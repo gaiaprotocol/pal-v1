@@ -10,18 +10,10 @@ contract Pal is Ownable {
     uint256 public tokenOwnerFeePercent;
 
     event TokenCreated(address indexed owner, address tokenAddress, string name, string symbol);
-    event BuyToken(
-        address indexed buyer,
+    event Trade(
+        address indexed trader,
         address indexed tokenAddress,
-        uint256 amount,
-        uint256 price,
-        uint256 protocolFee,
-        uint256 tokenOwnerFee,
-        uint256 supply
-    );
-    event SellToken(
-        address indexed seller,
-        address indexed tokenAddress,
+        bool indexed isBuy,
         uint256 amount,
         uint256 price,
         uint256 protocolFee,
@@ -102,7 +94,7 @@ contract Pal is Ownable {
         require(msg.value >= price + protocolFee + tokenOwnerFee, "Insufficient payment");
 
         token.mint(msg.sender, amount);
-        emit BuyToken(msg.sender, tokenAddress, amount, price, protocolFee, tokenOwnerFee, supply + amount);
+        emit Trade(msg.sender, tokenAddress, true, amount, price, protocolFee, tokenOwnerFee, supply + amount);
 
         (bool success1, ) = protocolFeeDestination.call{value: protocolFee}("");
         (bool success2, ) = tokenOwner.call{value: tokenOwnerFee}("");
@@ -121,7 +113,7 @@ contract Pal is Ownable {
         require(token.balanceOf(msg.sender) >= amount, "Insufficient tokens");
 
         token.burn(msg.sender, amount);
-        emit SellToken(msg.sender, tokenAddress, amount, price, protocolFee, tokenOwnerFee, supply - amount);
+        emit Trade(msg.sender, tokenAddress, false, amount, price, protocolFee, tokenOwnerFee, supply - amount);
 
         (bool success1, ) = msg.sender.call{value: price - protocolFee - tokenOwnerFee}("");
         (bool success2, ) = protocolFeeDestination.call{value: protocolFee}("");
