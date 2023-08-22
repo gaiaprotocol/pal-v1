@@ -10,8 +10,7 @@ contract PalToken is ERC20 {
     string private _name;
     string private _symbol;
 
-    event SetName(string name);
-    event SetSymbol(string symbol);
+    event SetNameAndSymbol(string name, string symbol);
 
     constructor(address owner_, string memory name_, string memory symbol_) ERC20(name_, symbol_) {
         pal = msg.sender;
@@ -33,14 +32,10 @@ contract PalToken is ERC20 {
         _;
     }
 
-    function setName(string memory name_) external onlyOwner {
+    function setNameAndSymbol(string memory name_, string memory symbol_) external onlyOwner {
         _name = name_;
-        emit SetName(name_);
-    }
-
-    function setSymbol(string memory symbol_) external onlyOwner {
         _symbol = symbol_;
-        emit SetSymbol(symbol_);
+        emit SetNameAndSymbol(name_, symbol_);
     }
 
     modifier onlyPal() {
