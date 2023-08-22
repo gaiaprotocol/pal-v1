@@ -9,7 +9,8 @@
     "merge": "sol-merger \"./contracts/*.sol\" ./merge",
     "pretty": "prettier --write contracts/**/*.sol",
     "solhint": "hardhat check",
-    "generateProfile": "sol-profiler ./contracts/"
+    "generateProfile": "sol-profiler ./contracts/",
+    "deploy": "gh-pages -d app/build/web"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.0",
@@ -24,6 +25,7 @@
     "chai": "^4.3.7",
     "dotenv": "^16.3.1",
     "ethers": "^6.1.0",
+    "gh-pages": "^6.0.0",
     "hardhat": "^2.17.1",
     "hardhat-tracer": "^2.6.0",
     "solidity-coverage": "^0.8.4",
