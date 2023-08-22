@@ -17,13 +17,13 @@ node_modules
 package-lock.json
 *.log
 *.gz
+yarn.lock
 
 # local env variables
 .env
 
 # vscode
 .history
-.yarn
 
 # hardhat
 cache
