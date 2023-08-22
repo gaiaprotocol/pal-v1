@@ -8,6 +8,7 @@ import "@nomiclabs/hardhat-solhint";
 import "solidity-coverage";
 // import "hardhat-gas-reporter";
 import "hardhat-tracer";
+import "@openzeppelin/hardhat-upgrades";
 
 let accounts;
 if (process.env.PRIVATE_KEY) {
