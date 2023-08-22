@@ -94,7 +94,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      mainnet: process.env.MAINNET_ETHERSCAN_API_KEY!,
+      mainnet: process.env.ETHERSCAN_API_KEY!,
       "base-goerli": "PLACEHOLDER_STRING",
     },
     customChains: [
