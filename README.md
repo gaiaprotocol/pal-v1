@@ -1,6 +1,8 @@
 # Pal
 
-- [Smart Contracts](./contracts/README.md)
+- [Smart Contracts](./contracts)
+- [App (Flutter)](./app)
+- [Backend (Supabase)](./supabase)
 
 ## License
 [MIT](LICENSE)
