@@ -12,81 +12,105 @@ import "@openzeppelin/hardhat-upgrades";
 
 let accounts;
 if (process.env.PRIVATE_KEY) {
-    accounts = [process.env.PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000000"];
+  accounts = [
+    process.env.PRIVATE_KEY ||
+    "0x0000000000000000000000000000000000000000000000000000000000000000",
+  ];
 } else {
-    accounts = {
-        mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk",
-    };
+  accounts = {
+    mnemonic: process.env.MNEMONIC ||
+      "test test test test test test test test test test test junk",
+  };
 }
 
 const config: HardhatUserConfig = {
-    solidity: {
-        compilers: [
-            {
-                version: "0.8.20",
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 200,
-                    },
-                },
-            },
-        ],
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.20",
+        settings: {
+          evmVersion: "paris",
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+    ],
+  },
+  networks: {
+    mainnet: {
+      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts,
+      chainId: 1,
     },
-    networks: {
-        mainnet: {
-            url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            accounts,
-            chainId: 1,
-        },
-        polygon: {
-            url: `https://polygon-rpc.com/`,
-            accounts,
-            chainId: 137,
-        },
-        klaytn: {
-            url: "https://public-node-api.klaytnapi.com/v1/cypress",
-            accounts,
-            chainId: 8217,
-            gasPrice: 250000000000,
-        },
-        bnb: {
-            url: `https://bsc-dataseed.binance.org/`,
-            accounts,
-            chainId: 56,
-        },
-        goerli: {
-            url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            accounts,
-            chainId: 5,
-        },
-        mumbai: {
-            url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            accounts,
-            chainId: 80001,
-        },
-        baobab: {
-            url: "https://public-node-api.klaytnapi.com/v1/baobab",
-            accounts,
-            chainId: 1001,
-        },
-        popcateum: {
-            url: "https://dataseed.popcateum.org",
-            accounts,
-            chainId: 1213,
-        },
-        bifrost: {
-            url: "https://public-01.mainnet.thebifrost.io/rpc",
-            accounts,
-            chainId: 3068,
-        },
+    polygon: {
+      url: `https://polygon-rpc.com/`,
+      accounts,
+      chainId: 137,
     },
-    etherscan: {
-        apiKey: process.env.ETHERSCAN_API_KEY,
+    klaytn: {
+      url: "https://public-node-api.klaytnapi.com/v1/cypress",
+      accounts,
+      chainId: 8217,
+      gasPrice: 250000000000,
     },
-    mocha: {
-        timeout: 600000,
+    bnb: {
+      url: `https://bsc-dataseed.binance.org/`,
+      accounts,
+      chainId: 56,
     },
+    goerli: {
+      url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts,
+      chainId: 5,
+    },
+    mumbai: {
+      url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts,
+      chainId: 80001,
+    },
+    baobab: {
+      url: "https://public-node-api.klaytnapi.com/v1/baobab",
+      accounts,
+      chainId: 1001,
+    },
+    popcateum: {
+      url: "https://dataseed.popcateum.org",
+      accounts,
+      chainId: 1213,
+    },
+    bifrost: {
+      url: "https://public-01.mainnet.thebifrost.io/rpc",
+      accounts,
+      chainId: 3068,
+    },
+    "base-goerli": {
+      url: "https://goerli.base.org",
+      accounts,
+      chainId: 84531,
+      gasPrice: 1000000000,
+    },
+  },
+  etherscan: {
+    apiKey: {
+      mainnet: process.env.MAINNET_ETHERSCAN_API_KEY!,
+      "base-goerli": "PLACEHOLDER_STRING",
+    },
+    customChains: [
+      {
+        network: "base-goerli",
+        chainId: 84531,
+        urls: {
+          apiURL: "https://api-goerli.basescan.org/api",
+          browserURL: "https://goerli.basescan.org",
+        },
+      },
+    ],
+  },
+  mocha: {
+    timeout: 600000,
+  },
 };
 
 export default config;

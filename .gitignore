@@ -23,8 +23,10 @@ package-lock.json
 
 # vscode
 .history
+.yarn
 
 # hardhat
 cache
 artifacts
 typechain*
+.openzeppelin
