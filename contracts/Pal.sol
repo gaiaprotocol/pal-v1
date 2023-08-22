@@ -11,7 +11,9 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     uint256 public protocolFeePercent;
     uint256 public tokenOwnerFeePercent;
     uint256 private constant BASE_DIVIDER = 16000;
-    address[] public createdTokens;
+
+    address[] public tokens;
+    mapping(address => address) public tokenOwners;
 
     event TokenCreated(address indexed owner, address tokenAddress, string name, string symbol);
     event Trade(
@@ -38,6 +40,10 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         tokenOwnerFeePercent = _tokenOwnerFeePercent;
     }
 
+    function tokenLength() public view returns (uint256) {
+        return tokens.length;
+    }
+
     function setProtocolFeeDestination(address payable _feeDestination) public onlyOwner {
         protocolFeeDestination = _feeDestination;
     }
@@ -54,7 +60,8 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     function createToken(string memory name, string memory symbol) public returns (address) {
         PalToken newToken = new PalToken(msg.sender, name, symbol);
 
-        createdTokens.push(address(newToken));
+        tokens.push(address(newToken));
+        tokenOwners[address(newToken)] = msg.sender;
         newToken.mint(msg.sender, 1 ether);
 
         emit TokenCreated(msg.sender, address(newToken), name, symbol);

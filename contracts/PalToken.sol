@@ -2,21 +2,22 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract PalToken is ERC20, Ownable {
-    address private _pal;
+contract PalToken is ERC20 {
+    address public pal;
+    address public owner;
+
     string private _name;
     string private _symbol;
 
     event SetName(string name);
     event SetSymbol(string symbol);
 
-    constructor(address owner, string memory name_, string memory symbol_) ERC20(name_, symbol_) {
-        _pal = msg.sender;
+    constructor(address owner_, string memory name_, string memory symbol_) ERC20(name_, symbol_) {
+        pal = msg.sender;
+        owner = owner_;
         _name = name_;
         _symbol = symbol_;
-        _transferOwnership(owner);
     }
 
     function name() public view virtual override returns (string memory) {
@@ -25,6 +26,11 @@ contract PalToken is ERC20, Ownable {
 
     function symbol() public view virtual override returns (string memory) {
         return _symbol;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "PalToken: caller is not the owner");
+        _;
     }
 
     function setName(string memory name_) external onlyOwner {
@@ -38,7 +44,7 @@ contract PalToken is ERC20, Ownable {
     }
 
     modifier onlyPal() {
-        require(msg.sender == _pal, "PalToken: caller is not the pal");
+        require(msg.sender == pal, "PalToken: caller is not the pal");
         _;
     }
 
