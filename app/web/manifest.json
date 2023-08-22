@@ -1,11 +1,11 @@
 {
-    "name": "pal",
-    "short_name": "pal",
+    "name": "Pal",
+    "short_name": "Pal",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "pal",
+    "theme_color": "#530087",
+    "description": "\uD83D\uDC9C",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
