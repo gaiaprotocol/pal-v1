@@ -1,14 +1,12 @@
-import "dotenv/config";
-import "@nomiclabs/hardhat-ethers";
-import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-import { HardhatUserConfig } from "hardhat/types";
-import "@nomiclabs/hardhat-solhint";
-import "solidity-coverage";
-// import "hardhat-gas-reporter";
-import "hardhat-tracer";
-import "@openzeppelin/hardhat-upgrades";
+require("dotenv/config");
+require("@nomiclabs/hardhat-ethers");
+require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-waffle");
+require("@typechain/hardhat");
+require("@nomiclabs/hardhat-solhint");
+require("solidity-coverage");
+require("hardhat-tracer");
+require("@openzeppelin/hardhat-upgrades");
 
 let accounts;
 if (process.env.PRIVATE_KEY) {
@@ -23,7 +21,7 @@ if (process.env.PRIVATE_KEY) {
   };
 }
 
-const config: HardhatUserConfig = {
+module.exports = {
   solidity: {
     compilers: [
       {
@@ -94,7 +92,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      mainnet: process.env.ETHERSCAN_API_KEY!,
+      mainnet: process.env.ETHERSCAN_API_KEY,
       "base-goerli": "PLACEHOLDER_STRING",
     },
     customChains: [
@@ -112,5 +110,3 @@ const config: HardhatUserConfig = {
     timeout: 600000,
   },
 };
-
-export default config;

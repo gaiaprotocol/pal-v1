@@ -17,9 +17,14 @@ node_modules
 package-lock.json
 *.log
 *.gz
+
+# yarn
 yarn.lock
 
-# local env variables
+# ts
+dist
+
+# secure
 .env
 
 # vscode
