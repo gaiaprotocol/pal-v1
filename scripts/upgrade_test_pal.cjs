@@ -1,7 +1,7 @@
-import { ethers, upgrades } from "hardhat";
+require("@nomiclabs/hardhat-ethers");
 
 async function main() {
-  const deployedProxyAddress = process.env.PAL_ADDRESS!;
+  const deployedProxyAddress = process.env.PAL_ADDRESS;
 
   const TestPalUpgrade = await ethers.getContractFactory(
     //"TestPalUpgrade",

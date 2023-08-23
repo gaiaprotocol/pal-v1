@@ -1,4 +1,4 @@
-import { ethers, network, upgrades } from "hardhat";
+require("@nomiclabs/hardhat-ethers");
 
 async function main() {
   const Pal = await ethers.getContractFactory("Pal");
@@ -19,7 +19,7 @@ async function main() {
   );
   await pal.waitForDeployment();
 
-  console.log("PriceFeedTracker deployed to:", pal.address);
+  console.log("Pal deployed to:", pal);
 }
 
 main();

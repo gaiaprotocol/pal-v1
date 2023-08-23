@@ -12,7 +12,7 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     uint256 public tokenOwnerFeePercent;
     uint256 private constant BASE_DIVIDER = 16000;
 
-    mapping(address => address) public tokenOwners;
+    mapping(address => bool) public isPalToken;
 
     event TokenCreated(address indexed owner, address tokenAddress, string name, string symbol);
     event Trade(
@@ -55,49 +55,33 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     function createToken(string memory name, string memory symbol) public returns (address) {
         PalToken newToken = new PalToken(msg.sender, name, symbol);
 
-        tokenOwners[address(newToken)] = msg.sender;
+        isPalToken[address(newToken)] = true;
         newToken.mint(msg.sender, 1 ether);
 
         emit TokenCreated(msg.sender, address(newToken), name, symbol);
         return address(newToken);
     }
 
-    // The calculateFee function computes the fee based on a given price and a fee percentage.
-    function calculateFee(uint256 price, uint256 feePercent) public pure returns (uint256) {
-        return (price * feePercent) / 1 ether;
-    }
-
-    // The getTokenPrice function calculates the token price based on the current supply, transaction volume, and the number of decimals.
-    // This function uses the Riemann Sum approach to determine the price.
-    // It essentially performs an integration calculation on how the price changes based on the given supply and volume.
-    function getTokenPrice(uint256 supply, uint256 amount, uint8 decimals) public pure returns (uint256) {
-        uint256 base = 10 ** decimals;
-        uint256 normalizedSupply = supply / base;
-        uint256 normalizedAmount = amount / base;
-
-        uint256 sum1 = normalizedSupply == 0
+    function getPrice(uint256 supply, uint256 amount) public pure returns (uint256) {
+        uint256 sum1 = supply == 0
             ? 0
-            : ((normalizedSupply - 1) * normalizedSupply * (2 * (normalizedSupply - 1) + 1)) / 6;
-        uint256 sum2 = (normalizedSupply == 0 && normalizedAmount == 1)
+            : (((((supply - 1 ether) * supply) / 1 ether) * (2 * (supply - 1 ether) + 1 ether)) / 1 ether) / 6;
+        uint256 sum2 = (supply == 0 && amount == 1 ether)
             ? 0
-            : ((normalizedSupply - 1 + normalizedAmount) *
-                (normalizedSupply + normalizedAmount) *
-                (2 * (normalizedSupply - 1 + normalizedAmount) + 1)) / 6;
-
+            : (((((supply - 1 ether + amount) * (supply + amount)) / 1 ether) *
+                (2 * (supply - 1 ether + amount) + 1 ether)) / 1 ether) / 6;
         uint256 summation = sum2 - sum1;
-        return (summation * 1 ether) / BASE_DIVIDER;
+        return summation / BASE_DIVIDER;
     }
 
-    // The getBuyPrice function calculates the buying price based on a given token address and the amount of tokens to purchase.
     function getBuyPrice(address tokenAddress, uint256 amount) public view returns (uint256) {
         PalToken token = PalToken(tokenAddress);
-        return getTokenPrice(token.totalSupply(), amount, token.decimals());
+        return getPrice(token.totalSupply(), amount);
     }
 
-    // The getSellPrice function calculates the selling price based on a given token address and the amount of tokens to sell.
     function getSellPrice(address tokenAddress, uint256 amount) public view returns (uint256) {
         PalToken token = PalToken(tokenAddress);
-        return getTokenPrice(token.totalSupply() - amount, amount, token.decimals());
+        return getPrice(token.totalSupply() - amount, amount);
     }
 
     function getBuyPriceAfterFee(address tokenAddress, uint256 amount) public view returns (uint256) {
@@ -115,11 +99,11 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     }
 
     function executeTrade(address tokenAddress, uint256 amount, uint256 price, bool isBuy) internal nonReentrant {
-        require(tokenOwners[tokenAddress] != address(0), "Token does not exist");
+        require(isPalToken[tokenAddress], "Invalid token address");
 
         PalToken token = PalToken(tokenAddress);
-        uint256 protocolFee = calculateFee(price, protocolFeePercent);
-        uint256 tokenOwnerFee = calculateFee(price, tokenOwnerFeePercent);
+        uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
+        uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether;
 
         if (isBuy) {
             require(msg.value >= price + protocolFee + tokenOwnerFee, "Insufficient payment");
@@ -150,5 +134,10 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     function sellToken(address tokenAddress, uint256 amount) public {
         uint256 price = getSellPrice(tokenAddress, amount);
         executeTrade(tokenAddress, amount, price, false);
+    }
+
+    // Fallback function
+    receive() external payable {
+        revert("Direct ether transfers are not allowed");
     }
 }
