@@ -17,7 +17,7 @@ module.exports = {
         })],
     },
     entry: {
-        'bundle': './src/prod.ts',
+        'bundle': './app/prod.ts',
         __less: './public/style/main.less',
     },
     module: {

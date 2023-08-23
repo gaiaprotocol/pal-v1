@@ -72,6 +72,8 @@
     ".vscode",
     "test-src",
     "old",
-    "test"
+    "test",
+    "typechain-types",
+    "scripts",
   ]
 }

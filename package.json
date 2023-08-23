@@ -10,7 +10,10 @@
     "pretty": "prettier --write contracts/**/*.sol",
     "solhint": "hardhat check",
     "generateProfile": "sol-profiler ./contracts/",
-    "deploy": "gh-pages -d app/build/web"
+    "webpack-dev": "webpack --mode development --watch --config webpack.config.dev.cjs",
+    "webpack-prod": "webpack --mode production --config webpack.config.prod.cjs",
+    "predeploy": "yarn webpack-prod",
+    "deploy": "gh-pages -d public"
   },
   "type": "module",
   "dependencies": {
@@ -35,15 +38,29 @@
     "@openzeppelin/hardhat-upgrades": "^2.2.1",
     "@typechain/ethers-v6": "^0.5.0",
     "@typechain/hardhat": "^9.0.0",
+    "assert": "^2.0.0",
     "chai": "^4.3.7",
+    "crypto-browserify": "^3.12.0",
+    "css-loader": "^6.8.1",
     "dotenv": "^16.3.1",
     "ethers": "^6.1.0",
     "gh-pages": "^6.0.0",
     "hardhat": "^2.17.1",
     "hardhat-tracer": "^2.6.0",
+    "http-browserify": "^1.7.0",
+    "https-browserify": "^1.0.0",
+    "less": "^4.2.0",
+    "less-loader": "^11.1.3",
+    "mini-css-extract-plugin": "^2.7.6",
+    "os-browserify": "^0.3.0",
+    "process": "^0.11.10",
     "solidity-coverage": "^0.8.4",
+    "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
     "typechain": "^8.3.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "url": "^0.11.1",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   }
 }
