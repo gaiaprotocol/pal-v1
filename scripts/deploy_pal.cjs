@@ -19,7 +19,7 @@ async function main() {
   );
   await pal.waitForDeployment();
 
-  console.log("Pal deployed to:", pal);
+  console.log("Pal deployed to:", pal.target);
 }
 
 main();

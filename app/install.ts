@@ -1,9 +1,10 @@
 import { msg, Router } from "common-dapp-module";
+import SupabaseManager from "./SupabaseManager.js";
 import Activity from "./view/Activity.js";
+import ChatRoom from "./view/ChatRoom.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import Settings from "./view/Settings.js";
-import ChatRoom from "./view/ChatRoom.js";
 
 export default async function install() {
   if (sessionStorage.__spa_path) {
@@ -14,6 +15,8 @@ export default async function install() {
   await msg.loadYAMLs({
     en: ["/locales/en.yml"],
   });
+
+  SupabaseManager.connect();
 
   Router.route("**", Layout);
   Router.route("activity", Activity);
