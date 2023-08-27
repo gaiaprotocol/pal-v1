@@ -14,7 +14,7 @@ contract PalToken is ERC20Permit, Ownable {
     event SetName(string name);
     event SetSymbol(string symbol);
 
-    constructor(address owner_, string memory name_, string memory symbol_) ERC20(name_, symbol_) {
+    constructor(address owner_, string memory name_, string memory symbol_) ERC20Permit(name_) ERC20(name_, symbol_) {
         _pal = msg.sender;
         _name = name_;
         _symbol = symbol_;
