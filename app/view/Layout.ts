@@ -7,6 +7,7 @@ import {
   ViewParams,
 } from "common-dapp-module";
 import Icon from "../component/Icon.js";
+import UserSummary from "../component/UserSummary.js";
 
 export default class Layout extends View {
   private static current: Layout;
@@ -34,6 +35,7 @@ export default class Layout extends View {
               click: () => Router.go("/"),
             }),
           ),
+          new UserSummary(),
         ),
         this.content = el("main"),
         el(

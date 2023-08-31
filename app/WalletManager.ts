@@ -2,6 +2,8 @@ import {
   configureChains,
   createConfig,
   getAccount,
+  getNetwork,
+  getWalletClient,
   signMessage,
   watchAccount,
 } from "@wagmi/core";
@@ -13,6 +15,7 @@ import {
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/html";
 import { EventContainer } from "common-dapp-module";
+import { BrowserProvider, JsonRpcSigner } from "ethers";
 import Config from "./Config.js";
 
 class WalletManager extends EventContainer {
@@ -23,6 +26,8 @@ class WalletManager extends EventContainer {
   public get address() {
     return getAccount().address;
   }
+
+  public signer: JsonRpcSigner | undefined;
 
   public init() {
     const chains = [mainnet];
@@ -53,6 +58,7 @@ class WalletManager extends EventContainer {
       if (this._resolveConnection) {
         this._resolveConnection(this.connected);
       }
+      this.createSigner();
       this.fireEvent("accountChanged");
     });
   }
@@ -80,6 +86,22 @@ class WalletManager extends EventContainer {
     } else {
       return await signMessage({ message });
     }
+  }
+
+  private async createSigner() {
+    const walletClient = await getWalletClient();
+    if (!walletClient) return;
+    const { account, transport } = walletClient;
+    const { chain } = getNetwork();
+    if (!chain) return;
+    const network = {
+      chainId: chain.id,
+      name: chain.name,
+      ensAddress: chain.contracts?.ensRegistry?.address,
+    };
+    const provider = new BrowserProvider(transport, network);
+    this.signer = new JsonRpcSigner(provider, account.address);
+    this.fireEvent("signerChanged");
   }
 }
 

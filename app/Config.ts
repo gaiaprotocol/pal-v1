@@ -3,5 +3,7 @@ export default class Config {
   public static supabaseURL: string;
   public static supabaseAnonKey: string;
   public static walletConnectProjectID: string;
+
+  public static palChainId: number = 1;
   public static palAddress: string;
 }

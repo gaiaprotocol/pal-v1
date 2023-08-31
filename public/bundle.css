@@ -113,6 +113,73 @@ meter {
 :root {
   font-family: 'Noto Sans', sans-serif;
 }
+:root {
+  --primary-color: 246, 189, 72;
+  --on-primary-color: 65, 45, 0;
+  --secondary-color: 178, 207, 167;
+  --on-secondary-color: 31, 54, 26;
+  --secondary-container-color: 53, 77, 47;
+  --on-secondary-container-color: 206, 235, 194;
+  --surface-color: 30, 27, 22;
+  --on-surface-color: 233, 225, 217;
+  --surface-conatiner-color: 24, 24, 24;
+  --on-surface-conatiner-color: 255, 255, 255;
+  --outline-color: 154, 143, 128;
+  --error-color: 147, 0, 10;
+  --on-error-color: 255, 218, 214;
+  --overlay-hover-color: 0, 0, 0, 0.2;
+  --box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+  --backdrop-color: 0, 0, 0, 0.2;
+  --backdrop-filter: blur(2px);
+}
+button.component {
+  display: flex;
+  justify-content: center;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button.component.disabled {
+  cursor: default;
+}
+button.component:hover:not(.disabled) {
+  background-image: linear-gradient(to bottom, rgba(var(--overlay-hover-color)), rgba(var(--overlay-hover-color)));
+  box-shadow: var(--box-shadow);
+}
+button.component.contained {
+  background-color: rgba(var(--primary-color));
+  color: rgba(var(--on-primary-color));
+  box-shadow: var(--box-shadow);
+}
+button.component.contained.disabled {
+  background-color: rgba(var(--primary-color), 0.3);
+  filter: grayscale(1);
+}
+button.component.outlined {
+  color: rgba(var(--primary-color));
+  border: 1px solid rgba(var(--primary-color));
+  border-radius: 4px;
+}
+button.component.text {
+  color: rgba(var(--primary-color));
+}
+.popup-background {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999998;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(var(--backdrop-color));
+  backdrop-filter: var(--backdrop-filter);
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 20px 0;
+}
+:root {
+  --primary-color: 157, 0, 255;
+}
 html,
 body {
   background-color: #121212;
@@ -133,6 +200,7 @@ body {
 }
 .layout > header {
   position: fixed;
+  justify-content: space-between;
   left: 0;
   top: 0;
   background-color: #530087;
@@ -241,5 +309,44 @@ body {
   .chat-room-view > header {
     background-color: #530087;
   }
+}
+.user-summary > .twitter-login-button {
+  cursor: pointer;
+  min-width: 200px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #039be5;
+  background-image: linear-gradient(to top right, #039be5, #29b6f6);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+}
+.confirm {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.confirm > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.confirm > p {
+  padding: 0 24px 20px;
+}
+.confirm > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
 }
 
