@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PalToken is ERC20Permit, Ownable {
-    address public _pal;
+    address public immutable _pal;
     address public _pendingOwner;
     string private _name;
     string private _symbol;
