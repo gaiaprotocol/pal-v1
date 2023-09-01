@@ -163,6 +163,9 @@ button.component.outlined {
 button.component.text {
   color: rgba(var(--primary-color));
 }
+button.component.text.disabled {
+  color: rgba(var(--primary-color), 0.3);
+}
 .popup-background {
   position: fixed;
   left: 0;
@@ -176,6 +179,31 @@ button.component.text {
   flex-direction: column;
   overflow-y: scroll;
   padding: 20px 0;
+}
+.confirm.component {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.confirm.component > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.confirm.component > p {
+  padding: 0 24px 20px;
+}
+.confirm.component > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
 }
 :root {
   --primary-color: 157, 0, 255;
@@ -324,7 +352,7 @@ body {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-radius: 4px;
 }
-.confirm {
+.connect-wallet-popup {
   max-width: 600px;
   width: 90%;
   margin: auto;
@@ -336,15 +364,15 @@ body {
   background-color: rgba(var(--surface-conatiner-color));
   color: rgba(var(--on-surface-conatiner-color));
 }
-.confirm > h1 {
+.connect-wallet-popup > h1 {
   padding: 16px 24px;
   font-size: 20px;
   font-weight: bold;
 }
-.confirm > p {
+.connect-wallet-popup > main {
   padding: 0 24px 20px;
 }
-.confirm > footer {
+.connect-wallet-popup > footer {
   padding: 8px;
   display: flex;
   justify-content: flex-end;

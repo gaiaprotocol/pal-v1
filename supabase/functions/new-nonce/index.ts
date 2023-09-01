@@ -7,18 +7,36 @@ const supabase = createClient(
 );
 
 serveWithOptions(async (req) => {
-  const u = new URL(req.url);
-  const walletAddress = u.searchParams.get("wallet_address");
+  const userSupabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+    {
+      global: { headers: { Authorization: req.headers.get("Authorization")! } },
+    },
+  );
+
+  const {
+    data: { user },
+  } = await userSupabase.auth.getUser();
+
+  if (!user) {
+    return responseError("Unauthorized");
+  }
+
+  const { walletAddress } = await req.json();
+  if (!walletAddress) {
+    return responseError("Missing wallet address");
+  }
 
   // delete old nonce
   await supabase
     .from("nonce")
     .delete()
-    .eq("id", walletAddress);
+    .eq("id", user.id);
 
   const { data, error } = await supabase
     .from("nonce")
-    .insert({ id: walletAddress })
+    .insert({ id: user.id, wallet_address: walletAddress })
     .select();
 
   if (error) {

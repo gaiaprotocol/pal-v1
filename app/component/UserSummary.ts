@@ -4,6 +4,8 @@ import Config from "../Config.js";
 import SupabaseManager from "../SupabaseManager.js";
 import WalletManager from "../auth/WalletManager.js";
 import PalContract from "../contract/PalContract.js";
+import ConnectWalletPopup from "../popup/user/ConnectWalletPopup.js";
+import WalletConnectionManager from "../auth/WalletConnectionManager.js";
 
 export default class UserSummary extends DomNode {
   constructor() {
@@ -24,10 +26,10 @@ export default class UserSummary extends DomNode {
             }),
         }),
       );
-    } else if (!WalletManager.connected) {
+    } else if (!WalletConnectionManager.connected) {
       this.empty().append(
         el("a.wallet-login-button", "Connect Wallet", {
-          click: () => WalletManager.connect(),
+          click: () => new ConnectWalletPopup(),
         }),
       );
     } else {
