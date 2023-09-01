@@ -1,7 +1,7 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.31.0";
 import { ethers } from "https://esm.sh/ethers@6.7.0";
 import PalContract from "../_shared/contracts/PalContract.ts";
+import { response, responseError, serveWithOptions } from "../_shared/cors.ts";
 
 const provider = new ethers.JsonRpcProvider(Deno.env.get("BASE_RPC")!);
 const signer = new ethers.JsonRpcSigner(provider, ethers.ZeroAddress);
@@ -12,11 +12,29 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
-serve(async (req) => {
+serveWithOptions(async () => {
+  const { data, error } = await supabase
+    .from("tracked_event_blocks")
+    .select()
+    .eq("id", 0);
+
+  if (error) {
+    return responseError(error);
+  }
+
+  let toTrackBlock = (data?.[0]?.block_number ??
+    parseInt(Deno.env.get("PAL_DEPLOY_BLOCK")!)) + 1000;
+
+  const currentBlock = await provider.getBlockNumber();
+  if (toTrackBlock > currentBlock) {
+    toTrackBlock = currentBlock;
+  }
+
   const events = await palContract.getEvents(
-    parseInt(Deno.env.get("PAL_DEPLOY_BLOCK")!),
-    parseInt(Deno.env.get("PAL_DEPLOY_BLOCK")!) + 2000,
+    toTrackBlock - 2000,
+    toTrackBlock,
   );
+
   for (const event of events) {
     const eventTopic = event.topics[0];
 
@@ -28,7 +46,7 @@ serve(async (req) => {
     }
 
     if (event_type !== undefined) {
-      await supabase
+      const { error } = await supabase
         .from("pal_contract_events")
         .upsert({
           block_number: event.blockNumber,
@@ -36,10 +54,16 @@ serve(async (req) => {
           event_type,
           args: event.args,
         });
+
+      if (error) {
+        return responseError(error);
+      }
     }
   }
-  return new Response(
-    JSON.stringify(events),
-    { headers: { "Content-Type": "application/json" } },
-  );
+
+  await supabase
+    .from("tracked_event_blocks")
+    .upsert({ id: 0, block_number: toTrackBlock });
+
+  return response({});
 });

@@ -7,7 +7,7 @@ import ChatRoom from "./view/ChatRoom.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import Settings from "./view/Settings.js";
-import WalletManager from "./WalletManager.js";
+import WalletManager from "./auth/WalletManager.js";
 
 export default async function install() {
   if (sessionStorage.__spa_path) {

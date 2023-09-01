@@ -1,6 +1,6 @@
 import { DomNode, el, View } from "common-dapp-module";
 import SupabaseManager from "../SupabaseManager.js";
-import WalletManager from "../WalletManager.js";
+import WalletManager from "../auth/WalletManager.js";
 import Layout from "./Layout.js";
 
 export default class Settings extends View {

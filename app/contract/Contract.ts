@@ -1,6 +1,6 @@
 import { EventContainer } from "common-dapp-module";
 import { BaseContract, ethers, Interface, InterfaceAbi } from "ethers";
-import WalletManager from "../WalletManager.js";
+import WalletManager from "../auth/WalletManager.js";
 
 export default abstract class Contract<CT extends BaseContract>
   extends EventContainer {

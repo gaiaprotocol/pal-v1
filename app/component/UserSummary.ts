@@ -2,7 +2,7 @@ import { getNetwork, switchNetwork } from "@wagmi/core";
 import { Confirm, DomNode, el } from "common-dapp-module";
 import Config from "../Config.js";
 import SupabaseManager from "../SupabaseManager.js";
-import WalletManager from "../WalletManager.js";
+import WalletManager from "../auth/WalletManager.js";
 import PalContract from "../contract/PalContract.js";
 
 export default class UserSummary extends DomNode {

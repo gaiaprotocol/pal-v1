@@ -16,7 +16,7 @@ import {
 import { Web3Modal } from "@web3modal/html";
 import { EventContainer } from "common-dapp-module";
 import { BrowserProvider, JsonRpcSigner } from "ethers";
-import Config from "./Config.js";
+import Config from "../Config.js";
 
 class WalletManager extends EventContainer {
   private web3modal: Web3Modal;
