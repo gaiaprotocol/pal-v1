@@ -1,11 +1,6 @@
-import { getNetwork, switchNetwork } from "@wagmi/core";
-import { Confirm, DomNode, el } from "common-dapp-module";
-import Config from "../Config.js";
-import SupabaseManager from "../SupabaseManager.js";
-import WalletManager from "../auth/WalletManager.js";
-import PalContract from "../contract/PalContract.js";
-import ConnectWalletPopup from "../popup/user/ConnectWalletPopup.js";
-import WalletConnectionManager from "../auth/WalletConnectionManager.js";
+import { DomNode, el } from "common-dapp-module";
+import UserManager from "../user/UserManager.js";
+import WalletManager from "../user/WalletManager.js";
 
 export default class UserSummary extends DomNode {
   constructor() {
@@ -16,40 +11,24 @@ export default class UserSummary extends DomNode {
   }
 
   private async init() {
-    const { data, error } = await SupabaseManager.supabase.auth.getSession();
-    if (!data?.session || error) {
+    if (!UserManager.signedIn) {
       this.empty().append(
         el("a.twitter-login-button", "Sign in with 𝕏", {
-          click: () =>
-            SupabaseManager.supabase.auth.signInWithOAuth({
-              provider: "twitter",
-            }),
+          click: () => UserManager.signIn(),
         }),
       );
-    } else if (!WalletConnectionManager.connected) {
+    } else if (!UserManager.walletConnected) {
       this.empty().append(
         el("a.wallet-login-button", "Connect Wallet", {
-          click: () => new ConnectWalletPopup(),
+          click: () => UserManager.connectWallet(),
         }),
       );
+    } else if (!UserManager.tokenCreated) {
+      this.empty().append(el("a.create-token-button", "Create Token", {
+        click: () => UserManager.createToken(),
+      }));
     } else {
       //TODO:
-      this.empty().append(el("a.create-token-button", "Create Token", {
-        click: async () => {
-          const { chain } = getNetwork();
-          if (chain?.id !== Config.palChainId) {
-            new Confirm({
-              title: "Wrong Network",
-              message: "Please switch to Base network to create tokens.",
-              confirmTitle: "Switch",
-            }, async () => {
-              switchNetwork({ chainId: Config.palChainId });
-            });
-          } else {
-            PalContract.createToken("test", "test");
-          }
-        },
-      }));
     }
   }
 }

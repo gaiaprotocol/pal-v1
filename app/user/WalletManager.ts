@@ -53,13 +53,17 @@ class WalletManager extends EventContainer {
 
     this.connected = this.address !== undefined;
 
+    let cachedAddress = this.address;
     watchAccount((account) => {
       this.connected = account.address !== undefined;
       if (this._resolveConnection) {
         this._resolveConnection(this.connected);
       }
       this.createSigner();
-      this.fireEvent("accountChanged");
+      if (cachedAddress !== account.address) {
+        this.fireEvent("accountChanged");
+        cachedAddress = account.address;
+      }
     });
   }
 

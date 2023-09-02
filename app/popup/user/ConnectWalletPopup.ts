@@ -6,14 +6,14 @@ import {
   el,
   Popup,
 } from "common-dapp-module";
-import WalletManager from "../../auth/WalletManager.js";
-import WalletConnectionManager from "../../auth/WalletConnectionManager.js";
+import WalletConnectionManager from "../../user/WalletConnectionManager.js";
+import WalletManager from "../../user/WalletManager.js";
 
 export default class ConnectWalletPopup extends Popup {
   public content: DomNode;
   private connectWalletButton: Button;
 
-  constructor() {
+  constructor(callback: () => void) {
     super({ barrierDismissible: false });
     this.append(
       this.content = new Component(
@@ -51,6 +51,7 @@ export default class ConnectWalletPopup extends Popup {
             tag: ".connect-wallet-button",
             click: async () => {
               await WalletConnectionManager.connect();
+              callback();
             },
             title: "Connect Wallet",
           }),

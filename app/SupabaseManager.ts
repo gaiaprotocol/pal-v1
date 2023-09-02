@@ -1,12 +1,14 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { EventContainer } from "common-dapp-module";
 import Config from "./Config.js";
+import UserManager from "./user/UserManager.js";
 
 class SupabaseManager extends EventContainer {
   public supabase!: SupabaseClient;
 
-  public connect() {
+  public async connect() {
     this.supabase = createClient(Config.supabaseURL, Config.supabaseAnonKey);
+    await UserManager.loadUser();
   }
 }
 

@@ -2,12 +2,12 @@ import { msg, Router } from "common-dapp-module";
 import Config from "./Config.js";
 import PalContract from "./contract/PalContract.js";
 import SupabaseManager from "./SupabaseManager.js";
+import WalletManager from "./user/WalletManager.js";
 import Activity from "./view/Activity.js";
 import ChatRoom from "./view/ChatRoom.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import Settings from "./view/Settings.js";
-import WalletManager from "./auth/WalletManager.js";
 
 export default async function install() {
   if (sessionStorage.__spa_path) {
@@ -19,9 +19,8 @@ export default async function install() {
     en: ["/locales/en.yml"],
   });
 
-  SupabaseManager.connect();
+  await SupabaseManager.connect();
   WalletManager.init();
-
   PalContract.init(Config.palAddress);
 
   Router.route("**", Layout);
