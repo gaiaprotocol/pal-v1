@@ -6,14 +6,17 @@ import {
   el,
   Popup,
 } from "common-dapp-module";
-import WalletConnectionManager from "../../user/WalletConnectionManager.js";
 
 export default class CreateTokenPopup extends Popup {
   public content: DomNode;
   private createTokenButton: Button;
 
-  constructor(callback: (name: string, symbol: string) => void) {
-    super({ barrierDismissible: false });
+  constructor(
+    callback: (name: string, symbol: string, metadata: {
+      description?: string;
+    }) => void,
+  ) {
+    super({ barrierDismissible: true });
     this.append(
       this.content = new Component(
         ".create-token-popup",

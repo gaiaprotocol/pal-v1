@@ -14,7 +14,7 @@ export default class ConnectWalletPopup extends Popup {
   private connectWalletButton: Button;
 
   constructor(callback: () => void) {
-    super({ barrierDismissible: false });
+    super({ barrierDismissible: true });
     this.append(
       this.content = new Component(
         ".connect-wallet-popup",

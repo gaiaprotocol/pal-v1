@@ -1,4 +1,5 @@
 import { DomNode, el } from "common-dapp-module";
+import TokenInfoPopup from "../popup/token/TokenInfoPopup.js";
 import UserManager from "../user/UserManager.js";
 import WalletManager from "../user/WalletManager.js";
 
@@ -28,7 +29,9 @@ export default class UserSummary extends DomNode {
         click: () => UserManager.createToken(),
       }));
     } else {
-      //TODO:
+      this.empty().append(el("a.token-info-button", "Token Info", {
+        click: () => new TokenInfoPopup(UserManager.userToken!),
+      }));
     }
   }
 }

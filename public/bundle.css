@@ -377,4 +377,54 @@ body {
   display: flex;
   justify-content: flex-end;
 }
+.create-token-popup {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.create-token-popup > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.create-token-popup > main {
+  padding: 0 24px 20px;
+}
+.create-token-popup > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+.token-info-popup {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.token-info-popup > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.token-info-popup > main {
+  padding: 0 24px 20px;
+}
+.token-info-popup > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
 

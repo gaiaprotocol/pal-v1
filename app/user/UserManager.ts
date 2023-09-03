@@ -3,12 +3,14 @@ import { Confirm, EventContainer } from "common-dapp-module";
 import Config from "../Config.js";
 import SupabaseManager from "../SupabaseManager.js";
 import PalContract from "../contract/PalContract.js";
+import TokenInfo from "../data/TokenInfo.js";
+import CreateTokenPopup from "../popup/token/CreateTokenPopup.js";
 import ConnectWalletPopup from "../popup/user/ConnectWalletPopup.js";
 
 class UserManager extends EventContainer {
   public userId: string | undefined;
   public userWalletAddress: string | undefined;
-  public userTokenAddress: string | undefined;
+  public userToken: TokenInfo | undefined;
 
   public get signedIn() {
     return this.userId !== undefined;
@@ -17,7 +19,7 @@ class UserManager extends EventContainer {
     return this.userWalletAddress !== undefined;
   }
   public get tokenCreated() {
-    return this.userTokenAddress !== undefined;
+    return this.userToken !== undefined;
   }
 
   public async getUserWalletAddress(userId: string) {
@@ -28,12 +30,12 @@ class UserManager extends EventContainer {
     return data?.[0]?.wallet_address;
   }
 
-  public async getUserTokenAddress(userWalletAddress: string) {
+  public async getUserToken(userWalletAddress: string) {
     const { data } = await SupabaseManager.supabase
       .from("pal_tokens")
       .select()
       .eq("owner", userWalletAddress);
-    return data?.[0]?.address;
+    return data?.[0];
   }
 
   public async loadUser() {
@@ -42,7 +44,7 @@ class UserManager extends EventContainer {
     if (this.userId) {
       this.userWalletAddress = await this.getUserWalletAddress(this.userId);
       if (this.userWalletAddress) {
-        this.userTokenAddress = await this.getUserTokenAddress(
+        this.userToken = await this.getUserToken(
           this.userWalletAddress,
         );
       }
@@ -60,7 +62,7 @@ class UserManager extends EventContainer {
     new ConnectWalletPopup(() => this.loadUser());
   }
 
-  public async createToken() {
+  public createToken() {
     const { chain } = getNetwork();
     if (chain?.id !== Config.palChainId) {
       new Confirm({
@@ -71,8 +73,15 @@ class UserManager extends EventContainer {
         switchNetwork({ chainId: Config.palChainId });
       });
     } else {
-      //TODO:
-      this.userTokenAddress = await PalContract.createToken("test", "test");
+      new CreateTokenPopup(async (name, symbol, metadata) => {
+        const address = await PalContract.createToken(name, symbol);
+        this.userToken = {
+          address,
+          name,
+          symbol,
+          metadata,
+        };
+      });
     }
   }
 
