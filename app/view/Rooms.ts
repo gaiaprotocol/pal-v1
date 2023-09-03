@@ -57,11 +57,11 @@ export default class Rooms extends View {
   }
 
   private async loadFriendsTokenRooms(): Promise<void> {
-    //TODO:
-    const { data, error } = await SupabaseManager.supabase.functions.invoke(
+    //TODO: Implement after profit is generated
+    /*const { data, error } = await SupabaseManager.supabase.functions.invoke(
       "get-friends",
     );
-    console.log(data, error);
+    console.log(data, error);*/
   }
 
   private async loadTopRooms(): Promise<void> {
