@@ -7,4 +7,5 @@ export default class Config {
   public static palChainId: number = 1;
   public static palRPC: string;
   public static palAddress: string;
+  public static tokenHoldingsAggregatorAddress: string;
 }

@@ -1,6 +1,7 @@
 import { msg, Router } from "common-dapp-module";
 import Config from "./Config.js";
 import PalContract from "./contract/PalContract.js";
+import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorContract.js";
 import SupabaseManager from "./SupabaseManager.js";
 import WalletManager from "./user/WalletManager.js";
 import Activity from "./view/Activity.js";
@@ -22,6 +23,7 @@ export default async function install() {
   await SupabaseManager.connect();
   WalletManager.init();
   PalContract.init(Config.palAddress);
+  TokenHoldingsAggregatorContract.init(Config.tokenHoldingsAggregatorAddress);
 
   Router.route("**", Layout);
   Router.route("activity", Activity);

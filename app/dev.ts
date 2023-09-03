@@ -12,6 +12,7 @@ Config.walletConnectProjectID = "a7ae37d3cf98197d04b720fb165553e0";
 Config.palChainId = 84531;
 Config.palRPC = "https://goerli.base.org";
 Config.palAddress = "0x10e082761dA7C275FE05567D3C1475244C2BfB0e";
+Config.tokenHoldingsAggregatorAddress = "0x5E8c983BdbBbCf19f61e16E6e2E79920E4eE3dEF";
 
 await install();
 
