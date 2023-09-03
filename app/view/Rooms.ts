@@ -36,10 +36,13 @@ export default class Rooms extends View {
   }
 
   private async loadMyTokenRooms(): Promise<void> {
+    const { data } = await SupabaseManager.supabase.from("pal_tokens")
+      .select()
+      .eq("owner", UserManager.userWalletAddress);
+    console.log(data);
   }
 
   private async loadHoldingTokenRooms(): Promise<void> {
-    console.log(UserManager.userWalletAddress);
     if (UserManager.userWalletAddress) {
       const { data } = await SupabaseManager.supabase.from("pal_tokens")
         .select();
@@ -54,9 +57,15 @@ export default class Rooms extends View {
   }
 
   private async loadFriendsTokenRooms(): Promise<void> {
+    //TODO:
+    const { data, error } = await SupabaseManager.supabase.functions.invoke(
+      "get-friends",
+    );
+    console.log(data, error);
   }
 
   private async loadTopRooms(): Promise<void> {
+    //TODO:
   }
 
   public close(): void {
