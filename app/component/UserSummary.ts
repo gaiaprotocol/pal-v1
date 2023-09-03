@@ -1,4 +1,6 @@
 import { DomNode, el } from "common-dapp-module";
+import { ethers } from "ethers";
+import PalContract from "../contract/PalContract.js";
 import TokenInfoPopup from "../popup/token/TokenInfoPopup.js";
 import UserManager from "../user/UserManager.js";
 import WalletManager from "../user/WalletManager.js";
@@ -29,9 +31,21 @@ export default class UserSummary extends DomNode {
         click: () => UserManager.createToken(),
       }));
     } else {
-      this.empty().append(el("a.token-info-button", "Token Info", {
-        click: () => new TokenInfoPopup(UserManager.userToken!),
-      }));
+      const price = await PalContract.getBuyPriceAfterFee(
+        UserManager.userToken!.address,
+        ethers.parseEther("1"),
+      );
+      this.empty().append(
+        el(
+          "a.token-info-button",
+          `1 ${UserManager.userToken!.symbol} = ${
+            ethers.formatEther(price)
+          } ETH`,
+          {
+            click: () => new TokenInfoPopup(UserManager.userToken!),
+          },
+        ),
+      );
     }
   }
 }

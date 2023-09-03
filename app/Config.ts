@@ -5,5 +5,6 @@ export default class Config {
   public static walletConnectProjectID: string;
 
   public static palChainId: number = 1;
+  public static palRPC: string;
   public static palAddress: string;
 }

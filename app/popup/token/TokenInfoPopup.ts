@@ -6,12 +6,14 @@ import {
   el,
   Popup,
 } from "common-dapp-module";
+import PalContract from "../../contract/PalContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
+import { ethers } from "ethers";
 
 export default class TokenInfoPopup extends Popup {
   public content: DomNode;
 
-  constructor(info: TokenInfo) {
+  constructor(private info: TokenInfo) {
     super({ barrierDismissible: true });
     this.append(
       this.content = new Component(
@@ -35,6 +37,21 @@ export default class TokenInfoPopup extends Popup {
             title: "Cancel",
           }),
         ),
+      ),
+    );
+    this.loadPrice();
+  }
+
+  private async loadPrice() {
+    const price = await PalContract.getBuyPriceAfterFee(
+      this.info.address,
+      ethers.parseEther("1"),
+    );
+    this.content.append(
+      el(
+        "section",
+        el("label", "Price"),
+        el("p", ethers.formatEther(price) + " ETH"),
       ),
     );
   }

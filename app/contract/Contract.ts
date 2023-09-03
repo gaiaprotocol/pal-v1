@@ -1,5 +1,6 @@
 import { EventContainer } from "common-dapp-module";
 import { BaseContract, ethers, Interface, InterfaceAbi } from "ethers";
+import Config from "../Config.js";
 import WalletManager from "../user/WalletManager.js";
 
 export default abstract class Contract<CT extends BaseContract>
@@ -23,8 +24,14 @@ export default abstract class Contract<CT extends BaseContract>
   }
 
   private checkSignerChanged() {
-    if (this.currentSigner !== WalletManager.signer) {
-      this.currentSigner = WalletManager.signer;
+    const signer = WalletManager.signer ??
+      new ethers.VoidSigner(
+        ethers.ZeroAddress,
+        new ethers.JsonRpcProvider(Config.palRPC),
+      );
+
+    if (this.currentSigner !== signer) {
+      this.currentSigner = signer;
       this.ethersContract = new ethers.Contract(
         this.address,
         this.abi,

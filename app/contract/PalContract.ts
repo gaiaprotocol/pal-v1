@@ -24,6 +24,10 @@ class PalContract extends Contract<Pal> {
     }
     throw new Error("TokenCreated event not found");
   }
+
+  public async getBuyPriceAfterFee(tokenAddress: string, amount: bigint) {
+    return this.ethersContract.getBuyPriceAfterFee(tokenAddress, amount);
+  }
 }
 
 export default new PalContract();
