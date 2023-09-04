@@ -1,4 +1,5 @@
 import { BodyNode, DomNode, el, View, ViewParams } from "common-dapp-module";
+import SupabaseManager from "../SupabaseManager.js";
 
 export default class ChatRoom extends View {
   private container: DomNode;
@@ -12,11 +13,23 @@ export default class ChatRoom extends View {
         "test",
       ),
     );
-    console.log(params);
+    if (params.tokenAddress) {
+      this.loadRoomInfo(params.tokenAddress);
+    }
   }
 
   public changeParams(params: ViewParams): void {
-    console.log(params);
+    if (params.tokenAddress) {
+      this.loadRoomInfo(params.tokenAddress);
+    }
+  }
+
+  private async loadRoomInfo(tokenAddress: string) {
+    const { data, error } = await SupabaseManager.supabase.functions.invoke(
+      "get-room",
+      { body: { tokenAddress } },
+    );
+    console.log(data, error);
   }
 
   public close(): void {

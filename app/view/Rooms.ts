@@ -3,6 +3,7 @@ import TokenHoldingsAggregatorContract from "../contract/TokenHoldingsAggregator
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
+import RoomList from "../component/rooms/RoomList.js";
 
 export default class Rooms extends View {
   private container: DomNode;
@@ -17,11 +18,10 @@ export default class Rooms extends View {
     Layout.append(
       this.container = el(
         ".rooms-view",
-        el("ul.room-list", el("li", "test")),
-        this.myRooms = el("ul.room-list", el("li", "test")),
-        this.holdingRooms = el("ul.room-list", el("li", "test")),
-        this.friendsRooms = el("ul.room-list", el("li", "test")),
-        this.topRooms = el("ul.room-list", el("li", "test")),
+        this.myRooms = new RoomList("My Rooms"),
+        this.holdingRooms = new RoomList("Holding Token's Rooms"),
+        this.friendsRooms = new RoomList("Friends Rooms"),
+        this.topRooms = new RoomList("Top Rooms"),
       ),
     );
 
@@ -65,7 +65,11 @@ export default class Rooms extends View {
   }
 
   private async loadTopRooms(): Promise<void> {
-    //TODO:
+    const { data } = await SupabaseManager.supabase.from("pal_tokens")
+      .select()
+      .order("last_fetched_price", { ascending: false })
+      .limit(50);
+    console.log(data);
   }
 
   public close(): void {

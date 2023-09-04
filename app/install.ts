@@ -28,6 +28,6 @@ export default async function install() {
   Router.route("**", Layout);
   Router.route("activity", Activity);
   Router.route("settings", Settings);
-  Router.route(["", "{twitterUsername}"], Rooms, ["activity", "settings"]);
-  Router.route("{twitterUsername}", ChatRoom, ["activity", "settings"]);
+  Router.route(["", "{tokenAddress}"], Rooms, ["activity", "settings"]);
+  Router.route("{tokenAddress}", ChatRoom, ["activity", "settings"]);
 }

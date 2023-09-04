@@ -80,6 +80,9 @@ class UserManager extends EventContainer {
           name,
           symbol,
           metadata,
+          view_token_required: "1000000000000000000",
+          write_token_required: "1000000000000000000",
+          last_fetched_price: "0",
         };
       });
     }

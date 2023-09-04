@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.31.0";
 import { ethers } from "https://esm.sh/ethers@6.7.0";
 import { response, responseError, serveWithOptions } from "../_shared/cors.ts";
+import { getSignedUser } from "../_shared/user.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
@@ -8,18 +9,7 @@ const supabase = createClient(
 );
 
 serveWithOptions(async (req) => {
-  const userSupabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_ANON_KEY")!,
-    {
-      global: { headers: { Authorization: req.headers.get("Authorization")! } },
-    },
-  );
-
-  const {
-    data: { user },
-  } = await userSupabase.auth.getUser();
-
+  const user = await getSignedUser(req);
   if (!user) {
     return responseError("Unauthorized");
   }

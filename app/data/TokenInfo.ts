@@ -5,4 +5,7 @@ export default interface TokenInfo {
   metadata: {
     description?: string;
   };
+  view_token_required: string;
+  write_token_required: string;
+  last_fetched_price: string;
 }
