@@ -1,5 +1,6 @@
 import { BodyNode, DomNode, el, View, ViewParams } from "common-dapp-module";
 import SupabaseManager from "../SupabaseManager.js";
+import MessageForm from "../component/room/MessageForm.js";
 
 export default class ChatRoom extends View {
   private container: DomNode;
@@ -35,7 +36,9 @@ export default class ChatRoom extends View {
       await SupabaseManager.supabase.rpc("check_view_granted", {
         token_address: tokenAddress,
       });
-    console.log(checkViewGrantedData, checkViewGrantedError);
+    if (checkViewGrantedData === true) {
+      this.container.append(new MessageForm(tokenAddress));
+    }
 
     const { data: chatMessagesData, error: chatMessagesError } =
       await SupabaseManager.supabase.from("chat_messages")
