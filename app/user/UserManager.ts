@@ -24,7 +24,7 @@ class UserManager extends EventContainer {
 
   public async getUserWalletAddress(userId: string) {
     const { data } = await SupabaseManager.supabase
-      .from("user_wallets")
+      .from("user_details")
       .select()
       .eq("id", userId);
     return data?.[0]?.wallet_address;

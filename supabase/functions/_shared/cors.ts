@@ -18,12 +18,12 @@ export const corsHeaders = {
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
 };
 
-export const response = (data: string | object) => {
+export const response = (data?: string | object) => {
   if (typeof data === "string") {
     return new Response(data, { headers: corsHeaders });
   }
   return new Response(
-    JSON.stringify(data),
+    data === undefined ? undefined : JSON.stringify(data),
     { headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
 };

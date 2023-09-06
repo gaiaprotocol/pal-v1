@@ -8,20 +8,23 @@ import RoomList from "../component/rooms/RoomList.js";
 export default class Rooms extends View {
   private container: DomNode;
 
-  private myRooms: DomNode;
-  private holdingRooms: DomNode;
-  private friendsRooms: DomNode;
-  private topRooms: DomNode;
+  private myRooms: RoomList;
+  private holdingRooms: RoomList;
+  private friendsRooms: RoomList;
+  private topRooms: RoomList;
 
   constructor() {
     super();
     Layout.append(
       this.container = el(
         ".rooms-view",
-        this.myRooms = new RoomList("My Rooms"),
-        this.holdingRooms = new RoomList("Holding Token's Rooms"),
-        this.friendsRooms = new RoomList("Friends Rooms"),
-        this.topRooms = new RoomList("Top Rooms"),
+        el(
+          ".rooms",
+          this.myRooms = new RoomList("My Rooms"),
+          this.holdingRooms = new RoomList("Holding Token's Rooms"),
+          this.friendsRooms = new RoomList("Friends Rooms"),
+          this.topRooms = new RoomList("Top Rooms"),
+        ),
       ),
     );
 
@@ -39,7 +42,9 @@ export default class Rooms extends View {
     const { data } = await SupabaseManager.supabase.from("pal_tokens")
       .select()
       .eq("owner", UserManager.userWalletAddress);
-    console.log(data);
+    if (data) {
+      this.myRooms.rooms = data;
+    }
   }
 
   private async loadHoldingTokenRooms(): Promise<void> {

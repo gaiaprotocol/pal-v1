@@ -39,7 +39,7 @@ serveWithOptions(async (req) => {
   }
 
   const { data: userWallets } = await supabase
-    .from("user_wallets")
+    .from("user_details")
     .select("wallet_address")
     .eq("id", user.id)
     .single();
@@ -58,13 +58,20 @@ serveWithOptions(async (req) => {
     userWallets.wallet_address,
   );
 
-  await supabase.from("pal_tokens").upsert({
-    address: tokenAddress,
-    name: tokenInfo.name,
-    symbol: tokenInfo.symbol,
-    owner: tokenInfo.owner,
-    last_fetched_price: tokenInfo.price.toString(),
-  });
+  await Promise.all([
+    supabase.from("pal_tokens").upsert({
+      address: tokenAddress,
+      name: tokenInfo.name,
+      symbol: tokenInfo.symbol,
+      owner: tokenInfo.owner,
+      last_fetched_price: tokenInfo.price.toString(),
+    }),
+    supabase.from("pal_token_balances").upsert({
+      token: tokenAddress,
+      wallet_address: userWallets.wallet_address,
+      last_fetched_balance: tokenInfo.balance.toString(),
+    }),
+  ]);
 
   return response({
     name: tokenInfo.name,

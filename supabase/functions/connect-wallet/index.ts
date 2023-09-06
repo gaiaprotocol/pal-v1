@@ -50,7 +50,7 @@ serveWithOptions(async (req) => {
         .eq("id", user.id);
 
       const { error: updateError } = await supabase
-        .from("user_wallets")
+        .from("user_details")
         .upsert({
           id: user.id,
           wallet_address: walletAddress,
