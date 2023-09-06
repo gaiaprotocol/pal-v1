@@ -1,5 +1,6 @@
 export default interface TokenInfo {
   address: string;
+  owner: string;
   name: string;
   symbol: string;
   metadata: {

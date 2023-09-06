@@ -54,6 +54,8 @@ serveWithOptions(async (req) => {
         .upsert({
           id: user.id,
           wallet_address: walletAddress,
+          display_name: user.user_metadata.full_name,
+          profile_image: user.user_metadata.avatar_url,
         })
         .eq("id", user.id);
 

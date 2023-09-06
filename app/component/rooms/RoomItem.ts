@@ -1,14 +1,32 @@
-import { DomNode, Router } from "common-dapp-module";
+import { DomNode, el, Router } from "common-dapp-module";
 import TokenInfo from "../../data/TokenInfo.js";
+import SupabaseManager from "../../SupabaseManager.js";
 
 export default class RoomItem extends DomNode {
-  constructor(tokenInfo: TokenInfo) {
-    super("a.room-item");
+  private tokenOwnerProfileImage: DomNode<HTMLImageElement>;
+  private tokenOwnerName: DomNode;
+
+  constructor(private tokenInfo: TokenInfo) {
+    super("li.room-item");
     this.append(
-      tokenInfo.name,
+      this.tokenOwnerProfileImage = el("img.token-owner-profile-image"),
+      el("span.token-name", tokenInfo.name),
+      this.tokenOwnerName = el("span.token-owner"),
     );
     this.onDom("click", () => {
       Router.go("/" + tokenInfo.address);
     });
+
+    this.load();
+  }
+
+  private async load() {
+    const { data, error } = await SupabaseManager.supabase.from("user_details")
+      .select().eq("wallet_address", this.tokenInfo.owner);
+    const tokenOwner = data?.[0];
+    if (tokenOwner) {
+      this.tokenOwnerProfileImage.domElement.src = tokenOwner.profile_image;
+      this.tokenOwnerName.text = " by " + tokenOwner.display_name;
+    }
   }
 }

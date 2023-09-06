@@ -6,6 +6,7 @@ import PalContract from "../contract/PalContract.js";
 import TokenInfo from "../data/TokenInfo.js";
 import CreateTokenPopup from "../popup/token/CreateTokenPopup.js";
 import ConnectWalletPopup from "../popup/user/ConnectWalletPopup.js";
+import WalletManager from "./WalletManager.js";
 
 class UserManager extends EventContainer {
   public userId: string | undefined;
@@ -75,15 +76,18 @@ class UserManager extends EventContainer {
     } else {
       new CreateTokenPopup(async (name, symbol, metadata) => {
         const address = await PalContract.createToken(name, symbol);
-        this.userToken = {
-          address,
-          name,
-          symbol,
-          metadata,
-          view_token_required: "1000000000000000000",
-          write_token_required: "1000000000000000000",
-          last_fetched_price: "0",
-        };
+        if (WalletManager.address) {
+          this.userToken = {
+            address,
+            owner: WalletManager.address,
+            name,
+            symbol,
+            metadata,
+            view_token_required: "1000000000000000000",
+            write_token_required: "1000000000000000000",
+            last_fetched_price: "0",
+          };
+        }
       });
     }
   }

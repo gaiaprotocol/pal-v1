@@ -10,7 +10,7 @@ export default class Rooms extends View {
 
   private myRooms: RoomList;
   private holdingRooms: RoomList;
-  private friendsRooms: RoomList;
+  //private friendsRooms: RoomList;
   private topRooms: RoomList;
 
   constructor() {
@@ -22,7 +22,7 @@ export default class Rooms extends View {
           ".rooms",
           this.myRooms = new RoomList("My Rooms"),
           this.holdingRooms = new RoomList("Holding Token's Rooms"),
-          this.friendsRooms = new RoomList("Friends Rooms"),
+          //this.friendsRooms = new RoomList("Friends Rooms"),
           this.topRooms = new RoomList("Top Rooms"),
         ),
       ),
@@ -51,13 +51,19 @@ export default class Rooms extends View {
     if (UserManager.userWalletAddress) {
       const { data } = await SupabaseManager.supabase.from("pal_tokens")
         .select();
-      const tokenAddresses: string[] = data?.map((token) => token.address) ??
-        [];
-      const balances = await TokenHoldingsAggregatorContract.getERC20Balances(
-        UserManager.userWalletAddress,
-        tokenAddresses,
-      );
-      console.log(balances);
+      if (data) {
+        const tokenAddresses: string[] = data?.map((token) => token.address) ??
+          [];
+        const balances = await TokenHoldingsAggregatorContract.getERC20Balances(
+          UserManager.userWalletAddress,
+          tokenAddresses,
+        );
+        for (const [index, balance] of balances.entries()) {
+          if (balance >= BigInt(data[index].view_token_required)) {
+            this.holdingRooms.add(data[index]);
+          }
+        }
+      }
     }
   }
 
@@ -74,7 +80,9 @@ export default class Rooms extends View {
       .select()
       .order("last_fetched_price", { ascending: false })
       .limit(50);
-    console.log(data);
+    if (data) {
+      this.topRooms.rooms = data;
+    }
   }
 
   public close(): void {
