@@ -210,7 +210,7 @@ button.component.text.disabled {
 }
 html,
 body {
-  background-color: #121212;
+  background-color: #1b1b1b;
   color: #e1e1e1;
   height: 100%;
   font-size: 14px;
@@ -290,6 +290,10 @@ body {
 .layout > nav > a.active {
   color: #fff;
 }
+.token-info-view {
+  background-color: #1e1e1e;
+  min-height: 100%;
+}
 .rooms-view {
   height: 100%;
 }
@@ -306,24 +310,24 @@ body {
     border: none;
   }
 }
-.chat-room-view {
+.room-view {
   position: fixed;
   left: 440px;
   top: 60px;
   width: calc(100% - 440px);
   height: calc(100% - 60px);
   padding-top: 60px;
-  background-color: #121212;
+  background-color: #222222;
 }
 @media only screen and (max-width: 859px) {
-  .chat-room-view {
+  .room-view {
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
   }
 }
-.chat-room-view > header {
+.room-view > header {
   position: absolute;
   left: 0;
   top: 0;
@@ -335,9 +339,17 @@ body {
   padding: 0 24px;
 }
 @media only screen and (max-width: 859px) {
-  .chat-room-view > header {
+  .room-view > header {
     background-color: #530087;
   }
+}
+.activity-view {
+  background-color: #1e1e1e;
+  min-height: 100%;
+}
+.settings-view {
+  background-color: #1e1e1e;
+  min-height: 100%;
 }
 .user-summary > .twitter-login-button {
   cursor: pointer;

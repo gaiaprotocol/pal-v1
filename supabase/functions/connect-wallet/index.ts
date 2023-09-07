@@ -51,6 +51,17 @@ serveWithOptions(async (req) => {
 
       const { error: updateError } = await supabase
         .from("user_details")
+        .update({
+          wallet_address: null,
+        })
+        .eq("wallet_address", walletAddress);
+
+      if (updateError) {
+        throw new Error(updateError.message);
+      }
+
+      const { error: updateError2 } = await supabase
+        .from("user_details")
         .upsert({
           id: user.id,
           wallet_address: walletAddress,
@@ -59,8 +70,8 @@ serveWithOptions(async (req) => {
         })
         .eq("id", user.id);
 
-      if (updateError) {
-        throw new Error(updateError.message);
+      if (updateError2) {
+        throw new Error(updateError2.message);
       }
 
       return response({});

@@ -2,6 +2,7 @@ import { DomNode, el, View } from "common-dapp-module";
 import SupabaseManager from "../SupabaseManager.js";
 import WalletManager from "../user/WalletManager.js";
 import Layout from "./Layout.js";
+import UserManager from "../user/UserManager.js";
 
 export default class Settings extends View {
   private container: DomNode;
@@ -43,7 +44,9 @@ export default class Settings extends View {
       );
 
       this.container.append(
-        el("w3m-core-button"),
+        el("a.connect-wallet-button", "Connect Wallet", {
+          click: () => UserManager.connectWallet(),
+        }),
       );
     }
   }

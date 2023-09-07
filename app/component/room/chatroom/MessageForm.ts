@@ -1,6 +1,6 @@
 import { DomNode, el } from "common-dapp-module";
-import SupabaseManager from "../../SupabaseManager.js";
-import { MessageType } from "../../data/ChatMessage.js";
+import SupabaseManager from "../../../SupabaseManager.js";
+import { MessageType } from "../../../data/ChatMessage.js";
 
 export default class MessageForm extends DomNode {
   private messageInput: DomNode<HTMLInputElement>;

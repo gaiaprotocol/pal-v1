@@ -52,6 +52,7 @@ export default class ConnectWalletPopup extends Popup {
             click: async () => {
               await WalletConnectionManager.connect();
               callback();
+              this.delete();
             },
             title: "Connect Wallet",
           }),

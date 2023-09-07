@@ -5,7 +5,7 @@ import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorC
 import SupabaseManager from "./SupabaseManager.js";
 import WalletManager from "./user/WalletManager.js";
 import Activity from "./view/Activity.js";
-import ChatRoom from "./view/ChatRoom.js";
+import RoomView from "./view/RoomView.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import Settings from "./view/Settings.js";
@@ -29,5 +29,5 @@ export default async function install() {
   Router.route("activity", Activity);
   Router.route("settings", Settings);
   Router.route(["", "{tokenAddress}"], Rooms, ["activity", "settings"]);
-  Router.route("{tokenAddress}", ChatRoom, ["activity", "settings"]);
+  Router.route("{tokenAddress}", RoomView, ["activity", "settings"]);
 }

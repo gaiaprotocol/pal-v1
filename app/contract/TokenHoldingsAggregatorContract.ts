@@ -1,7 +1,7 @@
 import Contract from "./Contract.js";
 import { TokenHoldingsAggregator } from "./abi/token-holdings-aggregator/TokenHoldingsAggregator.js";
 import TokenHoldingsAggregatorArtifact from "./abi/token-holdings-aggregator/TokenHoldingsAggregator.json" assert {
-  type: "json"
+  type: "json",
 };
 
 class TokenHoldingsAggregatorContract

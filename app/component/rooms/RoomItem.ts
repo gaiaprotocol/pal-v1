@@ -1,4 +1,5 @@
-import { DomNode, el, Router } from "common-dapp-module";
+import { DomNode, el, Router, StringUtil } from "common-dapp-module";
+import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import SupabaseManager from "../../SupabaseManager.js";
 
@@ -27,6 +28,11 @@ export default class RoomItem extends DomNode {
     if (tokenOwner) {
       this.tokenOwnerProfileImage.domElement.src = tokenOwner.profile_image;
       this.tokenOwnerName.text = " by " + tokenOwner.display_name;
+    } else {
+      this.tokenOwnerProfileImage.domElement.src = generateJazziconDataURL(
+        this.tokenInfo.owner,
+      );
+      this.tokenOwnerName.text = " by " + StringUtil.shortenEthereumAddress(this.tokenInfo.owner);
     }
   }
 }
