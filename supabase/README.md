@@ -1,6 +1,10 @@
 # Pal Backend (Supabase)
 
 ```sql
+select * from cron.job;
+```
+
+```sql
 select
   cron.schedule(
     'track-events-every-10-minutes',

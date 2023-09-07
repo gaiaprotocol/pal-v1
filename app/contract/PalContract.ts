@@ -47,6 +47,11 @@ class PalContract extends Contract<Pal> {
     });
     return response.wait();
   }
+
+  public async sellToken(tokenAddress: string, amount: bigint) {
+    const response = await this.ethersContract.sellToken(tokenAddress, amount);
+    return response.wait();
+  }
 }
 
 export default new PalContract();

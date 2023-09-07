@@ -31,6 +31,17 @@ export default class SellTokenPopup extends Popup {
             click: () => this.delete(),
             title: "Cancel",
           }),
+          new Button({
+            type: ButtonType.Text,
+            tag: ".sell-token-button",
+            click: async () => {
+              await PalContract.sellToken(
+                this.tokenAddress,
+                ethers.parseEther("1"),
+              );
+            },
+            title: "Sell Token",
+          }),
         ),
       ),
     );
@@ -42,6 +53,8 @@ export default class SellTokenPopup extends Popup {
       this.tokenAddress,
       ethers.parseEther("1"),
     );
-    this.priceDisplay.appendText(`${ethers.formatEther(price)} ETH`);
+    this.priceDisplay.appendText(
+      `${ethers.formatEther(price)} ETH`,
+    );
   }
 }

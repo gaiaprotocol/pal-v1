@@ -13,6 +13,8 @@ export default class BuyTokenPopup extends Popup {
   public content: DomNode;
   private priceDisplay: DomNode;
 
+  private currentPrice: bigint = 0n;
+
   constructor(private tokenAddress: string) {
     super({ barrierDismissible: true });
     this.append(
@@ -31,6 +33,18 @@ export default class BuyTokenPopup extends Popup {
             click: () => this.delete(),
             title: "Cancel",
           }),
+          new Button({
+            type: ButtonType.Text,
+            tag: ".buy-token-button",
+            click: async () => {
+              await PalContract.buyToken(
+                this.tokenAddress,
+                ethers.parseEther("1"),
+                this.currentPrice,
+              );
+            },
+            title: "Buy Token",
+          }),
         ),
       ),
     );
@@ -38,10 +52,12 @@ export default class BuyTokenPopup extends Popup {
   }
 
   private async loadPrice() {
-    const price = await PalContract.getBuyPriceAfterFee(
+    this.currentPrice = await PalContract.getBuyPriceAfterFee(
       this.tokenAddress,
       ethers.parseEther("1"),
     );
-    this.priceDisplay.appendText(`${ethers.formatEther(price)} ETH`);
+    this.priceDisplay.appendText(
+      `${ethers.formatEther(this.currentPrice)} ETH`,
+    );
   }
 }

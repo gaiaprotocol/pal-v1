@@ -52,7 +52,7 @@ serveWithOptions(async () => {
           block_number: event.blockNumber,
           log_index: event.index,
           event_type,
-          args: event.args,
+          args: event.args.map((arg) => arg.toString()),
         });
 
       if (error) {
