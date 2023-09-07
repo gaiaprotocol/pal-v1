@@ -135,6 +135,7 @@ meter {
 button.component {
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 6px 16px;
   border-radius: 4px;
   cursor: pointer;
@@ -206,7 +207,8 @@ button.component.text.disabled {
   justify-content: flex-end;
 }
 :root {
-  --primary-color: 157, 0, 255;
+  --primary-color: 208, 188, 255;
+  --on-primary-color: 56, 30, 114;
 }
 html,
 body {
@@ -318,6 +320,7 @@ body {
   height: calc(100% - 60px);
   padding-top: 60px;
   background-color: #222222;
+  box-shadow: var(--box-shadow);
 }
 @media only screen and (max-width: 859px) {
   .room-view {
@@ -325,22 +328,6 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-  }
-}
-.room-view > header {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: #1f1f1f;
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-}
-@media only screen and (max-width: 859px) {
-  .room-view > header {
-    background-color: #530087;
   }
 }
 .activity-view {
@@ -391,6 +378,34 @@ body {
 .room-item > .token-owner {
   font-size: 12px;
   color: #7f7f7f;
+}
+.room-title-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #1f1f1f;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+@media only screen and (max-width: 859px) {
+  .room-title-bar {
+    background-color: #530087;
+  }
+}
+.token-purchase-form {
+  position: absolute;
+  left: 0;
+  top: 60px;
+  width: 100%;
+  height: calc(100% - 60px);
+}
+.token-purchase-form > .buy-token-button {
+  width: 260px;
+  height: 40px;
+  font-weight: bold;
 }
 .connect-wallet-popup {
   max-width: 600px;

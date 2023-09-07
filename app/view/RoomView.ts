@@ -50,7 +50,7 @@ export default class RoomView extends View {
       "get-room",
       { body: { tokenAddress } },
     );
-    this.roomInfo = data?.[0];
+    this.roomInfo = data;
     if (this.roomInfo) {
       this.tokenPurchaseForm.check(tokenAddress, this.roomInfo);
       this.chatRoom.loadMessages(tokenAddress);

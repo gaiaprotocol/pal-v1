@@ -28,6 +28,13 @@ class PalContract extends Contract<Pal> {
   public async getBuyPriceAfterFee(tokenAddress: string, amount: bigint) {
     return this.ethersContract.getBuyPriceAfterFee(tokenAddress, amount);
   }
+
+  public async buyToken(tokenAddress: string, amount: bigint, value: bigint) {
+    const response = await this.ethersContract.buyToken(tokenAddress, amount, {
+      value,
+    });
+    return response.wait();
+  }
 }
 
 export default new PalContract();

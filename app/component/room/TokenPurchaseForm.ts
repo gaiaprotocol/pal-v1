@@ -1,16 +1,37 @@
-import { DomNode, el } from "common-dapp-module";
+import { Button, DomNode, el } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import RoomInfo from "../../data/RoomInfo.js";
+import PalContract from "../../contract/PalContract.js";
+import { ethers } from "ethers";
 
 export default class TokenPurchaseForm extends DomNode {
+  private currentTokenAddress: string | undefined;
+
   constructor() {
     super(".token-purchase-form");
     this.append(
-      el("a.buy-token-button", "Buy Token"),
+      new Button({
+        tag: ".buy-token-button",
+        title: "Buy Token",
+        click: async () => {
+          if (this.currentTokenAddress) {
+            const price = await PalContract.getBuyPriceAfterFee(
+              this.currentTokenAddress,
+              ethers.parseEther("1"),
+            );
+            await PalContract.buyToken(
+              this.currentTokenAddress,
+              ethers.parseEther("1"),
+              price,
+            );
+          }
+        },
+      }),
     );
   }
 
   public async check(tokenAddress: string, roomInfo: RoomInfo) {
+    this.currentTokenAddress = tokenAddress;
     const { data, error } = await SupabaseManager.supabase.rpc(
       "check_view_granted",
       {
