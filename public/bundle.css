@@ -482,4 +482,79 @@ body {
   display: flex;
   justify-content: flex-end;
 }
+.trade-token-popup {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.trade-token-popup > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.trade-token-popup > main {
+  padding: 0 24px 20px;
+}
+.trade-token-popup > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+.buy-token-popup {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.buy-token-popup > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.buy-token-popup > main {
+  padding: 0 24px 20px;
+}
+.buy-token-popup > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+.sell-token-popup {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.sell-token-popup > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.sell-token-popup > main {
+  padding: 0 24px 20px;
+}
+.sell-token-popup > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
 

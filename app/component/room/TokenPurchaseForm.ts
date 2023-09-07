@@ -3,6 +3,7 @@ import SupabaseManager from "../../SupabaseManager.js";
 import RoomInfo from "../../data/RoomInfo.js";
 import PalContract from "../../contract/PalContract.js";
 import { ethers } from "ethers";
+import TradeTokenPopup from "../../popup/token/TradeTokenPopup.js";
 
 export default class TokenPurchaseForm extends DomNode {
   private currentTokenAddress: string | undefined;
@@ -15,7 +16,7 @@ export default class TokenPurchaseForm extends DomNode {
         title: "Buy Token",
         click: async () => {
           if (this.currentTokenAddress) {
-            const price = await PalContract.getBuyPriceAfterFee(
+            /*const price = await PalContract.getBuyPriceAfterFee(
               this.currentTokenAddress,
               ethers.parseEther("1"),
             );
@@ -23,7 +24,8 @@ export default class TokenPurchaseForm extends DomNode {
               this.currentTokenAddress,
               ethers.parseEther("1"),
               price,
-            );
+            );*/
+            new TradeTokenPopup(this.currentTokenAddress);
           }
         },
       }),
