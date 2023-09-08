@@ -1252,6 +1252,50 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "./app/component/activity/ActivityItem.ts":
+/*!************************************************!*\
+  !*** ./app/component/activity/ActivityItem.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ ActivityItem)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n/* harmony import */ var _data_Activity_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../data/Activity.js */ \"./app/data/Activity.ts\");\n\n\nclass ActivityItem extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.DomNode {\n    constructor(activity) {\n        super(\".activity-item\");\n        if (activity.eventType === _data_Activity_js__WEBPACK_IMPORTED_MODULE_1__.EventType.TokenCreated) {\n            this.append(activity.name);\n        }\n        else if (activity.eventType === _data_Activity_js__WEBPACK_IMPORTED_MODULE_1__.EventType.Trade) {\n            this.append(activity.token);\n        }\n    }\n}\n\n\n//# sourceURL=webpack:///./app/component/activity/ActivityItem.ts?");
+
+/***/ }),
+
+/***/ "./app/component/activity/ActivityList.ts":
+/*!************************************************!*\
+  !*** ./app/component/activity/ActivityList.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ ActivityList)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n/* harmony import */ var _ActivityItem_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ActivityItem.js */ \"./app/component/activity/ActivityItem.ts\");\n\n\nclass ActivityList extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.DomNode {\n    list;\n    constructor() {\n        super(\".activity-list\");\n        this.append(this.list = (0,common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.el)(\"ul\"));\n    }\n    add(activity) {\n        const item = new _ActivityItem_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"](activity).appendTo(this.list);\n        return item;\n    }\n    set activities(activities) {\n        this.list.empty();\n        for (const activity of activities) {\n            this.add(activity);\n        }\n    }\n}\n\n\n//# sourceURL=webpack:///./app/component/activity/ActivityList.ts?");
+
+/***/ }),
+
+/***/ "./app/component/activity/TokenItem.ts":
+/*!*********************************************!*\
+  !*** ./app/component/activity/TokenItem.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ TokenItem)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n\nclass TokenItem extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.DomNode {\n    constructor(tokenInfo) {\n        super(\".token-item\");\n    }\n}\n\n\n//# sourceURL=webpack:///./app/component/activity/TokenItem.ts?");
+
+/***/ }),
+
+/***/ "./app/component/activity/TokenList.ts":
+/*!*********************************************!*\
+  !*** ./app/component/activity/TokenList.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ TokenList)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n/* harmony import */ var _TokenItem_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TokenItem.js */ \"./app/component/activity/TokenItem.ts\");\n\n\nclass TokenList extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.DomNode {\n    list;\n    constructor() {\n        super(\".token-list\");\n        this.append(this.list = (0,common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.el)(\"ul\"));\n    }\n    add(tokenInfo) {\n        const item = new _TokenItem_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"](tokenInfo).appendTo(this.list);\n        return item;\n    }\n    set activities(tokenInfos) {\n        this.list.empty();\n        for (const tokenInfo of tokenInfos) {\n            this.add(tokenInfo);\n        }\n    }\n}\n\n\n//# sourceURL=webpack:///./app/component/activity/TokenList.ts?");
+
+/***/ }),
+
 /***/ "./app/component/room/ChatRoom.ts":
 /*!****************************************!*\
   !*** ./app/component/room/ChatRoom.ts ***!
@@ -1384,6 +1428,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "./app/data/Activity.ts":
+/*!******************************!*\
+  !*** ./app/data/Activity.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   EventType: () => (/* binding */ EventType),\n/* harmony export */   eventToActivity: () => (/* binding */ eventToActivity)\n/* harmony export */ });\nvar EventType;\n(function (EventType) {\n    EventType[EventType[\"TokenCreated\"] = 0] = \"TokenCreated\";\n    EventType[EventType[\"Trade\"] = 1] = \"Trade\";\n})(EventType || (EventType = {}));\nfunction eventToActivity(eventType, args) {\n    if (eventType === EventType.TokenCreated) {\n        return {\n            eventType,\n            owner: args[0],\n            address: args[1],\n            name: args[2],\n            symbol: args[3],\n        };\n    }\n    else if (eventType === EventType.Trade) {\n        return {\n            eventType,\n            trader: args[0],\n            token: args[1],\n            isBuy: args[2] === \"true\",\n            amount: BigInt(args[3]),\n            price: BigInt(args[4]),\n            protocolFee: BigInt(args[5]),\n            tokenOwnerFee: BigInt(args[6]),\n            supply: BigInt(args[7]),\n        };\n    }\n    else {\n        throw new Error(`Unknown event type: ${eventType}`);\n    }\n}\n\n\n//# sourceURL=webpack:///./app/data/Activity.ts?");
+
+/***/ }),
+
 /***/ "./app/dev.ts":
 /*!********************!*\
   !*** ./app/dev.ts ***!
@@ -1512,7 +1567,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ ActivityView)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n/* harmony import */ var _Layout_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Layout.js */ \"./app/view/Layout.ts\");\n\n\nclass ActivityView extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.View {\n    container;\n    constructor(params) {\n        super();\n        _Layout_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"].append(this.container = (0,common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.el)(\".activity-view\"));\n    }\n    changeParams(params) {\n    }\n    close() {\n        this.container.delete();\n        super.close();\n    }\n}\n\n\n//# sourceURL=webpack:///./app/view/ActivityView.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ ActivityView)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n/* harmony import */ var _component_activity_ActivityList_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../component/activity/ActivityList.js */ \"./app/component/activity/ActivityList.ts\");\n/* harmony import */ var _component_activity_TokenList_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../component/activity/TokenList.js */ \"./app/component/activity/TokenList.ts\");\n/* harmony import */ var _data_Activity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../data/Activity.js */ \"./app/data/Activity.ts\");\n/* harmony import */ var _SupabaseManager_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../SupabaseManager.js */ \"./app/SupabaseManager.ts\");\n/* harmony import */ var _Layout_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Layout.js */ \"./app/view/Layout.ts\");\n\n\n\n\n\n\nclass ActivityView extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.View {\n    container;\n    activityList;\n    tokenList;\n    constructor(params) {\n        super();\n        _Layout_js__WEBPACK_IMPORTED_MODULE_5__[\"default\"].append(this.container = (0,common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.el)(\".activity-view\", this.activityList = new _component_activity_ActivityList_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"](), this.tokenList = new _component_activity_TokenList_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"]()));\n        this.loadActivities();\n    }\n    changeParams(params) {\n    }\n    async loadActivities() {\n        const { data, error } = await _SupabaseManager_js__WEBPACK_IMPORTED_MODULE_4__[\"default\"].supabase.from(\"pal_contract_events\").select(\"*\").order(\"block_number\", { ascending: false });\n        console.log(data, error);\n        if (data) {\n            const activities = [];\n            for (const event of data) {\n                const activity = (0,_data_Activity_js__WEBPACK_IMPORTED_MODULE_3__.eventToActivity)(event.event_type, event.args);\n                activities.push(activity);\n            }\n            this.activityList.activities = activities;\n        }\n    }\n    close() {\n        this.container.delete();\n        super.close();\n    }\n}\n\n\n//# sourceURL=webpack:///./app/view/ActivityView.ts?");
 
 /***/ }),
 
