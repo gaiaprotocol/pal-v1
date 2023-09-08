@@ -2,7 +2,7 @@ import { DomNode, el, View, ViewParams } from "common-dapp-module";
 import { ethers } from "ethers";
 import Layout from "./Layout.js";
 
-export default class Activity extends View {
+export default class ActivityView extends View {
   private container: DomNode;
 
   constructor(params: ViewParams) {

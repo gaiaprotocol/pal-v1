@@ -2,9 +2,9 @@ import { BodyNode, DomNode, el, View, ViewParams } from "common-dapp-module";
 import ChatRoom from "../component/room/ChatRoom.js";
 import RoomDashboard from "../component/room/RoomDashboard.js";
 import RoomTitleBar from "../component/room/RoomTitleBar.js";
-import Tabs from "../component/room/Tabs.js";
+import Tabs from "../component/room/RoomTabs.js";
 import TokenPurchaseForm from "../component/room/TokenPurchaseForm.js";
-import UserList from "../component/room/UserList.js";
+import UserList from "../component/room/RoomUserList.js";
 import RoomInfo from "../data/RoomInfo.js";
 import SupabaseManager from "../SupabaseManager.js";
 

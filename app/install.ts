@@ -4,7 +4,7 @@ import PalContract from "./contract/PalContract.js";
 import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorContract.js";
 import SupabaseManager from "./SupabaseManager.js";
 import WalletManager from "./user/WalletManager.js";
-import Activity from "./view/Activity.js";
+import ActivityView from "./view/ActivityView.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import RoomView from "./view/RoomView.js";
@@ -26,7 +26,7 @@ export default async function install() {
   TokenHoldingsAggregatorContract.init(Config.tokenHoldingsAggregatorAddress);
 
   Router.route("**", Layout);
-  Router.route("activity", Activity);
+  Router.route(["activity", "activity/top"], ActivityView);
   Router.route("settings", Settings);
   Router.route(["", "{tokenAddress}"], Rooms, ["activity", "settings"]);
   Router.route("{tokenAddress}", RoomView, ["activity", "settings"]);
