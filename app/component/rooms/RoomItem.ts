@@ -15,7 +15,7 @@ export default class RoomItem extends DomNode {
       this.tokenOwnerName = el("span.token-owner"),
     );
     this.onDom("click", () => {
-      Router.go("/" + tokenInfo.address);
+      Router.go("/" + tokenInfo.token_address);
     });
 
     this.load();

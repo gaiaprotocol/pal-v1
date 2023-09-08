@@ -14,7 +14,7 @@ export default class TokenSummary extends DomNode {
 
   private async loadPrice() {
     const price = await PalContract.getBuyPriceAfterFee(
-      UserManager.userToken!.address,
+      UserManager.userToken!.token_address,
       ethers.parseEther("1"),
     );
 

@@ -14,7 +14,7 @@ const supabase = createClient(
 
 serveWithOptions(async () => {
   const { data: tokens } = await supabase.from("pal_tokens").select();
-  const tokenAddresses = tokens?.map((token: any) => token.address) ?? [];
+  const tokenAddresses = tokens?.map((token: any) => token.token_address) ?? [];
   const prices = await palContract.getBulkTokenPrices(tokenAddresses);
   const result: { [address: string]: string } = {};
   for (let i = 0; i < tokenAddresses.length; i++) {

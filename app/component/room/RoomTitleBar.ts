@@ -14,7 +14,7 @@ export default class RoomTitleBar extends DomNode {
     )
       .select(
         "*",
-      ).eq("address", tokenAddress).single();
+      ).eq("token_address", tokenAddress).single();
     if (error) {
       console.error(error);
       return;

@@ -26,7 +26,7 @@ CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
-CREATE OR REPLACE FUNCTION "public"."check_view_granted"("token_address" "text") RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."check_view_granted"("parameter_token_address" "text") RETURNS boolean
     LANGUAGE "plpgsql"
     AS $$begin return auth.role() = 'authenticated'::text
 and (
@@ -34,7 +34,7 @@ and (
       (
          SELECT pal_tokens.owner
          FROM pal_tokens
-         WHERE (pal_tokens.address = token_address)
+         WHERE (pal_tokens.token_address = parameter_token_address)
       ) = (
          SELECT user_details.wallet_address
          FROM user_details
@@ -45,12 +45,12 @@ and (
       (
          SELECT pal_tokens.view_token_required
          FROM pal_tokens
-         WHERE (pal_tokens.address = token_address)
+         WHERE (pal_tokens.token_address = parameter_token_address)
       ) >= (
          SELECT pal_token_balances.last_fetched_balance
          FROM pal_token_balances
          WHERE (
-               (pal_token_balances.token = token_address)
+               (pal_token_balances.token_address = parameter_token_address)
                AND (
                   pal_token_balances.wallet_address = (
                      SELECT user_details.wallet_address
@@ -64,13 +64,13 @@ and (
 );
 end;$$;
 
-ALTER FUNCTION "public"."check_view_granted"("token_address" "text") OWNER TO "postgres";
+ALTER FUNCTION "public"."check_view_granted"("parameter_token_address" "text") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."new_pal_token"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   IF new.event_type = 0 THEN
-    insert into pal_tokens (address, owner, name, symbol) values (
+    insert into pal_tokens (token_address, owner, name, symbol) values (
       new.args[2], new.args[1], new.args[3], new.args[4]
     );
   END IF;
@@ -134,7 +134,7 @@ ALTER TABLE "public"."pal_contract_events" ALTER COLUMN "block_number" ADD GENER
 );
 
 CREATE TABLE IF NOT EXISTS "public"."pal_token_balances" (
-    "token" "text" NOT NULL,
+    "token_address" "text" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "wallet_address" "text" NOT NULL,
     "last_fetched_balance" numeric DEFAULT '0'::numeric NOT NULL
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS "public"."pal_token_balances" (
 ALTER TABLE "public"."pal_token_balances" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
-    "address" "text" NOT NULL,
+    "token_address" "text" NOT NULL,
     "owner" "text" NOT NULL,
     "name" "text" NOT NULL,
     "symbol" "text" NOT NULL,
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS "public"."user_details" (
     "id" "uuid" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "wallet_address" "text",
-    "introduction" "text",
+    "metadata" "jsonb",
     "profile_image" "text",
     "display_name" "text"
 );
@@ -194,10 +194,10 @@ ALTER TABLE ONLY "public"."pal_contract_events"
     ADD CONSTRAINT "pal_contract_events_pkey" PRIMARY KEY ("block_number", "log_index");
 
 ALTER TABLE ONLY "public"."pal_token_balances"
-    ADD CONSTRAINT "pal_token_balances_pkey" PRIMARY KEY ("token", "wallet_address");
+    ADD CONSTRAINT "pal_token_balances_pkey" PRIMARY KEY ("token_address", "wallet_address");
 
 ALTER TABLE ONLY "public"."pal_tokens"
-    ADD CONSTRAINT "pal_tokens_pkey" PRIMARY KEY ("address");
+    ADD CONSTRAINT "pal_tokens_pkey" PRIMARY KEY ("token_address");
 
 ALTER TABLE ONLY "public"."tracked_event_blocks"
     ADD CONSTRAINT "tracked_event_blocks_pkey" PRIMARY KEY ("id");
@@ -216,6 +216,10 @@ ALTER TABLE ONLY "public"."chat_messages"
 ALTER TABLE ONLY "public"."user_details"
     ADD CONSTRAINT "user_details_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id");
 
+CREATE POLICY "allow anon select" ON "public"."pal_contract_events" FOR SELECT USING (true);
+
+CREATE POLICY "allow anon select" ON "public"."pal_token_balances" FOR SELECT USING (true);
+
 CREATE POLICY "allow anon select" ON "public"."pal_tokens" FOR SELECT USING (true);
 
 CREATE POLICY "allow anon select" ON "public"."user_details" FOR SELECT USING (true);
@@ -232,29 +236,33 @@ ALTER TABLE "public"."pal_tokens" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."tracked_event_blocks" ENABLE ROW LEVEL SECURITY;
 
+CREATE POLICY "update pal token's metadata" ON "public"."pal_tokens" FOR UPDATE USING (("owner" = ( SELECT "user_details"."wallet_address"
+   FROM "public"."user_details"
+  WHERE ("user_details"."id" = "auth"."uid"())))) WITH CHECK ((("owner" = NULL::"text") AND ("name" = NULL::"text") AND ("symbol" = NULL::"text") AND ("created_at" = NULL::timestamp with time zone) AND ("view_token_required" = NULL::numeric) AND ("write_token_required" = NULL::numeric) AND ("last_fetched_price" = NULL::numeric)));
+
 ALTER TABLE "public"."user_details" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "view only holder or owner" ON "public"."chat_messages" FOR SELECT TO "authenticated" USING (((( SELECT "pal_tokens"."owner"
    FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."address" = "chat_messages"."token_address")) = ( SELECT "user_details"."wallet_address"
+  WHERE ("pal_tokens"."token_address" = "chat_messages"."token_address")) = ( SELECT "user_details"."wallet_address"
    FROM "public"."user_details"
   WHERE ("user_details"."id" = "auth"."uid"()))) OR (( SELECT "pal_tokens"."view_token_required"
    FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."address" = "chat_messages"."token_address")) >= ( SELECT "pal_token_balances"."last_fetched_balance"
+  WHERE ("pal_tokens"."token_address" = "chat_messages"."token_address")) >= ( SELECT "pal_token_balances"."last_fetched_balance"
    FROM "public"."pal_token_balances"
-  WHERE (("pal_token_balances"."token" = "chat_messages"."token_address") AND ("pal_token_balances"."wallet_address" = ( SELECT "user_details"."wallet_address"
+  WHERE (("pal_token_balances"."token_address" = "chat_messages"."token_address") AND ("pal_token_balances"."wallet_address" = ( SELECT "user_details"."wallet_address"
            FROM "public"."user_details"
           WHERE ("user_details"."id" = "auth"."uid"()))))))));
 
 CREATE POLICY "write only holder or owner" ON "public"."chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((("auth"."uid"() = "author") AND ((( SELECT "pal_tokens"."owner"
    FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."address" = "chat_messages"."token_address")) = ( SELECT "user_details"."wallet_address"
+  WHERE ("pal_tokens"."token_address" = "chat_messages"."token_address")) = ( SELECT "user_details"."wallet_address"
    FROM "public"."user_details"
   WHERE ("user_details"."id" = "auth"."uid"()))) OR (( SELECT "pal_tokens"."write_token_required"
    FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."address" = "chat_messages"."token_address")) >= ( SELECT "pal_token_balances"."last_fetched_balance"
+  WHERE ("pal_tokens"."token_address" = "chat_messages"."token_address")) >= ( SELECT "pal_token_balances"."last_fetched_balance"
    FROM "public"."pal_token_balances"
-  WHERE (("pal_token_balances"."token" = "chat_messages"."token_address") AND ("pal_token_balances"."wallet_address" = ( SELECT "user_details"."wallet_address"
+  WHERE (("pal_token_balances"."token_address" = "chat_messages"."token_address") AND ("pal_token_balances"."wallet_address" = ( SELECT "user_details"."wallet_address"
            FROM "public"."user_details"
           WHERE ("user_details"."id" = "auth"."uid"())))))))));
 
@@ -264,9 +272,9 @@ GRANT USAGE ON SCHEMA "public" TO "anon";
 GRANT USAGE ON SCHEMA "public" TO "authenticated";
 GRANT USAGE ON SCHEMA "public" TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."check_view_granted"("token_address" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."check_view_granted"("token_address" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."check_view_granted"("token_address" "text") TO "service_role";
+GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "anon";
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "authenticated";

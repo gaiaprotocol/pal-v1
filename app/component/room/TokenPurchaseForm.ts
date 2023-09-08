@@ -37,7 +37,7 @@ export default class TokenPurchaseForm extends DomNode {
     const { data, error } = await SupabaseManager.supabase.rpc(
       "check_view_granted",
       {
-        token_address: tokenAddress,
+        parameter_token_address: tokenAddress,
       },
     );
     if (!error && data !== true) {

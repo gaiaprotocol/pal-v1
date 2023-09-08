@@ -1,5 +1,5 @@
 export default interface TokenInfo {
-  address: string;
+  token_address: string;
   owner: string;
   name: string;
   symbol: string;

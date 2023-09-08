@@ -1,5 +1,7 @@
 import { DomNode } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
+import MessageForm from "./chatroom/MessageForm.js";
+import MessageList from "./chatroom/MessageList.js";
 
 export default class ChatRoom extends DomNode {
   constructor() {
@@ -13,5 +15,9 @@ export default class ChatRoom extends DomNode {
         tokenAddress,
       );
     console.log(data, error);
+    this.append(
+      new MessageList(tokenAddress),
+      new MessageForm(tokenAddress),
+    );
   }
 }

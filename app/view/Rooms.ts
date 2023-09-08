@@ -52,7 +52,7 @@ export default class Rooms extends View {
       const { data } = await SupabaseManager.supabase.from("pal_tokens")
         .select();
       if (data) {
-        const tokenAddresses: string[] = data?.map((token) => token.address) ??
+        const tokenAddresses: string[] = data?.map((token) => token.token_address) ??
           [];
         const balances = await TokenHoldingsAggregatorContract.getERC20Balances(
           UserManager.userWalletAddress,

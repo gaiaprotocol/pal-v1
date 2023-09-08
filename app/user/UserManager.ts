@@ -79,7 +79,7 @@ class UserManager extends EventContainer {
         const address = await PalContract.createToken(name, symbol);
         if (WalletManager.address) {
           this.userToken = {
-            address,
+            token_address: address,
             owner: WalletManager.address,
             name,
             symbol,

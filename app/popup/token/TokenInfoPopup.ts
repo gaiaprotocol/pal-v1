@@ -35,7 +35,7 @@ export default class TokenInfoPopup extends Popup {
             type: ButtonType.Text,
             tag: ".chat-room-button",
             click: () => {
-              Router.go("/" + this.info.address);
+              Router.go("/" + this.info.token_address);
               this.delete();
             },
             title: "Chat Room",
@@ -54,7 +54,7 @@ export default class TokenInfoPopup extends Popup {
 
   private async loadPrice() {
     const price = await PalContract.getBuyPriceAfterFee(
-      this.info.address,
+      this.info.token_address,
       ethers.parseEther("1"),
     );
     this.content.append(
