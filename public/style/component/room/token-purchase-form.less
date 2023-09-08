@@ -1,9 +1,14 @@
 .token-purchase-form {
+    display : none;
     position: absolute;
     left    : 0;
     top     : 60px;
     width   : 100%;
     height  : calc(100% - 60px);
+
+    &.show {
+        display: block;
+    }
 
     >.buy-token-button {
         width      : 260px;

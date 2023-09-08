@@ -304,6 +304,7 @@ body {
   height: 100%;
   border-right: 1px solid #2d2d2d;
   background-color: #1e1e1e;
+  overflow-y: auto;
 }
 @media only screen and (max-width: 859px) {
   .rooms-view > .rooms {
@@ -396,11 +397,15 @@ body {
   }
 }
 .token-purchase-form {
+  display: none;
   position: absolute;
   left: 0;
   top: 60px;
   width: 100%;
   height: calc(100% - 60px);
+}
+.token-purchase-form.show {
+  display: block;
 }
 .token-purchase-form > .buy-token-button {
   width: 260px;

@@ -39,6 +39,7 @@ export default class SellTokenPopup extends Popup {
                 this.tokenAddress,
                 ethers.parseEther("1"),
               );
+              this.delete();
             },
             title: "Sell Token",
           }),

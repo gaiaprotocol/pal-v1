@@ -5,9 +5,9 @@ import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorC
 import SupabaseManager from "./SupabaseManager.js";
 import WalletManager from "./user/WalletManager.js";
 import Activity from "./view/Activity.js";
-import RoomView from "./view/RoomView.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
+import RoomView from "./view/RoomView.js";
 import Settings from "./view/Settings.js";
 
 export default async function install() {

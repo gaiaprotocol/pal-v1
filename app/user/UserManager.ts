@@ -42,6 +42,7 @@ class UserManager extends EventContainer {
   public async loadUser() {
     const { data } = await SupabaseManager.supabase.auth.getSession();
     this.userId = data?.session?.user?.id;
+    console.log(this.userId);
     if (this.userId) {
       this.userWalletAddress = await this.getUserWalletAddress(this.userId);
       if (this.userWalletAddress) {

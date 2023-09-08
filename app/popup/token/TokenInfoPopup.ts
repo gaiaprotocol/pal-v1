@@ -5,10 +5,11 @@ import {
   DomNode,
   el,
   Popup,
+  Router,
 } from "common-dapp-module";
+import { ethers } from "ethers";
 import PalContract from "../../contract/PalContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
-import { ethers } from "ethers";
 
 export default class TokenInfoPopup extends Popup {
   public content: DomNode;
@@ -30,6 +31,15 @@ export default class TokenInfoPopup extends Popup {
         ),
         el(
           "footer",
+          new Button({
+            type: ButtonType.Text,
+            tag: ".chat-room-button",
+            click: () => {
+              Router.go("/" + this.info.address);
+              this.delete();
+            },
+            title: "Chat Room",
+          }),
           new Button({
             type: ButtonType.Text,
             tag: ".cancel-button",

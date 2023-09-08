@@ -52,6 +52,7 @@ export default class RoomView extends View {
     );
     this.roomInfo = data;
     if (this.roomInfo) {
+      this.titleBar.loadTokenInfo(tokenAddress);
       this.tokenPurchaseForm.check(tokenAddress, this.roomInfo);
       this.chatRoom.loadMessages(tokenAddress);
     }

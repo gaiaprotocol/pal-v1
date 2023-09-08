@@ -42,6 +42,7 @@ export default class BuyTokenPopup extends Popup {
                 ethers.parseEther("1"),
                 this.currentPrice,
               );
+              this.delete();
             },
             title: "Buy Token",
           }),

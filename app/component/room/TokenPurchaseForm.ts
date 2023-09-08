@@ -40,7 +40,7 @@ export default class TokenPurchaseForm extends DomNode {
         token_address: tokenAddress,
       },
     );
-    if (data === false) {
+    if (!error && data !== true) {
       this.addClass("show");
     }
   }

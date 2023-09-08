@@ -1,8 +1,24 @@
 import { DomNode } from "common-dapp-module";
+import SupabaseManager from "../../SupabaseManager.js";
+import TokenSummary from "../TokenSummary.js";
 
 export default class RoomTitleBar extends DomNode {
   constructor() {
     super(".room-title-bar");
-    this.append("Chat Room");
+  }
+
+  public async loadTokenInfo(tokenAddress: string) {
+    this.empty();
+    const { data: tokenInfo, error } = await SupabaseManager.supabase.from(
+      "pal_tokens",
+    )
+      .select(
+        "*",
+      ).eq("address", tokenAddress).single();
+    if (error) {
+      console.error(error);
+      return;
+    }
+    this.empty().append(new TokenSummary(tokenInfo));
   }
 }
