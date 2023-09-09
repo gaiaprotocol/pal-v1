@@ -5,7 +5,7 @@ import {
   getNetwork,
   getWalletClient,
   signMessage,
-  watchAccount,
+  watchAccount
 } from "@wagmi/core";
 import { mainnet } from "@wagmi/core/chains";
 import {

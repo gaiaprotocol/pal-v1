@@ -1,7 +1,9 @@
+import { getNetwork } from "@wagmi/core";
 import { msg, Router } from "common-dapp-module";
 import Config from "./Config.js";
 import PalContract from "./contract/PalContract.js";
 import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorContract.js";
+import ChangeChainPopup from "./popup/ChangeChainPopup.js";
 import SupabaseManager from "./SupabaseManager.js";
 import WalletManager from "./user/WalletManager.js";
 import ActivityView from "./view/ActivityView.js";
@@ -30,4 +32,9 @@ export default async function install() {
   Router.route("settings", Settings);
   Router.route(["", "{tokenAddress}"], Rooms, ["activity", "settings"]);
   Router.route("{tokenAddress}", RoomView, ["activity", "settings"]);
+
+  const { chain } = getNetwork();
+  if (chain?.id !== Config.palChainId) {
+    new ChangeChainPopup();
+  }
 }
