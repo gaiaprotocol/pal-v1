@@ -1230,6 +1230,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "./app/component/ListLoading.ts":
+/*!**************************************!*\
+  !*** ./app/component/ListLoading.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ ListLoading)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n\nclass ListLoading extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.DomNode {\n    constructor() {\n        super(\".list-loading\");\n    }\n}\n\n\n//# sourceURL=webpack:///./app/component/ListLoading.ts?");
+
+/***/ }),
+
 /***/ "./app/component/TokenSummary.ts":
 /*!***************************************!*\
   !*** ./app/component/TokenSummary.ts ***!
@@ -1424,7 +1435,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ RoomList)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n/* harmony import */ var _RoomItem_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RoomItem.js */ \"./app/component/rooms/RoomItem.ts\");\n\n\nclass RoomList extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.DomNode {\n    list;\n    constructor(title) {\n        super(\".room-list\");\n        this.append((0,common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.el)(\"header\", title), this.list = (0,common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.el)(\"ul\"));\n    }\n    add(room) {\n        const item = new _RoomItem_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"](room).appendTo(this.list);\n        return item;\n    }\n    set rooms(rooms) {\n        this.list.empty();\n        for (const room of rooms) {\n            this.add(room);\n        }\n    }\n}\n\n\n//# sourceURL=webpack:///./app/component/rooms/RoomList.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ RoomList)\n/* harmony export */ });\n/* harmony import */ var common_dapp_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! common-dapp-module */ \"../common-dapp-module/lib/index.js\");\n/* harmony import */ var _ListLoading_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ListLoading.js */ \"./app/component/ListLoading.ts\");\n/* harmony import */ var _RoomItem_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RoomItem.js */ \"./app/component/rooms/RoomItem.ts\");\n\n\n\nclass RoomList extends common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.DomNode {\n    list;\n    loadingComponent;\n    constructor(title) {\n        super(\".room-list\");\n        this.append((0,common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.el)(\"header\", title), this.list = (0,common_dapp_module__WEBPACK_IMPORTED_MODULE_0__.el)(\"ul\", this.loadingComponent = new _ListLoading_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"]()));\n        this.loadingComponent.on(\"delete\", () => this.loadingComponent = undefined);\n    }\n    add(room) {\n        const item = new _RoomItem_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"](room).appendTo(this.list);\n        this.loadingComponent?.delete();\n        return item;\n    }\n    set rooms(rooms) {\n        this.list.empty();\n        for (const room of rooms) {\n            this.add(room);\n        }\n    }\n}\n\n\n//# sourceURL=webpack:///./app/component/rooms/RoomList.ts?");
 
 /***/ }),
 
