@@ -1,4 +1,4 @@
-import { DomNode } from "common-dapp-module";
+import { DomNode, el } from "common-dapp-module";
 import { ethers } from "ethers";
 import PalContract from "../contract/PalContract.js";
 import TokenInfo from "../data/TokenInfo.js";
@@ -7,7 +7,7 @@ import UserManager from "../user/UserManager.js";
 
 export default class TokenSummary extends DomNode {
   constructor(private tokenInfo: TokenInfo) {
-    super(".token-summary");
+    super(".token-summary.loading");
     this.onDom("click", () => new TokenInfoPopup(this.tokenInfo));
     this.loadPrice();
   }
@@ -19,7 +19,13 @@ export default class TokenSummary extends DomNode {
     );
 
     this.append(
-      `1 ${this.tokenInfo.symbol} = ${ethers.formatEther(price)} ETH`,
+      el("img.profile-image", {
+        src: UserManager.user?.user_metadata.avatar_url,
+      }),
+      el("span.symbol", this.tokenInfo.symbol),
+      el("span.price", `${ethers.formatEther(price)} ETH`),
     );
+
+    this.deleteClass("loading");
   }
 }

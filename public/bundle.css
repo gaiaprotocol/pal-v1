@@ -353,6 +353,48 @@ body {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-radius: 4px;
 }
+@keyframes token-summary-loading {
+  0% {
+    background-position-x: -200px;
+  }
+  100% {
+    background-position-x: 200px;
+  }
+}
+.token-summary {
+  min-width: 200px;
+  height: 36px;
+  border-radius: 18px;
+  background-color: #1e1e1e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 14px 0 8px;
+  box-shadow: var(--box-shadow);
+  font-size: 16px;
+  color: #e1e1e1;
+  gap: 8px;
+}
+.token-summary:hover {
+  background-color: #2e2e2e;
+}
+.token-summary > .profile-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+}
+.token-summary > .symbol {
+  font-weight: bold;
+  border-right: 1px solid #6e6e6e;
+  padding-right: 8px;
+}
+.token-summary > .price {
+  color: #999;
+}
+.token-summary.loading {
+  background: linear-gradient(0.25turn, #1e1e1e, #2e2e2e 45% 55%, #1e1e1e);
+  animation: token-summary-loading 2s infinite linear;
+}
 .room-list {
   border-bottom: 1px solid #2d2d2d;
 }

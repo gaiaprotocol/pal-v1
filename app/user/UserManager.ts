@@ -1,3 +1,4 @@
+import { User } from "@supabase/supabase-js";
 import { getNetwork, switchNetwork } from "@wagmi/core";
 import { Confirm, EventContainer } from "common-dapp-module";
 import Config from "../Config.js";
@@ -9,12 +10,12 @@ import ConnectWalletPopup from "../popup/user/ConnectWalletPopup.js";
 import WalletManager from "./WalletManager.js";
 
 class UserManager extends EventContainer {
-  public userId: string | undefined;
+  public user: User | undefined;
   public userWalletAddress: string | undefined;
   public userToken: TokenInfo | undefined;
 
   public get signedIn() {
-    return this.userId !== undefined;
+    return this.user !== undefined;
   }
   public get walletConnected() {
     return this.userWalletAddress !== undefined;
@@ -41,10 +42,9 @@ class UserManager extends EventContainer {
 
   public async loadUser() {
     const { data } = await SupabaseManager.supabase.auth.getSession();
-    this.userId = data?.session?.user?.id;
-    console.log(this.userId);
-    if (this.userId) {
-      this.userWalletAddress = await this.getUserWalletAddress(this.userId);
+    this.user = data?.session?.user;
+    if (this.user) {
+      this.userWalletAddress = await this.getUserWalletAddress(this.user.id);
       if (this.userWalletAddress) {
         this.userToken = await this.getUserToken(
           this.userWalletAddress,
