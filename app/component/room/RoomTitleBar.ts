@@ -1,4 +1,4 @@
-import { DomNode } from "common-dapp-module";
+import { DomNode, el } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import TokenSummary from "../TokenSummary.js";
 
@@ -19,6 +19,9 @@ export default class RoomTitleBar extends DomNode {
       console.error(error);
       return;
     }
-    this.empty().append(new TokenSummary(tokenInfo));
+    this.empty().append(
+      el("h1", tokenInfo.metadata.roomName ?? tokenInfo.name),
+      new TokenSummary(tokenInfo),
+    );
   }
 }

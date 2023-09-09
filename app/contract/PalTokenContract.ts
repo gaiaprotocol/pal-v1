@@ -15,4 +15,8 @@ export default class PalTokenContract extends Contract<PalToken> {
   public async symbol(): Promise<string> {
     return await this.ethersContract.symbol();
   }
+
+  public async balanceOf(address: string): Promise<bigint> {
+    return await this.ethersContract.balanceOf(address);
+  }
 }

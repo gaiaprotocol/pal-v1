@@ -33,6 +33,9 @@ export default async function install() {
   Router.route(["", "{tokenAddress}"], Rooms, ["activity", "settings"]);
   Router.route("{tokenAddress}", RoomView, ["activity", "settings"]);
 
+  if (!WalletManager.connected) {
+    await WalletManager.connect();
+  }
   const { chain } = getNetwork();
   if (chain?.id !== Config.palChainId) {
     new ChangeChainPopup();

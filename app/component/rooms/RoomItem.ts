@@ -11,7 +11,7 @@ export default class RoomItem extends DomNode {
     super("li.room-item");
     this.append(
       this.tokenOwnerProfileImage = el("img.token-owner-profile-image"),
-      el("span.token-name", tokenInfo.name),
+      el("span.room-name", tokenInfo.metadata.roomName ?? tokenInfo.name),
       this.tokenOwnerName = el("span.token-owner"),
     );
     this.onDom("click", () => {

@@ -5,7 +5,7 @@ import {
   getNetwork,
   getWalletClient,
   signMessage,
-  watchAccount
+  watchAccount,
 } from "@wagmi/core";
 import { mainnet } from "@wagmi/core/chains";
 import {
@@ -20,7 +20,7 @@ import Config from "../Config.js";
 
 class WalletManager extends EventContainer {
   private web3modal: Web3Modal;
-  private _resolveConnection?: (value: boolean) => void;
+  private _resolveConnection?: () => void;
 
   public connected = false;
   public get address() {
@@ -56,8 +56,8 @@ class WalletManager extends EventContainer {
     let cachedAddress = this.address;
     watchAccount((account) => {
       this.connected = account.address !== undefined;
-      if (this._resolveConnection) {
-        this._resolveConnection(this.connected);
+      if (this.connected && this._resolveConnection) {
+        this._resolveConnection();
       }
       this.createSigner();
       if (cachedAddress !== account.address) {
@@ -71,9 +71,8 @@ class WalletManager extends EventContainer {
     if (this.address !== undefined) {
       this.connected = true;
       this.fireEvent("accountChanged");
-      return true;
     }
-    return new Promise<boolean>((resolve) => {
+    return new Promise<void>((resolve) => {
       this._resolveConnection = resolve;
       this.openModal();
     });

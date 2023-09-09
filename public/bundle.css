@@ -181,6 +181,31 @@ button.component.text.disabled {
   overflow-y: scroll;
   padding: 20px 0;
 }
+.alert.component {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.alert.component > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.alert.component > p {
+  padding: 0 24px 20px;
+}
+.alert.component > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
 .confirm.component {
   max-width: 600px;
   width: 90%;
@@ -426,7 +451,7 @@ body {
   height: 48px;
   border-radius: 50%;
 }
-.room-item > .token-name {
+.room-item > .room-name {
   font-size: 18px;
   font-weight: bold;
 }
@@ -444,6 +469,7 @@ body {
   display: flex;
   align-items: center;
   padding: 0 24px;
+  justify-content: space-between;
 }
 @media only screen and (max-width: 859px) {
   .room-title-bar {
@@ -571,11 +597,62 @@ body {
   padding: 16px 24px;
   font-size: 20px;
   font-weight: bold;
+  border-bottom: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.token-info-popup > h1 > .profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+.token-info-popup > h1 > .name {
+  font-weight: bold;
+}
+.token-info-popup > h1 > .symbol {
+  flex-grow: 1;
+  font-size: 16px;
+  color: #999;
+}
+.token-info-popup > h1 > .price {
+  font-size: 16px;
+  color: #999;
 }
 .token-info-popup > main {
-  padding: 0 24px 20px;
+  padding: 20px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+.token-info-popup > main > .balance {
+  height: 36px;
+  border-radius: 18px;
+  background-color: #1e1e1e;
+  display: flex;
+  align-items: center;
+  padding: 0 14px 0 8px;
+  box-shadow: var(--box-shadow);
+  font-size: 16px;
+  color: #e1e1e1;
+  gap: 8px;
+}
+.token-info-popup > main > .balance > .profile-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+}
+.token-info-popup > main > .balance > label {
+  font-weight: bold;
+  border-right: 1px solid #6e6e6e;
+  padding-right: 8px;
+}
+.token-info-popup > main > .balance > .balance {
+  color: #999;
 }
 .token-info-popup > footer {
+  border-top: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
   padding: 8px;
   display: flex;
   justify-content: flex-end;

@@ -7,27 +7,50 @@ import {
   Popup,
   Router,
 } from "common-dapp-module";
+import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
+import ActivityList from "../../component/activity/ActivityList.js";
+import HolderList from "../../component/token-info/HolderList.js";
+import TokenInfoTabs from "../../component/token-info/TokenInfoTabs.js";
 import PalContract from "../../contract/PalContract.js";
+import PalTokenContract from "../../contract/PalTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
+import SupabaseManager from "../../SupabaseManager.js";
+import UserManager from "../../user/UserManager.js";
 
 export default class TokenInfoPopup extends Popup {
   public content: DomNode;
 
-  constructor(private info: TokenInfo) {
+  private profileImage: DomNode<HTMLImageElement>;
+  private priceDisplay: DomNode;
+  private balanceDisplay: DomNode;
+
+  constructor(private tokenInfo: TokenInfo) {
     super({ barrierDismissible: true });
     this.append(
       this.content = new Component(
         ".token-info-popup",
-        el("h1", "Token Info"),
+        el(
+          "h1",
+          this.profileImage = el("img.profile-image"),
+          el("span.name", tokenInfo.name),
+          el("span.symbol", tokenInfo.symbol),
+          this.priceDisplay = el("span.price"),
+        ),
         el(
           "main",
-          el("label", "Name"),
-          el("p", info.name),
-          el("label", "Symbol"),
-          el("p", info.symbol),
-          el("label", "Description"),
-          el("p", info.metadata.description),
+          el("p", tokenInfo.metadata.description ?? "No description"),
+          el(
+            ".balance",
+            el("img.profile-image", {
+              src: UserManager.user?.user_metadata.avatar_url,
+            }),
+            el("label", "Your Balance"),
+            this.balanceDisplay = el("span.balance.loading"),
+          ),
+          new TokenInfoTabs(),
+          new HolderList(),
+          new ActivityList(),
         ),
         el(
           "footer",
@@ -35,7 +58,7 @@ export default class TokenInfoPopup extends Popup {
             type: ButtonType.Text,
             tag: ".chat-room-button",
             click: () => {
-              Router.go("/" + this.info.token_address);
+              Router.go("/" + this.tokenInfo.token_address);
               this.delete();
             },
             title: "Chat Room",
@@ -49,20 +72,40 @@ export default class TokenInfoPopup extends Popup {
         ),
       ),
     );
+    this.loadProfileImage();
     this.loadPrice();
+    this.loadBalance();
+  }
+
+  private async loadProfileImage() {
+    const { data, error } = await SupabaseManager.supabase.from("user_details")
+      .select().eq("wallet_address", this.tokenInfo.owner);
+
+    const tokenOwner = data?.[0];
+    let profileImageSrc;
+    if (tokenOwner) {
+      profileImageSrc = tokenOwner.profile_image;
+    } else {
+      profileImageSrc = generateJazziconDataURL(
+        this.tokenInfo.owner,
+      );
+    }
+    this.profileImage.domElement.src = profileImageSrc;
   }
 
   private async loadPrice() {
     const price = await PalContract.getBuyPriceAfterFee(
-      this.info.token_address,
+      this.tokenInfo.token_address,
       ethers.parseEther("1"),
     );
-    this.content.append(
-      el(
-        "section",
-        el("label", "Price"),
-        el("p", ethers.formatEther(price) + " ETH"),
-      ),
-    );
+    this.priceDisplay.text = `${ethers.formatEther(price)} ETH`;
+  }
+
+  private async loadBalance() {
+    if (UserManager.userWalletAddress) {
+      const balance = await new PalTokenContract(this.tokenInfo.token_address)
+        .balanceOf(UserManager.userWalletAddress);
+      this.balanceDisplay.text = ethers.formatEther(balance);
+    }
   }
 }

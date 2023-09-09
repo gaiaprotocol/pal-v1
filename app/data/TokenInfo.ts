@@ -4,6 +4,7 @@ export default interface TokenInfo {
   name: string;
   symbol: string;
   metadata: {
+    roomName?: string;
     description?: string;
   };
   view_token_required: string;

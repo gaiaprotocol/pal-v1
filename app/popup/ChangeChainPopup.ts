@@ -1,5 +1,6 @@
 import { switchNetwork } from "@wagmi/core";
 import {
+  Alert,
   Button,
   ButtonType,
   Component,
@@ -35,7 +36,15 @@ export default class ChangeChainPopup extends Popup {
           new Button({
             type: ButtonType.Text,
             tag: ".cancel-button",
-            click: () => this.delete(),
+            click: () => {
+              new Alert({
+                title: "Warning",
+                message:
+                  "If you do not switch to the Base Chain, Pal may not function properly. Ensure you change the chain for a seamless experience.",
+                confirmTitle: "Understood",
+              });
+              this.delete();
+            },
             title: "Later",
           }),
           new Button({
