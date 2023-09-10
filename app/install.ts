@@ -11,6 +11,7 @@ import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import RoomView from "./view/RoomView.js";
 import Settings from "./view/Settings.js";
+import Explorer from "./view/Explorer.js";
 
 export default async function install() {
   if (sessionStorage.__spa_path) {
@@ -28,10 +29,19 @@ export default async function install() {
   TokenHoldingsAggregatorContract.init(Config.tokenHoldingsAggregatorAddress);
 
   Router.route("**", Layout);
-  Router.route(["activity", "activity/top"], ActivityView);
+  Router.route("activity", ActivityView);
+  Router.route("explorer", Explorer);
   Router.route("settings", Settings);
-  Router.route(["", "{tokenAddress}"], Rooms, ["activity", "settings"]);
-  Router.route("{tokenAddress}", RoomView, ["activity", "settings"]);
+  Router.route(["", "{tokenAddress}"], Rooms, [
+    "activity",
+    "explorer",
+    "settings",
+  ]);
+  Router.route("{tokenAddress}", RoomView, [
+    "activity",
+    "explorer",
+    "settings",
+  ]);
 
   if (!WalletManager.connected) {
     await WalletManager.connect();

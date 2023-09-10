@@ -51,6 +51,14 @@ export default class Layout extends View {
               click: () => Router.go("/activity"),
             },
           ),
+          this.navButtons["explorer"] = el(
+            "a",
+            new Icon("travel_explore"),
+            "Explorer",
+            {
+              click: () => Router.go("/explorer"),
+            },
+          ),
           this.navButtons["settings"] = el(
             "a",
             new Icon("settings"),

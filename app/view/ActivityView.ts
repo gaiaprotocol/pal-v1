@@ -1,23 +1,32 @@
 import { DomNode, el, View, ViewParams } from "common-dapp-module";
 import ActivityList from "../component/list/ActivityList.js";
-import TokenList from "../component/activity/TokenList.js";
+import TokenList from "../component/list/TokenList.js";
 import { eventToActivity } from "../data/Activity.js";
 import SupabaseManager from "../SupabaseManager.js";
 import Layout from "./Layout.js";
+import UserManager from "../user/UserManager.js";
 
 export default class ActivityView extends View {
   private container: DomNode;
 
   private activityList: ActivityList;
-  private tokenList: TokenList;
 
   constructor(params: ViewParams) {
     super();
     Layout.append(
       this.container = el(
         ".activity-view",
-        this.activityList = new ActivityList(),
-        this.tokenList = new TokenList(),
+        // Global
+        this.activityList = new ActivityList({/* Global */}),
+        // Yours
+        UserManager.userWalletAddress === undefined
+          ? undefined
+          : new ActivityList({
+            walletAddresses: [UserManager.userWalletAddress],
+          }),
+        //TODO: Your Tokens
+
+        //TODO: Friends
       ),
     );
     this.loadActivities();

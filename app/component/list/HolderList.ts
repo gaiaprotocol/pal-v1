@@ -5,7 +5,7 @@ import HolderItem from "./HolderItem.js";
 export default class HolderList extends DomNode {
   private list: DomNode;
 
-  constructor() {
+  constructor(tokenAddress: string) {
     super(".holder-list");
     this.append(this.list = el("ul"));
   }

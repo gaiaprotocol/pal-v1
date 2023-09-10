@@ -49,8 +49,10 @@ export default class TokenInfoPopup extends Popup {
             this.balanceDisplay = el("span.balance.loading"),
           ),
           new TokenInfoTabs(),
-          new HolderList(),
-          new ActivityList({}),
+          new HolderList(tokenInfo.token_address),
+          new ActivityList({
+            tokenAddresses: [tokenInfo.token_address],
+          }),
         ),
         el(
           "footer",
