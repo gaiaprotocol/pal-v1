@@ -1,5 +1,5 @@
 import { DomNode, el, View, ViewParams } from "common-dapp-module";
-import ActivityList from "../component/activity/ActivityList.js";
+import ActivityList from "../component/list/ActivityList.js";
 import TokenList from "../component/activity/TokenList.js";
 import { eventToActivity } from "../data/Activity.js";
 import SupabaseManager from "../SupabaseManager.js";

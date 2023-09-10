@@ -5,7 +5,10 @@ import ActivityItem from "./ActivityItem.js";
 export default class ActivityList extends DomNode {
   private list: DomNode;
 
-  constructor() {
+  constructor(filter: {
+    walletAddresses?: string[];
+    tokenAddresses?: string[];
+  }) {
     super(".activity-list");
     this.append(this.list = el("ul"));
   }

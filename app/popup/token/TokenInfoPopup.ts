@@ -9,8 +9,8 @@ import {
 } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
-import ActivityList from "../../component/activity/ActivityList.js";
-import HolderList from "../../component/token-info/HolderList.js";
+import ActivityList from "../../component/list/ActivityList.js";
+import HolderList from "../../component/list/HolderList.js";
 import TokenInfoTabs from "../../component/token-info/TokenInfoTabs.js";
 import PalContract from "../../contract/PalContract.js";
 import PalTokenContract from "../../contract/PalTokenContract.js";
@@ -50,7 +50,7 @@ export default class TokenInfoPopup extends Popup {
           ),
           new TokenInfoTabs(),
           new HolderList(),
-          new ActivityList(),
+          new ActivityList({}),
         ),
         el(
           "footer",
