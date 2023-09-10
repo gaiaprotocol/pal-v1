@@ -10,6 +10,11 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     address payable public protocolFeeDestination;
     uint256 public protocolFeePercent;
     uint256 public tokenOwnerFeePercent;
+
+    IERC20 public membershipToken;
+    uint256 public requiredMembershipAmount;
+    uint256 public additionalTokenOwnerFeePercent;
+
     uint256 private constant BASE_DIVIDER = 16000;
 
     mapping(address => bool) public isPalToken;
@@ -49,6 +54,32 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
 
     function setTokenOwnerFeePercent(uint256 _feePercent) public onlyOwner {
         tokenOwnerFeePercent = _feePercent;
+    }
+
+    function setMembershipToken(address _token) public onlyOwner {
+        membershipToken = IERC20(_token);
+    }
+
+    function setRequiredMembershipAmount(uint256 _amount) public onlyOwner {
+        requiredMembershipAmount = _amount;
+    }
+
+    function setAdditionalTokenOwnerFeePercent(uint256 _feePercent) public onlyOwner {
+        additionalTokenOwnerFeePercent = _feePercent;
+    }
+
+    function hasRequiredMembership(address user) public view returns (bool) {
+        if (address(membershipToken) == address(0)) {
+            return false;
+        }
+        return membershipToken.balanceOf(user) >= requiredMembershipAmount;
+    }
+
+    function calculateAdditionalTokenOwnerFee(uint256 price) public view returns (uint256) {
+        if (address(membershipToken) == address(0)) {
+            return 0;
+        }
+        return hasRequiredMembership(msg.sender) ? (price * additionalTokenOwnerFeePercent) / 1 ether : 0;
     }
 
     // Users can create their own tokens using this function
@@ -104,26 +135,36 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         PalToken token = PalToken(tokenAddress);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether;
+        uint256 additionalFee = calculateAdditionalTokenOwnerFee(price);
 
         if (isBuy) {
-            require(msg.value >= price + protocolFee + tokenOwnerFee, "Insufficient payment");
+            require(msg.value >= price + protocolFee + tokenOwnerFee + additionalFee, "Insufficient payment");
             token.mint(msg.sender, amount);
             protocolFeeDestination.transfer(protocolFee);
-            payable(token.owner()).transfer(tokenOwnerFee);
-            if (msg.value > price + protocolFee + tokenOwnerFee) {
-                uint256 refund = msg.value - price - protocolFee - tokenOwnerFee;
+            payable(token.owner()).transfer(tokenOwnerFee + additionalFee);
+            if (msg.value > price + protocolFee + tokenOwnerFee + additionalFee) {
+                uint256 refund = msg.value - price - protocolFee - tokenOwnerFee - additionalFee;
                 payable(msg.sender).transfer(refund);
             }
         } else {
             require(token.balanceOf(msg.sender) >= amount, "Insufficient tokens");
             token.burn(msg.sender, amount);
-            uint256 netAmount = price - protocolFee - tokenOwnerFee;
+            uint256 netAmount = price - protocolFee - tokenOwnerFee - additionalFee;
             payable(msg.sender).transfer(netAmount);
             protocolFeeDestination.transfer(protocolFee);
-            payable(token.owner()).transfer(tokenOwnerFee);
+            payable(token.owner()).transfer(tokenOwnerFee + additionalFee);
         }
 
-        emit Trade(msg.sender, tokenAddress, isBuy, amount, price, protocolFee, tokenOwnerFee, token.totalSupply());
+        emit Trade(
+            msg.sender,
+            tokenAddress,
+            isBuy,
+            amount,
+            price,
+            protocolFee,
+            tokenOwnerFee + additionalFee,
+            token.totalSupply()
+        );
     }
 
     function buyToken(address tokenAddress, uint256 amount) public payable {
