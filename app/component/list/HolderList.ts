@@ -14,11 +14,4 @@ export default class HolderList extends DomNode {
     const item = new HolderItem(balanceInfo).appendTo(this.list);
     return item;
   }
-
-  public set activities(balanceInfos: TokenBalanceInfo[]) {
-    this.list.empty();
-    for (const balanceInfo of balanceInfos) {
-      this.add(balanceInfo);
-    }
-  }
 }

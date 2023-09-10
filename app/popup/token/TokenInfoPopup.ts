@@ -24,6 +24,7 @@ export default class TokenInfoPopup extends Popup {
   private profileImage: DomNode<HTMLImageElement>;
   private priceDisplay: DomNode;
   private balanceDisplay: DomNode;
+  private activityList: ActivityList;
 
   constructor(private tokenInfo: TokenInfo) {
     super({ barrierDismissible: true });
@@ -50,9 +51,7 @@ export default class TokenInfoPopup extends Popup {
           ),
           new TokenInfoTabs(),
           new HolderList(tokenInfo.token_address),
-          new ActivityList({
-            tokenAddresses: [tokenInfo.token_address],
-          }),
+          this.activityList = new ActivityList(),
         ),
         el(
           "footer",
@@ -74,9 +73,13 @@ export default class TokenInfoPopup extends Popup {
         ),
       ),
     );
+
     this.loadProfileImage();
     this.loadPrice();
     this.loadBalance();
+    this.activityList.load({
+      tokenAddresses: [tokenInfo.token_address],
+    });
   }
 
   private async loadProfileImage() {

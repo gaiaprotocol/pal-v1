@@ -14,11 +14,4 @@ export default class UserList extends DomNode {
     const item = new UserItem(userDetails).appendTo(this.list);
     return item;
   }
-
-  public set users(userDetailsSet: UserDetails[]) {
-    this.list.empty();
-    for (const userDetails of userDetailsSet) {
-      this.add(userDetails);
-    }
-  }
 }

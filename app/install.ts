@@ -3,15 +3,16 @@ import { msg, Router } from "common-dapp-module";
 import Config from "./Config.js";
 import PalContract from "./contract/PalContract.js";
 import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorContract.js";
+import OnlineUserManager from "./OnlineUserManager.js";
 import ChangeChainPopup from "./popup/ChangeChainPopup.js";
 import SupabaseManager from "./SupabaseManager.js";
 import WalletManager from "./user/WalletManager.js";
 import ActivityView from "./view/ActivityView.js";
+import Explorer from "./view/Explorer.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import RoomView from "./view/RoomView.js";
 import Settings from "./view/Settings.js";
-import Explorer from "./view/Explorer.js";
 
 export default async function install() {
   if (sessionStorage.__spa_path) {
@@ -25,6 +26,8 @@ export default async function install() {
 
   await SupabaseManager.connect();
   WalletManager.init();
+  OnlineUserManager.init();
+
   PalContract.init(Config.palAddress);
   TokenHoldingsAggregatorContract.init(Config.tokenHoldingsAggregatorAddress);
 

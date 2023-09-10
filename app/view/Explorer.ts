@@ -5,7 +5,11 @@ import Layout from "./Layout.js";
 export default class Explorer extends View {
   private container: DomNode;
 
-  private tokenList: TokenList;
+  private topTokenList: TokenList;
+  //TODO: private trendingTokenList: TokenList;
+  private newChatTokenList: TokenList;
+  //TODO: private friendsTokenList: TokenList;
+  private onlineUserTokenList: TokenList;
 
   constructor(params: ViewParams) {
     super();
@@ -13,14 +17,15 @@ export default class Explorer extends View {
       this.container = el(
         ".explorer-view",
         // Top
-        this.tokenList = new TokenList(),
+        this.topTokenList = new TokenList(),
         //TODO: Trending
 
-        // New Chats
+        // New Chat
+        this.newChatTokenList = new TokenList(),
+        //TODO: Friends
 
-        // Friends
-
-        // Online
+        // Online User
+        this.onlineUserTokenList = new TokenList(),
       ),
     );
   }

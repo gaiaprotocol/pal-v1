@@ -14,11 +14,4 @@ export default class TokenList extends DomNode {
     const item = new TokenItem(tokenInfo).appendTo(this.list);
     return item;
   }
-
-  public set activities(tokenInfos: TokenInfo[]) {
-    this.list.empty();
-    for (const tokenInfo of tokenInfos) {
-      this.add(tokenInfo);
-    }
-  }
 }

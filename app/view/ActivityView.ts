@@ -1,52 +1,50 @@
 import { DomNode, el, View, ViewParams } from "common-dapp-module";
 import ActivityList from "../component/list/ActivityList.js";
-import TokenList from "../component/list/TokenList.js";
-import { eventToActivity } from "../data/Activity.js";
 import SupabaseManager from "../SupabaseManager.js";
-import Layout from "./Layout.js";
 import UserManager from "../user/UserManager.js";
+import Layout from "./Layout.js";
 
 export default class ActivityView extends View {
   private container: DomNode;
 
-  private activityList: ActivityList;
+  private globalActivityList: ActivityList;
+  private yoursActivityList: ActivityList;
+  private yourTokensActivityList: ActivityList;
+  //TODO: private friendsActivityList: ActivityList;
 
   constructor(params: ViewParams) {
     super();
     Layout.append(
       this.container = el(
         ".activity-view",
-        // Global
-        this.activityList = new ActivityList({/* Global */}),
-        // Yours
-        UserManager.userWalletAddress === undefined
-          ? undefined
-          : new ActivityList({
-            walletAddresses: [UserManager.userWalletAddress],
-          }),
-        //TODO: Your Tokens
-
-        //TODO: Friends
+        this.globalActivityList = new ActivityList(),
+        this.yoursActivityList = new ActivityList(),
+        this.yourTokensActivityList = new ActivityList(),
+        //TODO: this.friendsActivityList = new ActivityList(),
       ),
     );
-    this.loadActivities();
+
+    this.globalActivityList.load({});
+    if (UserManager.userWalletAddress) {
+      this.yoursActivityList.load({
+        walletAddresses: [UserManager.userWalletAddress],
+      });
+      this.loadTokens();
+    }
   }
 
-  public changeParams(params: ViewParams): void {
-  }
-
-  private async loadActivities(): Promise<void> {
+  private async loadTokens(): Promise<void> {
     const { data, error } = await SupabaseManager.supabase.from(
-      "pal_contract_events",
-    ).select("*").order("block_number", { ascending: false });
-    console.log(data, error);
+      "pal_tokens",
+    ).select("*").eq("owner", UserManager.userWalletAddress);
     if (data) {
-      const activities = [];
-      for (const event of data) {
-        const activity = eventToActivity(event.event_type, event.args);
-        activities.push(activity);
+      const tokenAddresses = [];
+      for (const token of data) {
+        tokenAddresses.push(token.token_address);
       }
-      this.activityList.activities = activities;
+      this.yourTokensActivityList.load({
+        tokenAddresses,
+      });
     }
   }
 

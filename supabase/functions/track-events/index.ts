@@ -53,6 +53,8 @@ serveWithOptions(async () => {
           log_index: event.index,
           event_type,
           args: event.args.map((arg) => arg.toString()),
+          wallet_address: event.args[0],
+          token_address: event.args[1],
         });
 
       if (error) {

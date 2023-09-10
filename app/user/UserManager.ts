@@ -2,6 +2,7 @@ import { User } from "@supabase/supabase-js";
 import { getNetwork, switchNetwork } from "@wagmi/core";
 import { Confirm, EventContainer } from "common-dapp-module";
 import Config from "../Config.js";
+import OnlineUserManager from "../OnlineUserManager.js";
 import SupabaseManager from "../SupabaseManager.js";
 import PalContract from "../contract/PalContract.js";
 import TokenInfo from "../data/TokenInfo.js";
@@ -50,6 +51,7 @@ class UserManager extends EventContainer {
           this.userWalletAddress,
         );
       }
+      OnlineUserManager.track();
     }
     this.fireEvent("userLoaded");
   }
