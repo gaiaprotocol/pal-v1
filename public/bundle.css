@@ -366,6 +366,17 @@ body {
 .activity-view {
   background-color: #1e1e1e;
   min-height: 100%;
+  display: flex;
+}
+.activity-view > .activity-list-container {
+  flex: 1 1 0px;
+  border-right: 1px solid #2d2d2d;
+  overflow-y: auto;
+}
+.activity-view > .activity-list-container > h2 {
+  font-size: 28px;
+  color: #666;
+  padding: 16px;
 }
 .settings-view {
   background-color: #1e1e1e;
@@ -501,11 +512,12 @@ body {
 }
 .trade-activity-item {
   display: flex;
-  padding: 10px 12px;
-  gap: 12px;
+  padding: 8px 16px;
+  gap: 16px;
 }
 .trade-activity-item > .profile-image-container {
   display: flex;
+  flex: 0 0 84px;
 }
 .trade-activity-item > .profile-image-container > .profile-image {
   width: 48px;
@@ -529,11 +541,12 @@ body {
 }
 .token-created-activity-item {
   display: flex;
-  padding: 10px 12px;
-  gap: 12px;
+  padding: 8px 16px;
+  gap: 16px;
 }
 .token-created-activity-item > .profile-image-container {
   display: flex;
+  flex: 0 0 48px;
 }
 .token-created-activity-item > .profile-image-container > .profile-image {
   width: 48px;

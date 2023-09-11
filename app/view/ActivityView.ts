@@ -17,10 +17,26 @@ export default class ActivityView extends View {
     Layout.append(
       this.container = el(
         ".activity-view",
-        this.globalActivityList = new ActivityList(),
-        this.yoursActivityList = new ActivityList(),
-        this.yourTokensActivityList = new ActivityList(),
-        //TODO: this.friendsActivityList = new ActivityList(),
+        el(
+          ".activity-list-container",
+          el("h2", "Global"),
+          this.globalActivityList = new ActivityList(),
+        ),
+        el(
+          ".activity-list-container",
+          el("h2", "Yours"),
+          this.yoursActivityList = new ActivityList(),
+        ),
+        el(
+          ".activity-list-container",
+          el("h2", "Your Tokens"),
+          this.yourTokensActivityList = new ActivityList(),
+        ),
+        /*el(
+          ".activity-list-container",
+          el("h2", "Friends"),
+          this.friendsActivityList = new ActivityList(),
+        ),*/
       ),
     );
 

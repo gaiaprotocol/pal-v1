@@ -32,6 +32,7 @@ export default class TradeActivityItem extends DomNode {
           this.traderNameDisplay = el("span.name"),
           activity.isBuy ? " bought " : " sold ",
           this.amountDisplay = el("span.amount"),
+          " ",
           this.ownerNameDisplay = el("span.name"),
           "'s ",
           this.symbolDisplay = el("span.symbol"),

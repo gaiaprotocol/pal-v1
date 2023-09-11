@@ -1,4 +1,17 @@
 .activity-view {
     background-color: #1e1e1e;
     min-height      : 100%;
+    display         : flex;
+
+    >.activity-list-container {
+        flex        : 1 1 0px;
+        border-right: 1px solid #2d2d2d;
+        overflow-y  : auto;
+
+        >h2 {
+            font-size: 28px;
+            color    : #666;
+            padding  : 16px;
+        }
+    }
 }
