@@ -378,6 +378,21 @@ body {
   color: #666;
   padding: 16px;
 }
+.explorer-view {
+  background-color: #1e1e1e;
+  min-height: 100%;
+  display: flex;
+}
+.explorer-view > .token-list-container {
+  flex: 1 1 0px;
+  border-right: 1px solid #2d2d2d;
+  overflow-y: auto;
+}
+.explorer-view > .token-list-container > h2 {
+  font-size: 28px;
+  color: #666;
+  padding: 16px;
+}
 .settings-view {
   background-color: #1e1e1e;
   min-height: 100%;
@@ -560,6 +575,29 @@ body {
   gap: 4px;
 }
 .token-created-activity-item > .info-container > .info > .name {
+  font-weight: bold;
+}
+.token-item {
+  display: flex;
+  padding: 8px 16px;
+  gap: 16px;
+}
+.token-item > .profile-image-container {
+  display: flex;
+  flex: 0 0 48px;
+}
+.token-item > .profile-image-container > .profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #2d2d2d;
+}
+.token-item > .info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.token-item > .info-container > .info > .name {
   font-weight: bold;
 }
 .change-chain-popup {

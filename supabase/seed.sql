@@ -79,6 +79,19 @@ end;$$;
 
 ALTER FUNCTION "public"."new_pal_token"() OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."update_last_message_sent_at"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$begin
+  update pal_tokens
+  set
+    last_message_sent_at = now()
+  where
+    token_address = new.token_address;
+  return null;
+end;$$;
+
+ALTER FUNCTION "public"."update_last_message_sent_at"() OWNER TO "postgres";
+
 SET default_tablespace = '';
 
 SET default_table_access_method = "heap";
@@ -119,7 +132,9 @@ CREATE TABLE IF NOT EXISTS "public"."pal_contract_events" (
     "log_index" bigint NOT NULL,
     "event_type" smallint NOT NULL,
     "args" "text"[] DEFAULT '{}'::"text"[] NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "wallet_address" "text" NOT NULL,
+    "token_address" "text" NOT NULL
 );
 
 ALTER TABLE "public"."pal_contract_events" OWNER TO "postgres";
@@ -151,7 +166,8 @@ CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "view_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
-    "last_fetched_price" numeric DEFAULT '0'::numeric NOT NULL
+    "last_fetched_price" numeric DEFAULT '0'::numeric NOT NULL,
+    "last_message_sent_at" timestamp with time zone NOT NULL
 );
 
 ALTER TABLE "public"."pal_tokens" OWNER TO "postgres";
@@ -177,7 +193,7 @@ CREATE TABLE IF NOT EXISTS "public"."user_details" (
     "id" "uuid" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "wallet_address" "text",
-    "metadata" "jsonb",
+    "metadata" "jsonb" DEFAULT '{}'::"jsonb" NOT NULL,
     "profile_image" "text",
     "display_name" "text"
 );
@@ -209,6 +225,8 @@ ALTER TABLE ONLY "public"."user_details"
     ADD CONSTRAINT "user_wallets_wallet_address_key" UNIQUE ("wallet_address");
 
 CREATE TRIGGER "new_pal_token" AFTER INSERT ON "public"."pal_contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."new_pal_token"();
+
+CREATE TRIGGER "update_last_message_sent_at" AFTER INSERT ON "public"."chat_messages" FOR EACH ROW EXECUTE FUNCTION "public"."update_last_message_sent_at"();
 
 ALTER TABLE ONLY "public"."chat_messages"
     ADD CONSTRAINT "chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "auth"."users"("id");
@@ -279,6 +297,10 @@ GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "t
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "anon";
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."update_last_message_sent_at"() TO "anon";
+GRANT ALL ON FUNCTION "public"."update_last_message_sent_at"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."update_last_message_sent_at"() TO "service_role";
 
 GRANT ALL ON TABLE "public"."chat_messages" TO "anon";
 GRANT ALL ON TABLE "public"."chat_messages" TO "authenticated";

@@ -1,5 +1,5 @@
 import { DomNode, el, View, ViewParams } from "common-dapp-module";
-import TokenList from "../component/list/TokenList.js";
+import TokenList, { TokenListFilter } from "../component/list/TokenList.js";
 import Layout from "./Layout.js";
 
 export default class Explorer extends View {
@@ -9,23 +9,38 @@ export default class Explorer extends View {
   //TODO: private trendingTokenList: TokenList;
   private newChatTokenList: TokenList;
   //TODO: private friendsTokenList: TokenList;
-  private onlineUserTokenList: TokenList;
+  private onlineUsersTokenList: TokenList;
 
   constructor(params: ViewParams) {
     super();
     Layout.append(
       this.container = el(
         ".explorer-view",
-        // Top
-        this.topTokenList = new TokenList(),
-        //TODO: Trending
-
-        // New Chat
-        this.newChatTokenList = new TokenList(),
-        //TODO: Friends
-
-        // Online User
-        this.onlineUserTokenList = new TokenList(),
+        el(
+          ".token-list-container",
+          el("h2", "Top"),
+          this.topTokenList = new TokenList(TokenListFilter.Top),
+        ),
+        /*el(
+          ".token-list-container",
+          el("h2", "Trending"),
+          this.trendingTokenList = new TokenList(),
+        ),*/
+        el(
+          ".token-list-container",
+          el("h2", "New Chat"),
+          this.newChatTokenList = new TokenList(TokenListFilter.NewChat),
+        ),
+        /*el(
+          ".token-list-container",
+          el("h2", "Friends"),
+          this.friendsTokenList = new TokenList(),
+        ),*/
+        el(
+          ".token-list-container",
+          el("h2", "Online Users"),
+          this.onlineUsersTokenList = new TokenList(TokenListFilter.OnlineUsers),
+        ),
       ),
     );
   }
