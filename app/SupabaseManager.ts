@@ -7,7 +7,11 @@ class SupabaseManager extends EventContainer {
   public supabase!: SupabaseClient;
 
   public async connect() {
-    this.supabase = createClient(Config.supabaseURL, Config.supabaseAnonKey);
+    this.supabase = createClient(Config.supabaseURL, Config.supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+      },
+    });
     await UserManager.loadUser();
   }
 }
