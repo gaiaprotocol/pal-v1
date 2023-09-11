@@ -5,6 +5,7 @@ export enum EventType {
 
 export interface TokenCreatedActivity {
   eventType: EventType.TokenCreated;
+  blockNumber: number;
   owner: string;
   address: string;
   name: string;
@@ -13,6 +14,7 @@ export interface TokenCreatedActivity {
 
 export interface TradeActivity {
   eventType: EventType.Trade;
+  blockNumber: number;
   trader: string;
   token: string;
   isBuy: boolean;
@@ -27,10 +29,15 @@ type Activity = TokenCreatedActivity | TradeActivity;
 
 export default Activity;
 
-export function eventToActivity(eventType: EventType, args: string[]) {
+export function eventToActivity(
+  eventType: EventType,
+  blockNumber: number,
+  args: string[],
+) {
   if (eventType === EventType.TokenCreated) {
     return {
       eventType,
+      blockNumber,
       owner: args[0],
       address: args[1],
       name: args[2],
@@ -39,6 +46,7 @@ export function eventToActivity(eventType: EventType, args: string[]) {
   } else if (eventType === EventType.Trade) {
     return {
       eventType,
+      blockNumber,
       trader: args[0],
       token: args[1],
       isBuy: args[2] === "true",

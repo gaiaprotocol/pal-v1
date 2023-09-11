@@ -4,6 +4,10 @@ import TokenInfo from "../data/TokenInfo.js";
 class TokenInfoCacher {
   private tokenInfoMap: Map<string, TokenInfo> = new Map<string, TokenInfo>();
 
+  public getCachedTokenInfo(tokenAddress: string): TokenInfo | undefined {
+    return this.tokenInfoMap.get(tokenAddress);
+  }
+
   public async getMultipleTokenInfo(tokenAddresses: string[]) {
     const tokenInfoList: TokenInfo[] = [];
     for (const tokenAddress of tokenAddresses) {
@@ -25,7 +29,10 @@ class TokenInfoCacher {
     if (data) {
       for (const tokenInfo of data) {
         tokenInfoList.push(tokenInfo);
-        this.tokenInfoMap.set(tokenInfo.address, tokenInfo);
+        this.tokenInfoMap.set(
+          (tokenInfo as TokenInfo).token_address,
+          tokenInfo,
+        );
       }
     }
     return tokenInfoList;

@@ -108,7 +108,14 @@ meter {
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(https://fonts.gstatic.com/s/notosans/v30/o-0IIpQlx3QUlC5A4PNb4g.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/notosans/v30/o-0IIpQlx3QUlC5A4PNr5TRF.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notosans/v30/o-0NIpQlx3QUlC5A4PNjXhFVZNyE.ttf) format('truetype');
 }
 :root {
   font-family: 'Noto Sans', sans-serif;
@@ -490,6 +497,31 @@ body {
 .token-purchase-form > .buy-token-button {
   width: 260px;
   height: 40px;
+  font-weight: bold;
+}
+.trade-activity-item {
+  display: flex;
+  padding: 10px 12px;
+  gap: 12px;
+}
+.trade-activity-item > .profile-image-container {
+  display: flex;
+}
+.trade-activity-item > .profile-image-container > .profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #2d2d2d;
+}
+.trade-activity-item > .profile-image-container > .profile-image:last-of-type {
+  margin-left: -12px;
+}
+.trade-activity-item > .info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.trade-activity-item > .info-container > .info > .name {
   font-weight: bold;
 }
 .change-chain-popup {

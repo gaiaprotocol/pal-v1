@@ -7,6 +7,10 @@ class UserDataCacher {
     UserDetails
   >();
 
+  public getCachedUserData(walletAddress: string): UserDetails | undefined {
+    return this.userDataMap.get(walletAddress);
+  }
+
   public async getMultipleUserData(walletAddresses: string[]) {
     const userDataList: UserDetails[] = [];
     for (const walletAddress of walletAddresses) {
@@ -30,7 +34,10 @@ class UserDataCacher {
     if (data) {
       for (const userData of data) {
         userDataList.push(userData);
-        this.userDataMap.set(userData.wallet_address, userData);
+        this.userDataMap.set(
+          (userData as UserDetails).wallet_address,
+          userData,
+        );
       }
     }
     return userDataList;

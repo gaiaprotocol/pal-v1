@@ -24,6 +24,7 @@
     "@web3modal/ethereum": "^2.7.1",
     "@web3modal/html": "^2.7.1",
     "common-dapp-module": "^0.0.2",
+    "dayjs": "^1.11.9",
     "ethers": "^6.7.0",
     "uuid": "^9.0.0",
     "viem": "^1.5.3"

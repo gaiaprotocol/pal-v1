@@ -1,5 +1,6 @@
 import { getNetwork } from "@wagmi/core";
 import { msg, Router } from "common-dapp-module";
+import BlockTimeCacher from "./cacher/BlockTimeCacher.js";
 import Config from "./Config.js";
 import PalContract from "./contract/PalContract.js";
 import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorContract.js";
@@ -13,6 +14,10 @@ import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import RoomView from "./view/RoomView.js";
 import Settings from "./view/Settings.js";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime.js";
+
+dayjs.extend(relativeTime);
 
 export default async function install() {
   if (sessionStorage.__spa_path) {
@@ -27,6 +32,7 @@ export default async function install() {
   await SupabaseManager.connect();
   WalletManager.init();
   OnlineUserManager.init();
+  await BlockTimeCacher.init();
 
   PalContract.init(Config.palAddress);
   TokenHoldingsAggregatorContract.init(Config.tokenHoldingsAggregatorAddress);

@@ -13,20 +13,22 @@ export default abstract class Contract<CT extends BaseContract>
 
   constructor(private abi: Interface | InterfaceAbi) {
     super();
-    this.onDelegate(
-      WalletManager,
-      "signerChanged",
-      () => this.checkSignerChanged(),
-    );
   }
 
   public init(address: string) {
     this.address = address;
+
     this.viewContract = new ethers.Contract(
       this.address,
       this.abi,
       new ethers.JsonRpcProvider(Config.palRPC),
     ) as any;
+
+    this.onDelegate(
+      WalletManager,
+      "signerChanged",
+      () => this.checkSignerChanged(),
+    );
     this.checkSignerChanged();
   }
 
