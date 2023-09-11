@@ -12,7 +12,7 @@ class PalContract extends Contract<Pal> {
     name: string,
     symbol: string,
   ): Promise<string> {
-    const response = await this.ethersContract.createToken(name, symbol);
+    const response = await this.writeContract.createToken(name, symbol);
     const tx = await response.wait();
     if (!tx) {
       throw new Error("Transaction failed");
@@ -26,30 +26,30 @@ class PalContract extends Contract<Pal> {
   }
 
   public async getBuyPrice(tokenAddress: string, amount: bigint) {
-    return this.ethersContract.getBuyPrice(tokenAddress, amount);
+    return this.viewContract.getBuyPrice(tokenAddress, amount);
   }
 
   public async getSellPrice(tokenAddress: string, amount: bigint) {
-    return this.ethersContract.getSellPrice(tokenAddress, amount);
+    return this.viewContract.getSellPrice(tokenAddress, amount);
   }
 
   public async getBuyPriceAfterFee(tokenAddress: string, amount: bigint) {
-    return this.ethersContract.getBuyPriceAfterFee(tokenAddress, amount);
+    return this.viewContract.getBuyPriceAfterFee(tokenAddress, amount);
   }
 
   public async getSellPriceAfterFee(tokenAddress: string, amount: bigint) {
-    return this.ethersContract.getSellPriceAfterFee(tokenAddress, amount);
+    return this.viewContract.getSellPriceAfterFee(tokenAddress, amount);
   }
 
   public async buyToken(tokenAddress: string, amount: bigint, value: bigint) {
-    const response = await this.ethersContract.buyToken(tokenAddress, amount, {
+    const response = await this.writeContract.buyToken(tokenAddress, amount, {
       value,
     });
     return response.wait();
   }
 
   public async sellToken(tokenAddress: string, amount: bigint) {
-    const response = await this.ethersContract.sellToken(tokenAddress, amount);
+    const response = await this.writeContract.sellToken(tokenAddress, amount);
     return response.wait();
   }
 }

@@ -9,14 +9,14 @@ export default class PalTokenContract extends Contract<PalToken> {
   }
 
   public async name(): Promise<string> {
-    return await this.ethersContract.name();
+    return await this.viewContract.name();
   }
 
   public async symbol(): Promise<string> {
-    return await this.ethersContract.symbol();
+    return await this.viewContract.symbol();
   }
 
   public async balanceOf(address: string): Promise<bigint> {
-    return await this.ethersContract.balanceOf(address);
+    return await this.viewContract.balanceOf(address);
   }
 }

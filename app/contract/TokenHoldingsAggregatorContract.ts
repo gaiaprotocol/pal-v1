@@ -1,7 +1,7 @@
 import Contract from "./Contract.js";
 import { TokenHoldingsAggregator } from "./abi/token-holdings-aggregator/TokenHoldingsAggregator.js";
 import TokenHoldingsAggregatorArtifact from "./abi/token-holdings-aggregator/TokenHoldingsAggregator.json" assert {
-  type: "json",
+  type: "json"
 };
 
 class TokenHoldingsAggregatorContract
@@ -14,7 +14,7 @@ class TokenHoldingsAggregatorContract
     holder: string,
     tokens: string[],
   ): Promise<bigint[]> {
-    return await this.ethersContract.getERC20BalanceList_OneHolder(
+    return await this.viewContract.getERC20BalanceList_OneHolder(
       holder,
       tokens,
     );

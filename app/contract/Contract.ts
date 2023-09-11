@@ -5,7 +5,9 @@ import WalletManager from "../user/WalletManager.js";
 
 export default abstract class Contract<CT extends BaseContract>
   extends EventContainer {
-  protected ethersContract!: CT;
+  protected viewContract!: CT;
+  protected writeContract!: CT;
+
   private currentSigner?: ethers.Signer;
   public address!: string;
 
@@ -20,19 +22,18 @@ export default abstract class Contract<CT extends BaseContract>
 
   public init(address: string) {
     this.address = address;
+    this.viewContract = new ethers.Contract(
+      this.address,
+      this.abi,
+      new ethers.JsonRpcProvider(Config.palRPC),
+    ) as any;
     this.checkSignerChanged();
   }
 
   private checkSignerChanged() {
-    const signer = WalletManager.signer ??
-      new ethers.VoidSigner(
-        ethers.ZeroAddress,
-        new ethers.JsonRpcProvider(Config.palRPC),
-      );
-
-    if (this.currentSigner !== signer) {
-      this.currentSigner = signer;
-      this.ethersContract = new ethers.Contract(
+    if (this.currentSigner !== WalletManager.signer) {
+      this.currentSigner = WalletManager.signer;
+      this.writeContract = new ethers.Contract(
         this.address,
         this.abi,
         this.currentSigner,
