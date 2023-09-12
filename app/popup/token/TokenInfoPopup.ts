@@ -10,7 +10,7 @@ import {
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
 import ActivityList from "../../component/list/ActivityList.js";
-import HolderList from "../../component/list/HolderList.js";
+import MemberList from "../../component/list/MemberList.js";
 import TokenInfoTabs from "../../component/token-info/TokenInfoTabs.js";
 import PalContract from "../../contract/PalContract.js";
 import PalTokenContract from "../../contract/PalTokenContract.js";
@@ -49,10 +49,10 @@ export default class TokenInfoPopup extends Popup {
             el("label", "Your Balance"),
             this.balanceDisplay = el("span.balance.loading"),
           ),
-          new TokenInfoTabs(),
-          new HolderList(tokenInfo.token_address),
-          this.activityList = new ActivityList(),
         ),
+        new TokenInfoTabs(),
+        new MemberList(tokenInfo),
+        this.activityList = new ActivityList(),
         el(
           "footer",
           new Button({

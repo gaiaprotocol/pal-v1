@@ -509,6 +509,9 @@ body {
     background-color: #530087;
   }
 }
+.room-title-bar > h1 {
+  font-size: 20px;
+}
 .token-purchase-form {
   display: none;
   position: absolute;
@@ -599,6 +602,23 @@ body {
 }
 .token-item > .info-container > .info > .name {
   font-weight: bold;
+}
+.member-item {
+  display: flex;
+  padding: 8px 16px;
+  gap: 16px;
+  align-items: center;
+}
+.member-item > .profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #2d2d2d;
+  flex: 0 0 48px;
+}
+.member-item > .name {
+  flex-grow: 1;
+  font-size: 16px;
 }
 .change-chain-popup {
   max-width: 600px;

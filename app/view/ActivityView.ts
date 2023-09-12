@@ -52,10 +52,12 @@ export default class ActivityView extends View {
   private async loadTokens(): Promise<void> {
     const { data, error } = await SupabaseManager.supabase.from(
       "pal_tokens",
-    ).select("*").eq("owner", UserManager.userWalletAddress);
+    ).select(
+      "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+    ).eq("owner", UserManager.userWalletAddress);
     if (data) {
       const tokenAddresses = [];
-      for (const token of data) {
+      for (const token of data as any) {
         tokenAddresses.push(token.token_address);
       }
       this.yourTokensActivityList.load({

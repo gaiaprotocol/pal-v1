@@ -42,9 +42,11 @@ export default class TokenList extends DomNode {
     if (this.tokenListFilter === TokenListFilter.Top) {
       const result = await SupabaseManager.supabase.from(
         "pal_tokens",
-      ).select("*").order("last_fetched_price", { ascending: false }).limit(50);
+      ).select(
+        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      ).order("last_fetched_price", { ascending: false }).limit(50);
       if (result.data) {
-        data = result.data;
+        data = result.data as any;
       }
       error = result.error;
     } else if (this.tokenListFilter === TokenListFilter.Trending) {
@@ -52,11 +54,13 @@ export default class TokenList extends DomNode {
     } else if (this.tokenListFilter === TokenListFilter.NewChat) {
       const result = await SupabaseManager.supabase.from(
         "pal_tokens",
-      ).select("*").order("last_message_sent_at", { ascending: false }).limit(
+      ).select(
+        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      ).order("last_message_sent_at", { ascending: false }).limit(
         50,
       );
       if (result.data) {
-        data = result.data;
+        data = result.data as any;
       }
       error = result.error;
     } else if (this.tokenListFilter === TokenListFilter.Friends) {
@@ -67,9 +71,11 @@ export default class TokenList extends DomNode {
       );
       const result = await SupabaseManager.supabase.from(
         "pal_tokens",
-      ).select("*").in("owner", ownerWalletAddresses);
+      ).select(
+        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      ).in("owner", ownerWalletAddresses);
       if (result.data) {
-        data = result.data;
+        data = result.data as any;
       }
       error = result.error;
     }

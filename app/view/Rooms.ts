@@ -1,9 +1,9 @@
 import { DomNode, el, View } from "common-dapp-module";
+import RoomList from "../component/rooms/RoomList.js";
 import TokenHoldingsAggregatorContract from "../contract/TokenHoldingsAggregatorContract.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
-import RoomList from "../component/rooms/RoomList.js";
 
 export default class Rooms extends View {
   private container: DomNode;
@@ -40,27 +40,34 @@ export default class Rooms extends View {
 
   private async loadMyTokenRooms(): Promise<void> {
     const { data } = await SupabaseManager.supabase.from("pal_tokens")
-      .select()
+      .select(
+        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      )
       .eq("owner", UserManager.userWalletAddress);
     if (data) {
-      this.myRooms.rooms = data;
+      this.myRooms.rooms = data as any;
     }
   }
 
   private async loadHoldingTokenRooms(): Promise<void> {
     if (UserManager.userWalletAddress) {
       const { data } = await SupabaseManager.supabase.from("pal_tokens")
-        .select();
+        .select(
+          "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        );
       if (data) {
-        const tokenAddresses: string[] = data?.map((token) => token.token_address) ??
+        const tokenAddresses: string[] = (data as any)?.map((token: any) =>
+          token.token_address
+        ) ??
           [];
         const balances = await TokenHoldingsAggregatorContract.getERC20Balances(
           UserManager.userWalletAddress,
           tokenAddresses,
         );
         for (const [index, balance] of balances.entries()) {
-          if (balance >= BigInt(data[index].view_token_required)) {
-            this.holdingRooms.add(data[index]);
+          const d = data[index] as any;
+          if (balance >= BigInt(d.view_token_required)) {
+            this.holdingRooms.add(d);
           }
         }
       }
@@ -77,11 +84,13 @@ export default class Rooms extends View {
 
   private async loadTopRooms(): Promise<void> {
     const { data } = await SupabaseManager.supabase.from("pal_tokens")
-      .select()
+      .select(
+        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      )
       .order("last_fetched_price", { ascending: false })
       .limit(50);
     if (data) {
-      this.topRooms.rooms = data;
+      this.topRooms.rooms = data as any;
     }
   }
 

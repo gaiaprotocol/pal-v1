@@ -57,10 +57,10 @@ export default class TokenItem extends DomNode {
   private async loadMemberCount() {
     const { data, error } = await SupabaseManager.supabase.from(
       "pal_token_balances",
-    ).select("wallet_address").eq(
+    ).select("*, last_fetched_balance::text").eq(
       "token_address",
       this.tokenInfo.token_address,
-    );
+    ).gte("last_fetched_balance", this.tokenInfo.view_token_required);
     if (error) {
       console.error(error);
       return;

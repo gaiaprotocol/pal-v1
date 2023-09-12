@@ -36,9 +36,11 @@ class UserManager extends EventContainer {
   public async getUserToken(userWalletAddress: string) {
     const { data } = await SupabaseManager.supabase
       .from("pal_tokens")
-      .select()
+      .select(
+        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      )
       .eq("owner", userWalletAddress);
-    return data?.[0];
+    return data?.[0] as any;
   }
 
   public async loadUser() {

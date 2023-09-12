@@ -22,12 +22,14 @@ class TokenInfoCacher {
     }
     const { data, error } = await SupabaseManager.supabase.from(
       "pal_tokens",
-    ).select("*").in("token_address", tokenAddresses);
+    ).select(
+      "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+    ).in("token_address", tokenAddresses);
     if (error) {
       throw error;
     }
     if (data) {
-      for (const tokenInfo of data) {
+      for (const tokenInfo of data as any) {
         tokenInfoList.push(tokenInfo);
         this.tokenInfoMap.set(
           (tokenInfo as TokenInfo).token_address,
