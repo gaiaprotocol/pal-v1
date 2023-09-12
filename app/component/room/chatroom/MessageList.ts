@@ -55,9 +55,9 @@ export default class MessageList extends DomNode {
     this.items.push(item);
     item.on("delete", () => ArrayUtil.pull(this.items, item));
 
-    this.list.domElement.scrollTo(
+    this.domElement.scrollTo(
       0,
-      this.list.domElement.scrollHeight,
+      this.domElement.scrollHeight,
     );
 
     return item;

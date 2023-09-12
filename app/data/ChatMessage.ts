@@ -16,9 +16,10 @@ export interface UploadedFile {
 
 export default interface ChatMessage {
   id: number;
+  token_address: string;
   author: string;
-  authorName: string;
-  authorAvatarURL: string;
+  author_name?: string;
+  author_avatar_url?: string;
   message_type: MessageType;
   message?: string;
   rich?: {

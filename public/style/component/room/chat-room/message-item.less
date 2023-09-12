@@ -1,0 +1,37 @@
+.message-item {
+    display    : flex;
+    gap        : 5px;
+    margin     : 8px;
+    font-size  : 15px;
+    line-height: 1.5em;
+
+    >.profile-image {
+        background-color: #fff;
+        width           : 20px;
+        height          : 20px;
+        border-radius   : 5px;
+        margin-top      : 2px;
+    }
+
+    >.name {
+        font-weight: bold;
+        color      : #6699cc;
+    }
+
+    >.message {
+        color: #dcdcdc;
+    }
+
+    >.upload-image {
+        background-color: #fff;
+        height          : 100px;
+        border-radius   : 5px;
+        margin-top      : -2px;
+    }
+
+    &.wait {
+        >.message {
+            color: #999;
+        }
+    }
+}

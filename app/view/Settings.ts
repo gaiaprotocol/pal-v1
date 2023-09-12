@@ -1,8 +1,7 @@
-import { DomNode, el, View } from "common-dapp-module";
+import { Button, DomNode, el, View } from "common-dapp-module";
 import SupabaseManager from "../SupabaseManager.js";
-import WalletManager from "../user/WalletManager.js";
-import Layout from "./Layout.js";
 import UserManager from "../user/UserManager.js";
+import Layout from "./Layout.js";
 
 export default class Settings extends View {
   private container: DomNode;
@@ -12,6 +11,7 @@ export default class Settings extends View {
     Layout.append(
       this.container = el(
         ".settings-view",
+        el("h1", "Settings"),
       ),
     );
     this.init();
@@ -21,7 +21,9 @@ export default class Settings extends View {
     const { data, error } = await SupabaseManager.supabase.auth.getSession();
     if (!data?.session || error) {
       this.container.append(
-        el("a.twitter-login-button", "Sign in with 𝕏", {
+        new Button({
+          tag: ".twitter-login-button",
+          title: "Sign in with 𝕏",
           click: () =>
             SupabaseManager.supabase.auth.signInWithOAuth({
               provider: "twitter",
@@ -30,7 +32,9 @@ export default class Settings extends View {
       );
     } else {
       this.container.append(
-        el("a.logout-button", "Sign out", {
+        new Button({
+          tag: ".logout-button",
+          title: "Sign out",
           click: async () => {
             const { error } = await SupabaseManager.supabase.auth
               .signOut();
@@ -44,7 +48,9 @@ export default class Settings extends View {
       );
 
       this.container.append(
-        el("a.connect-wallet-button", "Connect Wallet", {
+        new Button({
+          tag: ".connect-wallet-button",
+          title: "Connect Wallet",
           click: () => UserManager.connectWallet(),
         }),
       );
