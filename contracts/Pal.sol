@@ -75,11 +75,11 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         return membershipToken.balanceOf(user) >= requiredMembershipAmount;
     }
 
-    function calculateAdditionalTokenOwnerFee(uint256 price) public view returns (uint256) {
+    function calculateAdditionalTokenOwnerFee(uint256 price, address tokenOwner) public view returns (uint256) {
         if (address(membershipToken) == address(0)) {
             return 0;
         }
-        return hasRequiredMembership(msg.sender) ? (price * additionalTokenOwnerFeePercent) / 1 ether : 0;
+        return hasRequiredMembership(tokenOwner) ? (price * additionalTokenOwnerFeePercent) / 1 ether : 0;
     }
 
     // Users can create their own tokens using this function
@@ -135,7 +135,7 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         PalToken token = PalToken(tokenAddress);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether;
-        uint256 additionalFee = calculateAdditionalTokenOwnerFee(price);
+        uint256 additionalFee = calculateAdditionalTokenOwnerFee(price, token.owner());
 
         if (isBuy) {
             require(msg.value >= price + protocolFee + tokenOwnerFee + additionalFee, "Insufficient payment");
