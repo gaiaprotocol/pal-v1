@@ -90,20 +90,15 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         PalToken newToken = new PalToken(msg.sender, name, symbol);
 
         isPalToken[address(newToken)] = true;
-        newToken.mint(msg.sender, 1 ether);
 
         emit TokenCreated(msg.sender, address(newToken), name, symbol);
         return address(newToken);
     }
 
     function getPrice(uint256 supply, uint256 amount) public pure returns (uint256) {
-        uint256 sum1 = supply == 0
-            ? 0
-            : (((((supply - 1 ether) * supply) / 1 ether) * (2 * (supply - 1 ether) + 1 ether)) / 1 ether) / 6;
-        uint256 sum2 = (supply == 0 && amount == 1 ether)
-            ? 0
-            : (((((supply - 1 ether + amount) * (supply + amount)) / 1 ether) *
-                (2 * (supply - 1 ether + amount) + 1 ether)) / 1 ether) / 6;
+        uint256 sum1 = ((((supply * (supply + 1 ether)) / 1 ether) * (2 * supply + 1 ether)) / 1 ether) / 6;
+        uint256 sum2 = (((((supply + amount) * (supply + 1 ether + amount)) / 1 ether) *
+            (2 * (supply + amount) + 1 ether)) / 1 ether) / 6;
         uint256 summation = sum2 - sum1;
         return summation / BASE_DIVIDER;
     }
