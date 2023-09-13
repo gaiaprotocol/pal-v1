@@ -176,9 +176,4 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         uint256 price = getSellPrice(tokenAddress, amount);
         executeTrade(tokenAddress, amount, price, false);
     }
-
-    // Fallback function
-    receive() external payable {
-        revert("Direct ether transfers are not allowed");
-    }
 }
