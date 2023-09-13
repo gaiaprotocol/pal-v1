@@ -22,4 +22,12 @@ export default class ChatRoom extends DomNode {
       new MessageForm(list, tokenAddress),
     );
   }
+
+  public active(): void {
+    this.addClass("active");
+  }
+
+  public inactive(): void {
+    this.deleteClass("active");
+  }
 }

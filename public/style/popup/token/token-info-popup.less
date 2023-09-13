@@ -5,7 +5,6 @@
     border-radius   : 4px;
     display         : flex;
     flex-direction  : column;
-    overflow-y      : auto;
     box-shadow      : var(--box-shadow);
     background-color: rgba(var(--surface-conatiner-color));
     color           : rgba(var(--on-surface-conatiner-color));
@@ -75,6 +74,21 @@
             >.balance {
                 color: #999;
             }
+        }
+    }
+
+    >.tabs {
+        border-bottom: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+    }
+
+    >.member-list,
+    >.activity-list {
+        display   : none;
+        max-height: 400px;
+        overflow-y: scroll;
+
+        &.active {
+            display: block;
         }
     }
 

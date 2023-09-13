@@ -363,10 +363,6 @@ body {
     height: 100%;
   }
 }
-.room-view > main {
-  width: 100%;
-  height: 100%;
-}
 .activity-view {
   background-color: #1e1e1e;
   min-height: 100%;
@@ -472,6 +468,18 @@ body {
 .list-loading {
   height: 40px;
   animation: list-loading 1s linear infinite alternate;
+}
+.tabs {
+  display: flex;
+}
+.tabs > .tab {
+  padding: 12px 16px;
+  cursor: pointer;
+  text-align: center;
+}
+.tabs > .tab.active {
+  color: rgba(var(--primary-color));
+  border-bottom: 2px solid rgba(var(--primary-color));
 }
 .room-list {
   border-bottom: 1px solid #2d2d2d;
@@ -782,7 +790,6 @@ body {
   border-radius: 4px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   box-shadow: var(--box-shadow);
   background-color: rgba(var(--surface-conatiner-color));
   color: rgba(var(--on-surface-conatiner-color));
@@ -844,6 +851,19 @@ body {
 }
 .token-info-popup > main > .balance > .balance {
   color: #999;
+}
+.token-info-popup > .tabs {
+  border-bottom: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+}
+.token-info-popup > .member-list,
+.token-info-popup > .activity-list {
+  display: none;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+.token-info-popup > .member-list.active,
+.token-info-popup > .activity-list.active {
+  display: block;
 }
 .token-info-popup > footer {
   border-top: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);

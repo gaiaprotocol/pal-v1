@@ -11,7 +11,7 @@ import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzic
 import { ethers } from "ethers";
 import ActivityList from "../../component/list/ActivityList.js";
 import MemberList from "../../component/list/MemberList.js";
-import TokenInfoTabs from "../../component/token-info/TokenInfoTabs.js";
+import Tabs from "../../component/tab/Tabs.js";
 import PalContract from "../../contract/PalContract.js";
 import PalTokenContract from "../../contract/PalTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
@@ -24,10 +24,13 @@ export default class TokenInfoPopup extends Popup {
   private profileImage: DomNode<HTMLImageElement>;
   private priceDisplay: DomNode;
   private balanceDisplay: DomNode;
+  private memberList: MemberList;
   private activityList: ActivityList;
 
   constructor(private tokenInfo: TokenInfo) {
     super({ barrierDismissible: true });
+
+    let tabs;
     this.append(
       this.content = new Component(
         ".token-info-popup",
@@ -50,8 +53,11 @@ export default class TokenInfoPopup extends Popup {
             this.balanceDisplay = el("span.balance.loading"),
           ),
         ),
-        new TokenInfoTabs(),
-        new MemberList(tokenInfo),
+        tabs = new Tabs([
+          { id: "members", label: "Members" },
+          { id: "activity", label: "Activity" },
+        ]),
+        this.memberList = new MemberList(tokenInfo),
         this.activityList = new ActivityList(),
         el(
           "footer",
@@ -62,7 +68,7 @@ export default class TokenInfoPopup extends Popup {
               Router.go("/" + this.tokenInfo.token_address);
               this.delete();
             },
-            title: "Chat Room",
+            title: "Go Chat Room",
           }),
           new Button({
             type: ButtonType.Text,
@@ -80,6 +86,18 @@ export default class TokenInfoPopup extends Popup {
     this.activityList.load({
       tokenAddresses: [tokenInfo.token_address],
     });
+
+    tabs.on("select", (id: string) => {
+      this.memberList.inactive();
+      this.activityList.inactive();
+
+      if (id === "members") {
+        this.memberList.active();
+      } else if (id === "activity") {
+        this.activityList.active();
+      }
+    });
+    tabs.select("members");
   }
 
   private async loadProfileImage() {

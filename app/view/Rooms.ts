@@ -72,6 +72,7 @@ export default class Rooms extends View {
         }
       }
     }
+    this.holdingRooms.loaded();
   }
 
   private async loadFriendsTokenRooms(): Promise<void> {

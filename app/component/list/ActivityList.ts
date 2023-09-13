@@ -2,7 +2,7 @@ import { DomNode, el } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import UserDataCacher from "../../cacher/UserDataCacher.js";
-import Activity, { EventType, eventToActivity } from "../../data/Activity.js";
+import Activity, { eventToActivity, EventType } from "../../data/Activity.js";
 import TokenCreatedActivityItem from "./TokenCreatedActivityItem.js";
 import TradeActivityItem from "./TradeActivityItem.js";
 
@@ -52,7 +52,11 @@ export default class ActivityList extends DomNode {
       const walletAddresses = new Set<string>();
 
       for (const event of data) {
-        const activity = eventToActivity(event.event_type, event.block_number, event.args);
+        const activity = eventToActivity(
+          event.event_type,
+          event.block_number,
+          event.args,
+        );
         if (activity.eventType === EventType.TokenCreated) {
           tokenAddresses.add(activity.address);
           walletAddresses.add(activity.owner);
@@ -75,5 +79,13 @@ export default class ActivityList extends DomNode {
         this.add(activity);
       }
     }
+  }
+
+  public active(): void {
+    this.addClass("active");
+  }
+
+  public inactive(): void {
+    this.deleteClass("active");
   }
 }

@@ -16,9 +16,13 @@ export default class RoomList extends DomNode {
     this.loadingComponent.on("delete", () => this.loadingComponent = undefined);
   }
 
+  public loaded() {
+    this.loadingComponent?.delete();
+  }
+
   public add(room: TokenInfo): RoomItem {
     const item = new RoomItem(room).appendTo(this.list);
-    this.loadingComponent?.delete();
+    this.loaded();
     return item;
   }
 

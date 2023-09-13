@@ -10,6 +10,7 @@ class SupabaseManager extends EventContainer {
     this.supabase = createClient(Config.supabaseURL, Config.supabaseAnonKey, {
       auth: {
         autoRefreshToken: true,
+        persistSession: true,
       },
     });
     await UserManager.loadUser();

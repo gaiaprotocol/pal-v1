@@ -9,13 +9,14 @@ export default class MemberList extends DomNode {
   private list: DomNode;
 
   constructor(private tokenInfo: TokenInfo) {
-    super(".holder-list");
+    super(".member-list");
     this.append(this.list = el("ul"));
     this.load();
   }
 
   public add(userDetails: UserDetails, balance: bigint): MemberItem {
-    const item = new MemberItem(userDetails, balance, this.tokenInfo.symbol).appendTo(this.list);
+    const item = new MemberItem(userDetails, balance, this.tokenInfo.symbol)
+      .appendTo(this.list);
     return item;
   }
 
@@ -45,5 +46,13 @@ export default class MemberList extends DomNode {
         }
       }
     }
+  }
+
+  public active(): void {
+    this.addClass("active");
+  }
+
+  public inactive(): void {
+    this.deleteClass("active");
   }
 }
