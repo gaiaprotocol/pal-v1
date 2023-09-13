@@ -2,15 +2,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
-contract PalToken is ERC20Permit, Ownable {
+contract PalToken is ERC20Permit, Ownable2Step {
     address public immutable _pal;
-    address public _pendingOwner;
     string private _name;
     string private _symbol;
 
-    event OwnershipTransferProposed(address indexed previousOwner, address indexed newOwner);
     event SetName(string name);
     event SetSymbol(string symbol);
 
@@ -27,18 +25,6 @@ contract PalToken is ERC20Permit, Ownable {
 
     function symbol() public view virtual override returns (string memory) {
         return _symbol;
-    }
-
-    function transferOwnership(address newOwner) public virtual override onlyOwner {
-        require(newOwner != address(0), "PalToken: new owner is the zero address");
-        emit OwnershipTransferProposed(owner(), newOwner);
-        _pendingOwner = newOwner;
-    }
-
-    function acceptOwnership() external {
-        require(msg.sender == _pendingOwner, "PalToken: caller is not the pending owner");
-        _transferOwnership(_pendingOwner);
-        _pendingOwner = address(0);
     }
 
     function setName(string memory name_) external onlyOwner {

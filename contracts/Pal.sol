@@ -5,8 +5,11 @@ import "./PalToken.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 
 contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
+    using AddressUpgradeable for address payable;
+
     address payable public protocolFeeDestination;
     uint256 public protocolFeePercent;
     uint256 public tokenOwnerFeePercent;
@@ -140,19 +143,19 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         if (isBuy) {
             require(msg.value >= price + protocolFee + tokenOwnerFee + additionalFee, "Insufficient payment");
             token.mint(msg.sender, amount);
-            protocolFeeDestination.transfer(protocolFee);
-            payable(token.owner()).transfer(tokenOwnerFee + additionalFee);
+            protocolFeeDestination.sendValue(protocolFee);
+            payable(token.owner()).sendValue(tokenOwnerFee + additionalFee);
             if (msg.value > price + protocolFee + tokenOwnerFee + additionalFee) {
                 uint256 refund = msg.value - price - protocolFee - tokenOwnerFee - additionalFee;
-                payable(msg.sender).transfer(refund);
+                payable(msg.sender).sendValue(refund);
             }
         } else {
             require(token.balanceOf(msg.sender) >= amount, "Insufficient tokens");
             token.burn(msg.sender, amount);
             uint256 netAmount = price - protocolFee - tokenOwnerFee - additionalFee;
-            payable(msg.sender).transfer(netAmount);
-            protocolFeeDestination.transfer(protocolFee);
-            payable(token.owner()).transfer(tokenOwnerFee + additionalFee);
+            payable(msg.sender).sendValue(netAmount);
+            protocolFeeDestination.sendValue(protocolFee);
+            payable(token.owner()).sendValue(tokenOwnerFee + additionalFee);
         }
 
         emit Trade(
