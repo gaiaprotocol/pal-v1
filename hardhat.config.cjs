@@ -83,6 +83,12 @@ module.exports = {
       accounts,
       chainId: 3068,
     },
+    base: {
+      url: "https://mainnet.base.org",
+      accounts,
+      chainId: 8453,
+      gasPrice: 1000000000,
+    },
     "base-goerli": {
       url: "https://goerli.base.org",
       accounts,
@@ -93,9 +99,18 @@ module.exports = {
   etherscan: {
     apiKey: {
       mainnet: process.env.ETHERSCAN_API_KEY,
+      base: process.env.BASESCAN_API_KEY,
       "base-goerli": "PLACEHOLDER_STRING",
     },
     customChains: [
+      {
+        network: "base",
+        chainId: 8453,
+        urls: {
+          apiURL: "https://api.basescan.org/api",
+          browserURL: "https://mainnet.basescan.org",
+        },
+      },
       {
         network: "base-goerli",
         chainId: 84531,

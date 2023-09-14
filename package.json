@@ -25,7 +25,7 @@
     "@web3modal/html": "^2.7.1",
     "common-dapp-module": "^0.0.2",
     "dayjs": "^1.11.9",
-    "ethers": "^6.7.0",
+    "ethers": "^6.7.1",
     "uuid": "^9.0.0",
     "viem": "^1.5.3"
   },
@@ -45,7 +45,6 @@
     "crypto-browserify": "^3.12.0",
     "css-loader": "^6.8.1",
     "dotenv": "^16.3.1",
-    "ethers": "^6.1.0",
     "gh-pages": "^6.0.0",
     "hardhat": "^2.17.1",
     "hardhat-tracer": "^2.6.0",

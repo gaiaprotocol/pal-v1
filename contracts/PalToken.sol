@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
 contract PalToken is ERC20Permit, Ownable2Step {
@@ -12,7 +12,11 @@ contract PalToken is ERC20Permit, Ownable2Step {
     event SetName(string name);
     event SetSymbol(string symbol);
 
-    constructor(address owner_, string memory name_, string memory symbol_) ERC20Permit(name_) ERC20(name_, symbol_) {
+    constructor(
+        address owner_,
+        string memory name_,
+        string memory symbol_
+    ) ERC20Permit("PalToken") ERC20(name_, symbol_) {
         _pal = msg.sender;
         _name = name_;
         _symbol = symbol_;
