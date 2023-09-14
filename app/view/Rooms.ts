@@ -43,7 +43,8 @@ export default class Rooms extends View {
       .select(
         "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
       )
-      .eq("owner", UserManager.userWalletAddress);
+      .eq("owner", UserManager.userWalletAddress)
+      .neq("hiding", true);
     if (data) {
       this.myRooms.rooms = data as any;
     }
@@ -54,14 +55,14 @@ export default class Rooms extends View {
       const { data } = await SupabaseManager.supabase.from("pal_tokens")
         .select(
           "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
-        );
+        )
+        .neq("hiding", true);
       if (data) {
         const tokenAddresses: string[] = (data as any)?.map((token: any) =>
           token.token_address
         ) ??
           [];
-          console.log(UserManager.userWalletAddress,
-            tokenAddresses,);
+        console.log(UserManager.userWalletAddress, tokenAddresses);
         const balances = await TokenHoldingsAggregatorContract.getERC20Balances(
           UserManager.userWalletAddress,
           tokenAddresses,
@@ -90,6 +91,7 @@ export default class Rooms extends View {
       .select(
         "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
       )
+      .neq("hiding", true)
       .order("last_fetched_price", { ascending: false })
       .limit(50);
     if (data) {

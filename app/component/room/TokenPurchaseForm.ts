@@ -1,8 +1,6 @@
-import { Button, DomNode, el } from "common-dapp-module";
+import { Button, DomNode } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import RoomInfo from "../../data/RoomInfo.js";
-import PalContract from "../../contract/PalContract.js";
-import { ethers } from "ethers";
 import TradeTokenPopup from "../../popup/token/TradeTokenPopup.js";
 
 export default class TokenPurchaseForm extends DomNode {

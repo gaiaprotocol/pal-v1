@@ -14,6 +14,8 @@ CREATE EXTENSION IF NOT EXISTS "pg_cron" WITH SCHEMA "extensions";
 
 CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
 
+CREATE EXTENSION IF NOT EXISTS "http" WITH SCHEMA "extensions";
+
 CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
 
 CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
@@ -104,7 +106,9 @@ CREATE TABLE IF NOT EXISTS "public"."chat_messages" (
     "message_type" smallint NOT NULL,
     "message" "text",
     "rich" "jsonb",
-    "translated" "jsonb"
+    "translated" "jsonb",
+    "author_name" "text",
+    "author_avatar_url" "text"
 );
 
 ALTER TABLE "public"."chat_messages" OWNER TO "postgres";
@@ -167,7 +171,7 @@ CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
     "view_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "last_fetched_price" numeric DEFAULT '0'::numeric NOT NULL,
-    "last_message_sent_at" timestamp with time zone NOT NULL
+    "last_message_sent_at" timestamp with time zone
 );
 
 ALTER TABLE "public"."pal_tokens" OWNER TO "postgres";

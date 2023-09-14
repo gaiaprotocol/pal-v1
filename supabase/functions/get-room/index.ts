@@ -1,36 +1,12 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.31.0";
-import { ethers } from "https://esm.sh/ethers@6.7.0";
-import PalContract from "../_shared/contracts/PalContract.ts";
-import PalTokenContract from "../_shared/contracts/PalTokenContract.ts";
 import { response, responseError, serveWithOptions } from "../_shared/cors.ts";
+import { getTokenInfo } from "../_shared/token.ts";
 import { getSignedUser } from "../_shared/user.ts";
-
-const provider = new ethers.JsonRpcProvider(Deno.env.get("BASE_RPC")!);
-const signer = new ethers.JsonRpcSigner(provider, ethers.ZeroAddress);
-const palContract = new PalContract(signer);
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
-
-async function getTokenInfo(
-  tokenAddress: string,
-  walletAddress: string,
-) {
-  const tokenContract = new PalTokenContract(tokenAddress, signer);
-  const [name, symbol, owner, balance, price] = await Promise.all([
-    tokenContract.name(),
-    tokenContract.symbol(),
-    tokenContract.owner(),
-    tokenContract.balanceOf(walletAddress),
-    palContract.getBuyPriceAfterFee(
-      tokenAddress,
-      ethers.parseEther("1"),
-    ),
-  ]);
-  return { name, symbol, owner, balance, price };
-}
 
 serveWithOptions(async (req) => {
   const user = await getSignedUser(req);

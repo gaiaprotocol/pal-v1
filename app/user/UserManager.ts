@@ -1,11 +1,13 @@
 import { User } from "@supabase/supabase-js";
-import { getNetwork, switchNetwork } from "@wagmi/core";
+import { getNetwork, getWalletClient, switchNetwork } from "@wagmi/core";
 import { Confirm, EventContainer } from "common-dapp-module";
+import { BrowserProvider, JsonRpcSigner } from "ethers";
 import Config from "../Config.js";
 import OnlineUserManager from "../OnlineUserManager.js";
 import SupabaseManager from "../SupabaseManager.js";
-import PalContract from "../contract/PalContract.js";
 import TokenInfo from "../data/TokenInfo.js";
+import ChangeChainPopup from "../popup/ChangeChainPopup.js";
+import ChangeWalletAddressPopup from "../popup/ChangeWalletAddressPopup.js";
 import CreateTokenPopup from "../popup/token/CreateTokenPopup.js";
 import ConnectWalletPopup from "../popup/user/ConnectWalletPopup.js";
 import WalletManager from "./WalletManager.js";
@@ -33,9 +35,14 @@ class UserManager extends EventContainer {
     return data?.[0]?.wallet_address;
   }
 
-  public async setSignedUserWalletAddress(walletAddress: string) {
+  public setSignedUserWalletAddress(walletAddress: string) {
     this.userWalletAddress = walletAddress;
     this.fireEvent("userWalletAddressChanged");
+  }
+
+  public setSignedUserToken(token: TokenInfo) {
+    this.userToken = token;
+    this.fireEvent("userTokenChanged");
   }
 
   public async getUserToken(userWalletAddress: string) {
@@ -84,21 +91,7 @@ class UserManager extends EventContainer {
         switchNetwork({ chainId: Config.palChainId });
       });
     } else {
-      new CreateTokenPopup(async (name, symbol, metadata) => {
-        const address = await PalContract.createToken(name, symbol);
-        if (WalletManager.address) {
-          this.userToken = {
-            token_address: address,
-            owner: WalletManager.address,
-            name,
-            symbol,
-            metadata,
-            view_token_required: "1000000000000000000",
-            write_token_required: "1000000000000000000",
-            last_fetched_price: "0",
-          };
-        }
-      });
+      new CreateTokenPopup();
     }
   }
 
@@ -110,6 +103,43 @@ class UserManager extends EventContainer {
     } else {
       window.location.reload();
     }
+  }
+
+  public async getSigner() {
+    if (!this.user) this.signIn();
+
+    if (WalletManager.connected !== true) {
+      WalletManager.connect();
+      return;
+    }
+
+    const walletClient = await getWalletClient();
+    if (!walletClient) return;
+    const { account, transport } = walletClient;
+    if (account.address !== this.userWalletAddress) {
+      if (!this.userWalletAddress) {
+        this.connectWallet();
+      } else {
+        new ChangeWalletAddressPopup(this.userWalletAddress);
+      }
+      return;
+    }
+
+    const { chain } = getNetwork();
+    if (!chain) return;
+
+    if (chain.id !== Config.palChainId) {
+      new ChangeChainPopup();
+      return;
+    }
+
+    const network = {
+      chainId: chain.id,
+      name: chain.name,
+      ensAddress: chain.contracts?.ensRegistry?.address,
+    };
+    const provider = new BrowserProvider(transport, network);
+    return new JsonRpcSigner(provider, account.address);
   }
 }
 

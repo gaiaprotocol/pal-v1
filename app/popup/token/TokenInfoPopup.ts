@@ -117,7 +117,7 @@ export default class TokenInfoPopup extends Popup {
   }
 
   private async loadPrice() {
-    const price = await PalContract.getBuyPriceAfterFee(
+    const price = await PalContract.getBuyPrice(
       this.tokenInfo.token_address,
       ethers.parseEther("1"),
     );

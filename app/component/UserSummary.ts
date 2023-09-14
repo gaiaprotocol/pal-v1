@@ -7,6 +7,7 @@ export default class UserSummary extends DomNode {
     super(".user-summary");
     this.init();
     this.onDelegate(UserManager, "userWalletAddressChanged", () => this.init());
+    this.onDelegate(UserManager, "userTokenChanged", () => this.init());
   }
 
   private async init() {
@@ -25,9 +26,13 @@ export default class UserSummary extends DomNode {
         }),
       );
     } else if (!UserManager.tokenCreated) {
-      this.empty().append(el("a.create-token-button", "Create Token", {
-        click: () => UserManager.createToken(),
-      }));
+      this.empty().append(
+        new Button({
+          tag: ".create-token-button",
+          title: "Create Your Token",
+          click: () => UserManager.createToken(),
+        }),
+      );
     } else {
       this.empty().append(new TokenSummary(UserManager.userToken!));
     }

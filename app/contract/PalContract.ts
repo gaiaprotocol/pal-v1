@@ -11,8 +11,12 @@ class PalContract extends Contract<Pal> {
   public async createToken(
     name: string,
     symbol: string,
-  ): Promise<string> {
-    const response = await this.writeContract.createToken(name, symbol);
+  ): Promise<string | undefined> {
+    const writeContract = await this.getWriteContract();
+    if (!writeContract) {
+      throw new Error("No signer");
+    }
+    const response = await writeContract.createToken(name, symbol);
     const tx = await response.wait();
     if (!tx) {
       throw new Error("Transaction failed");
@@ -42,14 +46,22 @@ class PalContract extends Contract<Pal> {
   }
 
   public async buyToken(tokenAddress: string, amount: bigint, value: bigint) {
-    const response = await this.writeContract.buyToken(tokenAddress, amount, {
+    const writeContract = await this.getWriteContract();
+    if (!writeContract) {
+      throw new Error("No signer");
+    }
+    const response = await writeContract.buyToken(tokenAddress, amount, {
       value,
     });
     return response.wait();
   }
 
   public async sellToken(tokenAddress: string, amount: bigint) {
-    const response = await this.writeContract.sellToken(tokenAddress, amount);
+    const writeContract = await this.getWriteContract();
+    if (!writeContract) {
+      throw new Error("No signer");
+    }
+    const response = await writeContract.sellToken(tokenAddress, amount);
     return response.wait();
   }
 }

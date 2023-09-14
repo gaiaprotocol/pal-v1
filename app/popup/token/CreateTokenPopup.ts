@@ -4,36 +4,47 @@ import {
   Component,
   DomNode,
   el,
+  Input,
   Popup,
   Router,
 } from "common-dapp-module";
 import PalContract from "../../contract/PalContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
+import UserManager from "../../user/UserManager.js";
 
 export default class CreateTokenPopup extends Popup {
   public content: DomNode;
   private createTokenButton: Button;
-  private tokenNameInput: DomNode<HTMLInputElement>;
-  private tokenSymbolInput: DomNode<HTMLInputElement>;
-  private tokenDescriptionInput: DomNode<HTMLTextAreaElement>;
+  private tokenNameInput: Input;
+  private tokenSymbolInput: Input;
+  private tokenDescriptionInput: Input;
 
-  constructor(
-    callback: (name: string, symbol: string, metadata: {
-      description?: string;
-    }) => void,
-  ) {
+  constructor() {
     super({ barrierDismissible: true });
     this.append(
       this.content = new Component(
         ".create-token-popup",
-        el("h1", "Create Token"),
+        el("h1", "Create Your Token"),
         el(
           "main",
-          this.tokenNameInput = el("input", { placeholder: "Name" }),
-          this.tokenSymbolInput = el("input", { placeholder: "Symbol" }),
-          this.tokenDescriptionInput = el("textarea", {
-            placeholder: "Description",
-          }),
+          el(
+            "form",
+            this.tokenNameInput = new Input({
+              label: "Name (e.g. Pal Token)",
+              placeholder: "Name",
+              required: true,
+            }),
+            this.tokenSymbolInput = new Input({
+              label: "Symbol (e.g. PAL)",
+              placeholder: "Symbol",
+              required: true,
+            }),
+            this.tokenDescriptionInput = new Input({
+              label: "Description",
+              placeholder: "Description",
+              multiline: true,
+            }),
+          ),
         ),
         el(
           "footer",
@@ -46,25 +57,52 @@ export default class CreateTokenPopup extends Popup {
           this.createTokenButton = new Button({
             type: ButtonType.Text,
             tag: ".create-token-button",
-            click: async () => {
-              const tokenAddress = await PalContract.createToken(
-                this.tokenNameInput.domElement.value,
-                this.tokenSymbolInput.domElement.value,
-              );
-              const { data, error } = await SupabaseManager.supabase.functions
-                .invoke("track-events");
-              console.log(data, error);
-              const { data: updateData, error: updateError } =
-                await SupabaseManager.supabase.from("pal_tokens").update({
-                  metadata: {
-                    description: this.tokenDescriptionInput.domElement.value,
-                  },
-                }).eq("address", tokenAddress);
-              console.log(updateData, updateError);
-              this.delete();
-              Router.go("/" + tokenAddress);
-            },
             title: "Create Token",
+            click: async () => {
+              this.createTokenButton.disable();
+              this.createTokenButton.title = "Creating...";
+
+              try {
+                const tokenAddress = await PalContract.createToken(
+                  this.tokenNameInput.value,
+                  this.tokenSymbolInput.value,
+                );
+
+                if (tokenAddress) {
+                  const { data, error } = await SupabaseManager.supabase
+                    .functions
+                    .invoke(
+                      "set-token-info",
+                      {
+                        body: {
+                          tokenAddress,
+                          metadata: {
+                            description: this.tokenDescriptionInput.value,
+                          },
+                        },
+                      },
+                    );
+
+                  console.log(data, error);
+
+                  if (error) {
+                    throw error;
+                  }
+
+                  UserManager.setSignedUserToken(data);
+
+                  SupabaseManager.supabase.functions.invoke("track-events");
+
+                  this.delete();
+                  Router.go("/" + tokenAddress);
+                }
+              } catch (e) {
+                console.error(e);
+
+                this.createTokenButton.enable();
+                this.createTokenButton.title = "Create Token";
+              }
+            },
           }),
         ),
       ),

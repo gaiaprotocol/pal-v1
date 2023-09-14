@@ -1,14 +1,12 @@
 import { EventContainer } from "common-dapp-module";
 import { BaseContract, ethers, Interface, InterfaceAbi } from "ethers";
 import Config from "../Config.js";
-import WalletManager from "../user/WalletManager.js";
+import UserManager from "../user/UserManager.js";
 
 export default abstract class Contract<CT extends BaseContract>
   extends EventContainer {
   protected viewContract!: CT;
-  protected writeContract!: CT;
 
-  private currentSigner?: ethers.Signer;
   public address!: string;
 
   constructor(private abi: Interface | InterfaceAbi) {
@@ -23,22 +21,15 @@ export default abstract class Contract<CT extends BaseContract>
       this.abi,
       new ethers.JsonRpcProvider(Config.palRPC),
     ) as any;
-
-    this.onDelegate(
-      WalletManager,
-      "signerChanged",
-      () => this.checkSignerChanged(),
-    );
-    this.checkSignerChanged();
   }
 
-  private checkSignerChanged() {
-    if (this.currentSigner !== WalletManager.signer) {
-      this.currentSigner = WalletManager.signer;
-      this.writeContract = new ethers.Contract(
+  protected async getWriteContract(): Promise<CT | undefined> {
+    const signer = await UserManager.getSigner();
+    if (signer) {
+      return new ethers.Contract(
         this.address,
         this.abi,
-        this.currentSigner,
+        signer,
       ) as any;
     }
   }

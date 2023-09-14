@@ -54,12 +54,15 @@ export default class ConnectWalletPopup extends Popup {
               try {
                 this.connectWalletButton.disable();
                 this.connectWalletButton.title = "Connecting...";
+
                 await WalletConnectionManager.connect();
                 UserManager.setSignedUserWalletAddress(WalletManager.address!);
+
                 callback();
                 this.delete();
               } catch (error) {
                 console.error(error);
+
                 this.connectWalletButton.enable();
                 this.connectWalletButton.title = "Connect Wallet";
               }

@@ -174,6 +174,48 @@ button.component.text {
 button.component.text.disabled {
   color: rgba(var(--primary-color), 0.3);
 }
+.input.component {
+  width: 100%;
+  border: 1px solid rgba(var(--outline-color));
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  padding-left: 6px;
+  padding-bottom: 6px;
+}
+.input.component.disabled {
+  border: 1px solid rgba(var(--on-surface-color), 0.3);
+  color: rgba(var(--on-surface-color), 0.3);
+  cursor: not-allowed;
+  user-select: none;
+}
+.input.component > legend {
+  padding: 0 6px;
+  font-size: 12px;
+}
+.input.component.active {
+  border: 1px solid rgba(var(--primary-color));
+}
+.input.component.active > legend {
+  color: rgba(var(--primary-color));
+}
+.input.component.required > legend::after {
+  content: "*";
+  margin: 0 0 0 4px;
+  color: rgba(var(--error-color));
+}
+.input.component > input,
+.input.component > textarea {
+  padding: 2px 12px 6px 6px;
+  width: 100%;
+}
+.input.component > input::placeholder,
+.input.component > textarea::placeholder {
+  color: rgba(var(--on-surface-color), 0.3);
+}
+.input.component > textarea {
+  height: 100px;
+}
 .popup-background {
   position: fixed;
   left: 0;
@@ -733,6 +775,37 @@ body {
   display: flex;
   justify-content: flex-end;
 }
+.change-wallet-address-popup {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.change-wallet-address-popup > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.change-wallet-address-popup > main {
+  padding: 0 24px 20px;
+}
+.change-wallet-address-popup > main > p {
+  line-height: 1.5;
+}
+.change-wallet-address-popup > main > p > b {
+  color: rgba(var(--primary-color));
+}
+.change-wallet-address-popup > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
 .connect-wallet-popup {
   max-width: 600px;
   width: 90%;
@@ -784,6 +857,12 @@ body {
 }
 .create-token-popup > main {
   padding: 0 24px 20px;
+}
+.create-token-popup > main > form > .select,
+.create-token-popup > main > form > .input,
+.create-token-popup > main > form > .button,
+.create-token-popup > main > form > .message-box {
+  margin-top: 16px;
 }
 .create-token-popup > footer {
   padding: 8px;
