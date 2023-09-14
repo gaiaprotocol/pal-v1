@@ -33,6 +33,11 @@ class UserManager extends EventContainer {
     return data?.[0]?.wallet_address;
   }
 
+  public async setSignedUserWalletAddress(walletAddress: string) {
+    this.userWalletAddress = walletAddress;
+    this.fireEvent("userWalletAddressChanged");
+  }
+
   public async getUserToken(userWalletAddress: string) {
     const { data } = await SupabaseManager.supabase
       .from("pal_tokens")

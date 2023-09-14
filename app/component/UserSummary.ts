@@ -1,14 +1,12 @@
-import { DomNode, el } from "common-dapp-module";
+import { Button, DomNode, el } from "common-dapp-module";
 import UserManager from "../user/UserManager.js";
-import WalletManager from "../user/WalletManager.js";
 import TokenSummary from "./TokenSummary.js";
 
 export default class UserSummary extends DomNode {
   constructor() {
     super(".user-summary");
     this.init();
-
-    this.onDelegate(WalletManager, "accountChanged", () => this.init());
+    this.onDelegate(UserManager, "userWalletAddressChanged", () => this.init());
   }
 
   private async init() {
@@ -20,7 +18,9 @@ export default class UserSummary extends DomNode {
       );
     } else if (!UserManager.walletConnected) {
       this.empty().append(
-        el("a.wallet-login-button", "Connect Wallet", {
+        new Button({
+          tag: ".wallet-login-button",
+          title: "Connect Wallet",
           click: () => UserManager.connectWallet(),
         }),
       );

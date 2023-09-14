@@ -6,8 +6,11 @@ export default class MemberItem extends DomNode {
   constructor(userDetails: UserDetails, balance: bigint, tokenSymbol: string) {
     super(".member-item");
     this.append(
-      el("img.profile-image", { src: userDetails.profile_image }),
-      el(".name", userDetails.display_name),
+      el(
+        "a.user",
+        el("img.profile-image", { src: userDetails.profile_image }),
+        el(".name", userDetails.display_name),
+      ),
       el(".balance", ethers.formatEther(balance) + " " + tokenSymbol),
     );
   }

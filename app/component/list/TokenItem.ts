@@ -15,13 +15,16 @@ export default class TokenItem extends DomNode {
     this.append(
       el(
         ".profile-image-container",
-        this.ownerProfileImage = el("img.profile-image"),
+        el(
+          ".profile-image",
+          this.ownerProfileImage = el("img"),
+        ),
       ),
       el(
         ".info-container",
         el(
           ".info",
-          this.ownerNameDisplay = el("span.name"),
+          this.ownerNameDisplay = el("a.name"),
           "'s token ",
           el("span.name", tokenInfo.name),
           " (",

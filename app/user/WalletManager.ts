@@ -19,7 +19,7 @@ import { BrowserProvider, JsonRpcSigner } from "ethers";
 import Config from "../Config.js";
 
 class WalletManager extends EventContainer {
-  private web3modal: Web3Modal;
+  private web3modal!: Web3Modal;
   private _resolveConnection?: () => void;
 
   public connected = false;
@@ -47,7 +47,7 @@ class WalletManager extends EventContainer {
     this.web3modal = new Web3Modal({
       projectId: Config.walletConnectProjectID,
       themeVariables: {
-        "--w3m-z-index": 999999,
+        "--w3m-z-index": "999999",
       },
     }, ethereumClient);
 

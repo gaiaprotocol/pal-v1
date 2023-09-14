@@ -22,18 +22,24 @@ export default class TradeActivityItem extends DomNode {
     this.append(
       el(
         ".profile-image-container",
-        this.traderProfileImage = el("img.profile-image"),
-        this.ownerProfileImage = el("img.profile-image"),
+        el(
+          ".profile-image",
+          this.traderProfileImage = el("img"),
+        ),
+        el(
+          ".profile-image",
+          this.ownerProfileImage = el("img"),
+        ),
       ),
       el(
         ".info-container",
         el(
           ".info",
-          this.traderNameDisplay = el("span.name"),
+          this.traderNameDisplay = el("a.name"),
           activity.isBuy ? " bought " : " sold ",
           this.amountDisplay = el("span.amount"),
           " ",
-          this.ownerNameDisplay = el("span.name"),
+          this.ownerNameDisplay = el("a.name"),
           "'s ",
           this.symbolDisplay = el("span.symbol"),
         ),

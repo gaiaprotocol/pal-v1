@@ -1,11 +1,11 @@
-import { getNetwork } from "@wagmi/core";
 import { msg, Router } from "common-dapp-module";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime.js";
 import BlockTimeCacher from "./cacher/BlockTimeCacher.js";
 import Config from "./Config.js";
 import PalContract from "./contract/PalContract.js";
 import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorContract.js";
 import OnlineUserManager from "./OnlineUserManager.js";
-import ChangeChainPopup from "./popup/ChangeChainPopup.js";
 import SupabaseManager from "./SupabaseManager.js";
 import WalletManager from "./user/WalletManager.js";
 import ActivityView from "./view/ActivityView.js";
@@ -14,8 +14,6 @@ import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import RoomView from "./view/RoomView.js";
 import Settings from "./view/Settings.js";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime.js";
 
 dayjs.extend(relativeTime);
 
@@ -51,12 +49,4 @@ export default async function install() {
     "explorer",
     "settings",
   ]);
-
-  if (!WalletManager.connected) {
-    await WalletManager.connect();
-  }
-  const { chain } = getNetwork();
-  if (chain?.id !== Config.palChainId) {
-    new ChangeChainPopup();
-  }
 }

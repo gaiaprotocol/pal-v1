@@ -8,6 +8,7 @@ Config.walletConnectProjectID = "a7ae37d3cf98197d04b720fb165553e0";
 
 Config.palChainId = 8453;
 Config.palRPC = "https://mainnet.base.org";
-Config.palAddress = "";
+Config.palAddress = "0x6C4F9e887304eFF6b819787F44545d947118884b";
+Config.tokenHoldingsAggregatorAddress = "0xdC5323d27c611D978E33B65ef9E1eA49fd9a0199";
 
 await install();

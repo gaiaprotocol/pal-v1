@@ -1,4 +1,4 @@
-import { DomNode, StringUtil, el } from "common-dapp-module";
+import { DomNode, el, StringUtil } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import dayjs from "dayjs";
 import BlockTimeCacher from "../../cacher/BlockTimeCacher.js";
@@ -17,15 +17,18 @@ export default class TokenCreatedActivityItem extends DomNode {
     this.append(
       el(
         ".profile-image-container",
-        this.ownerProfileImage = el("img.profile-image"),
+        el(
+          ".profile-image",
+          this.ownerProfileImage = el("img"),
+        ),
       ),
       el(
         ".info-container",
         el(
           ".info",
-          this.ownerNameDisplay = el("span.name"),
+          this.ownerNameDisplay = el("a.name"),
           " created a token ",
-          this.nameDisplay = el("span.name"),
+          this.nameDisplay = el("a.name"),
           " (",
           this.symbolDisplay = el("span.symbol"),
           ").",

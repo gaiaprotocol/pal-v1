@@ -7,9 +7,8 @@ class BlockTimeCacher {
 
   public async init() {
     const provider = new ethers.JsonRpcProvider(Config.palRPC);
-    const blockNumber = await provider.getBlockNumber();
-    const block = await provider.getBlock(blockNumber);
-    this.blockNumber = blockNumber;
+    const block = await provider.getBlock("latest");
+    this.blockNumber = block!.number;
     this.blockTime = block!.timestamp * 1000;
   }
 

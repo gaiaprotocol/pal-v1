@@ -60,6 +60,8 @@ export default class Rooms extends View {
           token.token_address
         ) ??
           [];
+          console.log(UserManager.userWalletAddress,
+            tokenAddresses,);
         const balances = await TokenHoldingsAggregatorContract.getERC20Balances(
           UserManager.userWalletAddress,
           tokenAddresses,

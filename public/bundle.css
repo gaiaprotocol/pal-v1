@@ -753,6 +753,13 @@ body {
 .connect-wallet-popup > main {
   padding: 0 24px 20px;
 }
+.connect-wallet-popup > main > p > ol {
+  padding: 24px 24px 0;
+  list-style-type: decimal;
+}
+.connect-wallet-popup > main > p > ol > li {
+  margin-bottom: 24px;
+}
 .connect-wallet-popup > footer {
   padding: 8px;
   display: flex;

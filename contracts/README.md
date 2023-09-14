@@ -6,7 +6,7 @@ The `Pal` and `PalToken` smart contracts are designed to facilitate the creation
 ### Pal
 The primary contract, `Pal`, allows users to create their own ERC20 tokens with custom names and symbols. It also provides a mechanism for buying and selling these tokens based on a pricing formula.
 
-#### Mainnet
+#### Base
 - [0x6C4F9e887304eFF6b819787F44545d947118884b](https://basescan.org/address/0x6C4F9e887304eFF6b819787F44545d947118884b)
 
 ### PalToken
