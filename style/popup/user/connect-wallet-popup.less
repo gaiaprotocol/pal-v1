@@ -1,0 +1,39 @@
+.connect-wallet-popup {
+    max-width       : 600px;
+    width           : 90%;
+    margin          : auto;
+    border-radius   : 4px;
+    display         : flex;
+    flex-direction  : column;
+    overflow-y      : auto;
+    box-shadow      : var(--box-shadow);
+    background-color: rgba(var(--surface-conatiner-color));
+    color           : rgba(var(--on-surface-conatiner-color));
+
+    >h1 {
+        padding    : 16px 24px;
+        font-size  : 20px;
+        font-weight: bold;
+    }
+
+    >main {
+        padding: 0 24px 20px;
+
+        >p {
+            >ol {
+                padding        : 24px 24px 0;
+                list-style-type: decimal;
+
+                >li {
+                    margin-bottom: 24px;
+                }
+            }
+        }
+    }
+
+    >footer {
+        padding        : 8px;
+        display        : flex;
+        justify-content: flex-end;
+    }
+}
