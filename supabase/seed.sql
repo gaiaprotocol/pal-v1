@@ -74,7 +74,8 @@ CREATE OR REPLACE FUNCTION "public"."new_pal_token"() RETURNS "trigger"
   IF new.event_type = 0 THEN
     insert into pal_tokens (token_address, owner, name, symbol) values (
       new.args[2], new.args[1], new.args[3], new.args[4]
-    );
+    ) ON CONFLICT (token_address)
+    DO NOTHING;
   END IF;
   return null;
 end;$$;
@@ -171,7 +172,8 @@ CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
     "view_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "last_fetched_price" numeric DEFAULT '0'::numeric NOT NULL,
-    "last_message_sent_at" timestamp with time zone
+    "last_message_sent_at" timestamp with time zone,
+    "hiding" boolean DEFAULT false NOT NULL
 );
 
 ALTER TABLE "public"."pal_tokens" OWNER TO "postgres";
@@ -179,7 +181,8 @@ ALTER TABLE "public"."pal_tokens" OWNER TO "postgres";
 CREATE TABLE IF NOT EXISTS "public"."tracked_event_blocks" (
     "id" bigint NOT NULL,
     "block_number" bigint NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone
 );
 
 ALTER TABLE "public"."tracked_event_blocks" OWNER TO "postgres";
@@ -260,7 +263,7 @@ ALTER TABLE "public"."tracked_event_blocks" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "update pal token's metadata" ON "public"."pal_tokens" FOR UPDATE USING (("owner" = ( SELECT "user_details"."wallet_address"
    FROM "public"."user_details"
-  WHERE ("user_details"."id" = "auth"."uid"())))) WITH CHECK ((("owner" = NULL::"text") AND ("name" = NULL::"text") AND ("symbol" = NULL::"text") AND ("created_at" = NULL::timestamp with time zone) AND ("view_token_required" = NULL::numeric) AND ("write_token_required" = NULL::numeric) AND ("last_fetched_price" = NULL::numeric)));
+  WHERE ("user_details"."id" = "auth"."uid"())))) WITH CHECK ((("owner" = NULL::"text") AND ("name" = NULL::"text") AND ("symbol" = NULL::"text") AND ("hiding" = NULL::boolean) AND ("created_at" = NULL::timestamp with time zone) AND ("view_token_required" = NULL::numeric) AND ("write_token_required" = NULL::numeric) AND ("last_fetched_price" = NULL::numeric)));
 
 ALTER TABLE "public"."user_details" ENABLE ROW LEVEL SECURITY;
 

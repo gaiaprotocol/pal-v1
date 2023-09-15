@@ -63,9 +63,17 @@ serveWithOptions(async () => {
     }
   }
 
-  await supabase
+  const { error: error2 } = await supabase
     .from("tracked_event_blocks")
-    .upsert({ id: 0, block_number: toTrackBlock });
+    .upsert({
+      id: 0,
+      block_number: toTrackBlock,
+      updated_at: new Date().toISOString(),
+    });
+
+  if (error2) {
+    return responseError(error2);
+  }
 
   return response({});
 });
