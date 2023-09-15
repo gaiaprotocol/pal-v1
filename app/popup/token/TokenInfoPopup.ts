@@ -9,19 +9,23 @@ import {
 } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
+import Icon from "../../component/Icon.js";
 import ActivityList from "../../component/list/ActivityList.js";
 import MemberList from "../../component/list/MemberList.js";
+import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
 import Tabs from "../../component/tab/Tabs.js";
 import PalContract from "../../contract/PalContract.js";
 import PalTokenContract from "../../contract/PalTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserManager from "../../user/UserManager.js";
+import EditTokenInfoPopup from "./EditTokenInfoPopup.js";
 
 export default class TokenInfoPopup extends Popup {
   public content: DomNode;
 
-  private profileImage: DomNode<HTMLImageElement>;
+  private profileImage: ProfileImageDisplay;
+  private editButton: DomNode;
   private priceDisplay: DomNode;
   private balanceDisplay: DomNode;
   private memberList: MemberList;
@@ -36,9 +40,18 @@ export default class TokenInfoPopup extends Popup {
         ".token-info-popup",
         el(
           "h1",
-          this.profileImage = el("img.profile-image"),
-          el("span.name", tokenInfo.name),
-          el("span.symbol", tokenInfo.symbol),
+          this.profileImage = new ProfileImageDisplay(),
+          el(
+            ".name-and-symbol",
+            el("span.name", tokenInfo.name),
+            el("span.symbol", tokenInfo.symbol),
+          ),
+          el(
+            ".edit-button-container",
+            this.editButton = el("a.hidden", new Icon("edit"), {
+              click: () => new EditTokenInfoPopup(tokenInfo),
+            }),
+          ),
           this.priceDisplay = el("span.price"),
         ),
         el(
@@ -80,7 +93,7 @@ export default class TokenInfoPopup extends Popup {
       ),
     );
 
-    this.loadProfileImage();
+    this.loadOwner();
     this.loadPrice();
     this.loadBalance();
     this.activityList.load({
@@ -100,7 +113,7 @@ export default class TokenInfoPopup extends Popup {
     tabs.select("members");
   }
 
-  private async loadProfileImage() {
+  private async loadOwner() {
     const { data, error } = await SupabaseManager.supabase.from("user_details")
       .select().eq("wallet_address", this.tokenInfo.owner);
 
@@ -113,7 +126,11 @@ export default class TokenInfoPopup extends Popup {
         this.tokenInfo.owner,
       );
     }
-    this.profileImage.domElement.src = profileImageSrc;
+    this.profileImage.src = profileImageSrc;
+
+    if (tokenOwner.wallet_address === UserManager.userWalletAddress) {
+      this.editButton.deleteClass("hidden");
+    }
   }
 
   private async loadPrice() {

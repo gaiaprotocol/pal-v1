@@ -84,8 +84,6 @@ export default class TokenList extends DomNode {
       throw error;
     }
 
-    this.list.empty();
-
     const ownerWalletAddresses: string[] = [];
     for (const tokenInfo of data) {
       if (!ownerWalletAddresses.includes(tokenInfo.owner)) {
@@ -93,6 +91,8 @@ export default class TokenList extends DomNode {
       }
     }
     await UserDataCacher.getMultipleUserData(ownerWalletAddresses);
+
+    this.list.empty();
     for (const tokenInfo of data) {
       this.add(tokenInfo);
     }

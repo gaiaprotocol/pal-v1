@@ -24,14 +24,55 @@
             border-radius: 50%;
         }
 
-        >.name {
-            font-weight: bold;
+        >.name-and-symbol {
+            display    : flex;
+            align-items: center;
+            gap        : 12px;
+
+            @media @phone {
+                flex-direction: column;
+                align-items   : start;
+                gap           : 2px;
+            }
+
+            >.name {
+                font-weight: bold;
+
+                @media @phone {
+                    font-size: 14px;
+                }
+            }
+
+            >.symbol {
+                font-size: 16px;
+                color    : #999;
+
+                @media @phone {
+                    font-size: 12px;
+                }
+            }
         }
 
-        >.symbol {
+        >.edit-button-container {
             flex-grow: 1;
-            font-size: 16px;
-            color    : #999;
+
+            >a {
+                display: block;
+                cursor : pointer;
+                color  : #999;
+
+                >.icon {
+                    display: block;
+                }
+
+                &:hover {
+                    color: #fff;
+                }
+
+                &.hidden {
+                    display: none;
+                }
+            }
         }
 
         >.price {

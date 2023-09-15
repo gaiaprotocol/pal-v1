@@ -75,6 +75,7 @@ export default class ActivityList extends DomNode {
       }
       await UserDataCacher.getMultipleUserData(Array.from(walletAddresses));
 
+      this.list.empty();
       for (const activity of activityList) {
         this.add(activity);
       }

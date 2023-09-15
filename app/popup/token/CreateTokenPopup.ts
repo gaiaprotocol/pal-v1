@@ -7,6 +7,7 @@ import {
   Input,
   Popup,
   Router,
+  WarningMessageBox,
 } from "common-dapp-module";
 import PalContract from "../../contract/PalContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
@@ -27,6 +28,10 @@ export default class CreateTokenPopup extends Popup {
         el("h1", "Create Your Token"),
         el(
           "main",
+          new WarningMessageBox({
+            message:
+              "You can create your own token. However, be cautious, as once a token is recorded on the blockchain, it cannot be deleted permanently. Although, the information of the token can be modified.",
+          }),
           el(
             "form",
             this.tokenNameInput = new Input({

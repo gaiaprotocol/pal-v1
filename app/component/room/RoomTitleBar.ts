@@ -10,7 +10,7 @@ export default class RoomTitleBar extends DomNode {
     super(".room-title-bar");
     this.append(
       this.infoContainer = el(".info-container"),
-      el("button", new Icon("close"), {
+      el("a", new Icon("close"), {
         click: () => history.back(),
       }),
     );
