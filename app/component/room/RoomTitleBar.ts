@@ -1,14 +1,23 @@
 import { DomNode, el } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
+import Icon from "../Icon.js";
 import TokenSummary from "../TokenSummary.js";
 
 export default class RoomTitleBar extends DomNode {
+  private infoContainer: DomNode;
+
   constructor() {
     super(".room-title-bar");
+    this.append(
+      this.infoContainer = el(".info-container"),
+      el("button", new Icon("close"), {
+        click: () => history.back(),
+      }),
+    );
   }
 
   public async loadTokenInfo(tokenAddress: string) {
-    this.empty();
+    this.infoContainer.empty();
     const { data, error } = await SupabaseManager.supabase.from(
       "pal_tokens",
     )
@@ -20,7 +29,7 @@ export default class RoomTitleBar extends DomNode {
       return;
     }
     const tokenInfo = data as any;
-    this.empty().append(
+    this.infoContainer.empty().append(
       el("h1", tokenInfo.metadata.roomName ?? tokenInfo.name),
       new TokenSummary(tokenInfo),
     );

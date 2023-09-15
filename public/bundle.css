@@ -1,3 +1,6 @@
+/*!***********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../common-style/lib/reset.css ***!
+  \***********************************************************************************************************/
 /***
     The new CSS reset - version 1.8.4 (last updated 14.2.2023)
     GitHub page: https://github.com/elad2412/the-new-css-reset
@@ -97,6 +100,9 @@ meter {
 :where(dialog:modal) {
     all: revert;
 }
+/*!*********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/less-loader/dist/cjs.js!./public/style/main.less ***!
+  \*********************************************************************************************************************************************/
 @font-face {
   font-family: 'Noto Sans';
   font-style: normal;
@@ -285,6 +291,14 @@ body {
   height: 100%;
   font-size: 14px;
 }
+@keyframes profile-image-loading {
+  0% {
+    background-position-x: -240px;
+  }
+  100% {
+    background-position-x: 24px;
+  }
+}
 .layout {
   padding-top: 60px;
   padding-left: 80px;
@@ -401,13 +415,27 @@ body {
 }
 .activity-view {
   background-color: #1e1e1e;
-  min-height: 100%;
+  height: 100%;
   display: flex;
+}
+@media only screen and (max-width: 859px) {
+  .activity-view {
+    display: block;
+    overflow-y: auto;
+    padding-bottom: 60px;
+  }
 }
 .activity-view > .activity-list-container {
   flex: 1 1 0px;
   border-right: 1px solid #2d2d2d;
   overflow-y: auto;
+  padding-bottom: 60px;
+}
+@media only screen and (max-width: 859px) {
+  .activity-view > .activity-list-container {
+    overflow-y: visible;
+    padding-bottom: 0;
+  }
 }
 .activity-view > .activity-list-container > h2 {
   font-size: 28px;
@@ -416,13 +444,27 @@ body {
 }
 .explorer-view {
   background-color: #1e1e1e;
-  min-height: 100%;
+  height: 100%;
   display: flex;
+}
+@media only screen and (max-width: 859px) {
+  .explorer-view {
+    display: block;
+    overflow-y: auto;
+    padding-bottom: 60px;
+  }
 }
 .explorer-view > .token-list-container {
   flex: 1 1 0px;
   border-right: 1px solid #2d2d2d;
   overflow-y: auto;
+  padding-bottom: 60px;
+}
+@media only screen and (max-width: 859px) {
+  .explorer-view > .token-list-container {
+    overflow-y: visible;
+    padding-bottom: 0;
+  }
 }
 .explorer-view > .token-list-container > h2 {
   font-size: 28px;
@@ -517,6 +559,20 @@ body {
   color: rgba(var(--primary-color));
   border-bottom: 2px solid rgba(var(--primary-color));
 }
+.profile-image-display {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+.profile-image-display.loading {
+  background: linear-gradient(0.25turn, #1e1e1e, #2e2e2e 45% 55%, #1e1e1e);
+  animation: profile-image-loading 2s infinite linear;
+}
+.profile-image-display > img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
 .room-list {
   border-bottom: 1px solid #2d2d2d;
 }
@@ -530,11 +586,6 @@ body {
   display: flex;
   gap: 8px;
   align-items: center;
-}
-.room-item > .token-owner-profile-image {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
 }
 .room-item > .room-name {
   font-size: 18px;
@@ -554,15 +605,40 @@ body {
   display: flex;
   align-items: center;
   padding: 0 24px;
-  justify-content: space-between;
+  gap: 24px;
 }
 @media only screen and (max-width: 859px) {
   .room-title-bar {
+    padding: 0 12px;
     background-color: #530087;
   }
 }
-.room-title-bar > h1 {
+.room-title-bar > .info-container {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.room-title-bar > .info-container > h1 {
   font-size: 20px;
+}
+@media only screen and (max-width: 859px) {
+  .room-title-bar > .info-container > h1 {
+    display: none;
+  }
+}
+.room-title-bar > button {
+  display: none;
+  cursor: pointer;
+  color: #999;
+}
+@media only screen and (max-width: 859px) {
+  .room-title-bar > button {
+    display: block;
+  }
+}
+.room-title-bar > button:hover {
+  color: #fff;
 }
 .token-purchase-form {
   display: none;
@@ -653,6 +729,10 @@ body {
   border-radius: 50%;
   border: 1px solid #2d2d2d;
 }
+.trade-activity-item > .profile-image-container > .profile-image.loading {
+  background: linear-gradient(0.25turn, #1e1e1e, #2e2e2e 45% 55%, #1e1e1e);
+  animation: profile-image-loading 2s infinite linear;
+}
 .trade-activity-item > .profile-image-container > .profile-image:last-of-type {
   margin-left: -12px;
 }
@@ -682,6 +762,10 @@ body {
   border-radius: 50%;
   border: 1px solid #2d2d2d;
 }
+.token-created-activity-item > .profile-image-container > .profile-image.loading {
+  background: linear-gradient(0.25turn, #1e1e1e, #2e2e2e 45% 55%, #1e1e1e);
+  animation: profile-image-loading 2s infinite linear;
+}
 .token-created-activity-item > .info-container {
   display: flex;
   flex-direction: column;
@@ -705,6 +789,10 @@ body {
   border-radius: 50%;
   border: 1px solid #2d2d2d;
 }
+.token-item > .profile-image-container > .profile-image.loading {
+  background: linear-gradient(0.25turn, #1e1e1e, #2e2e2e 45% 55%, #1e1e1e);
+  animation: profile-image-loading 2s infinite linear;
+}
 .token-item > .info-container {
   display: flex;
   flex-direction: column;
@@ -725,6 +813,10 @@ body {
   border-radius: 50%;
   border: 1px solid #2d2d2d;
   flex: 0 0 48px;
+}
+.member-item > .profile-image.loading {
+  background: linear-gradient(0.25turn, #1e1e1e, #2e2e2e 45% 55%, #1e1e1e);
+  animation: profile-image-loading 2s infinite linear;
 }
 .member-item > .name {
   flex-grow: 1;

@@ -8,13 +8,39 @@
     display         : flex;
     align-items     : center;
     padding         : 0 24px;
-    justify-content : space-between;
+    gap             : 24px;
 
     @media @phone {
+        padding         : 0 12px;
         background-color: #530087;
     }
 
-    >h1 {
-        font-size: 20px;
+    >.info-container {
+        flex-grow      : 1;
+        display        : flex;
+        align-items    : center;
+        justify-content: space-between;
+
+        >h1 {
+            font-size: 20px;
+
+            @media @phone {
+                display: none;
+            }
+        }
+    }
+
+    >button {
+        display: none;
+        cursor : pointer;
+        color  : #999;
+
+        @media @phone {
+            display: block;
+        }
+
+        &:hover {
+            color: #fff;
+        }
     }
 }
