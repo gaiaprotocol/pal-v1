@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./PalToken.sol";
+import "./PalUserToken.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -15,12 +15,11 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     uint256 public tokenOwnerFeePercent;
 
     IERC20 public membershipToken;
-    uint256 public requiredMembershipAmount;
-    uint256 public additionalTokenOwnerFeePercent;
+    uint256 public membershipWeight;
 
     uint256 private constant BASE_DIVIDER = 16000;
 
-    mapping(address => bool) public isPalToken;
+    mapping(address => bool) public isPalUserToken;
 
     event TokenCreated(address indexed owner, address tokenAddress, string name, string symbol);
     event Trade(
@@ -63,33 +62,28 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         membershipToken = IERC20(_token);
     }
 
-    function setRequiredMembershipAmount(uint256 _amount) public onlyOwner {
-        requiredMembershipAmount = _amount;
-    }
-
-    function setAdditionalTokenOwnerFeePercent(uint256 _feePercent) public onlyOwner {
-        additionalTokenOwnerFeePercent = _feePercent;
-    }
-
-    function hasRequiredMembership(address user) public view returns (bool) {
-        if (address(membershipToken) == address(0)) {
-            return false;
-        }
-        return membershipToken.balanceOf(user) >= requiredMembershipAmount;
+    function setMembershipWeight(uint256 _weight) public onlyOwner {
+        require(_weight <= protocolFeePercent, "Weight cannot exceed protocol fee percent");
+        membershipWeight = _weight;
     }
 
     function calculateAdditionalTokenOwnerFee(uint256 price, address tokenOwner) public view returns (uint256) {
         if (address(membershipToken) == address(0)) {
             return 0;
         }
-        return hasRequiredMembership(tokenOwner) ? (price * additionalTokenOwnerFeePercent) / 1 ether : 0;
+
+        uint256 memberBalance = membershipToken.balanceOf(tokenOwner);
+        uint256 feeIncrease = (((price * membershipWeight) / 1 ether) * memberBalance) / 1 ether;
+        uint256 maxAdditionalFee = (price * protocolFeePercent) / 1 ether;
+
+        return feeIncrease < maxAdditionalFee ? feeIncrease : maxAdditionalFee;
     }
 
     // Users can create their own tokens using this function
     function createToken(string memory name, string memory symbol) public returns (address) {
-        PalToken newToken = new PalToken(msg.sender, name, symbol);
+        PalUserToken newToken = new PalUserToken(msg.sender, name, symbol);
 
-        isPalToken[address(newToken)] = true;
+        isPalUserToken[address(newToken)] = true;
 
         emit TokenCreated(msg.sender, address(newToken), name, symbol);
         return address(newToken);
@@ -104,12 +98,12 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     }
 
     function getBuyPrice(address tokenAddress, uint256 amount) public view returns (uint256) {
-        PalToken token = PalToken(tokenAddress);
+        PalUserToken token = PalUserToken(tokenAddress);
         return getPrice(token.totalSupply(), amount);
     }
 
     function getSellPrice(address tokenAddress, uint256 amount) public view returns (uint256) {
-        PalToken token = PalToken(tokenAddress);
+        PalUserToken token = PalUserToken(tokenAddress);
         return getPrice(token.totalSupply() - amount, amount);
     }
 
@@ -128,12 +122,12 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     }
 
     function executeTrade(address tokenAddress, uint256 amount, uint256 price, bool isBuy) internal nonReentrant {
-        require(isPalToken[tokenAddress], "Invalid token address");
+        require(isPalUserToken[tokenAddress], "Invalid token address");
 
-        PalToken token = PalToken(tokenAddress);
-        uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
+        PalUserToken token = PalUserToken(tokenAddress);
         uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether;
         uint256 additionalFee = calculateAdditionalTokenOwnerFee(price, token.owner());
+        uint256 protocolFee = (price * protocolFeePercent) / 1 ether - additionalFee;
 
         if (isBuy) {
             require(msg.value >= price + protocolFee + tokenOwnerFee + additionalFee, "Insufficient payment");

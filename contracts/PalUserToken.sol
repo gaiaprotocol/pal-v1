@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
-contract PalToken is ERC20Permit, Ownable2Step {
+contract PalUserToken is ERC20Permit, Ownable2Step {
     address public immutable _pal;
     string private _name;
     string private _symbol;
@@ -16,7 +16,7 @@ contract PalToken is ERC20Permit, Ownable2Step {
         address owner_,
         string memory name_,
         string memory symbol_
-    ) ERC20Permit("PalToken") ERC20(name_, symbol_) {
+    ) ERC20Permit("Pal User Token") ERC20(name_, symbol_) {
         _pal = msg.sender;
         _name = name_;
         _symbol = symbol_;
