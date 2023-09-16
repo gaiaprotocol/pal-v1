@@ -34,6 +34,7 @@ export default class Layout extends View {
             el("img", { src: "/images/logo.png" }, {
               click: () => Router.go("/"),
             }),
+            el("span.beta", "beta"),
           ),
           new UserSummary(),
         ),

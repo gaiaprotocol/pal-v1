@@ -4,6 +4,8 @@ import MessageForm from "./chatroom/MessageForm.js";
 import MessageList from "./chatroom/MessageList.js";
 
 export default class ChatRoom extends DomNode {
+  private messageForm: MessageForm | undefined;
+
   constructor() {
     super(".chat-room");
   }
@@ -19,7 +21,7 @@ export default class ChatRoom extends DomNode {
     let list;
     this.empty().append(
       list = new MessageList(tokenAddress),
-      new MessageForm(list, tokenAddress),
+      this.messageForm = new MessageForm(list, tokenAddress),
     );
   }
 
@@ -29,5 +31,9 @@ export default class ChatRoom extends DomNode {
 
   public inactive(): void {
     this.deleteClass("active");
+  }
+
+  public focusMessageForm(): void {
+    this.messageForm?.focus();
   }
 }

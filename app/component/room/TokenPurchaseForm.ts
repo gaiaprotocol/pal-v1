@@ -1,7 +1,7 @@
 import { Button, DomNode } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import RoomInfo from "../../data/RoomInfo.js";
-import TradeTokenPopup from "../../popup/token/TradeTokenPopup.js";
+import BuyTokenPopup from "../../popup/token/BuyTokenPopup.js";
 
 export default class TokenPurchaseForm extends DomNode {
   private currentTokenAddress: string | undefined;
@@ -14,16 +14,7 @@ export default class TokenPurchaseForm extends DomNode {
         title: "Buy Token",
         click: async () => {
           if (this.currentTokenAddress) {
-            /*const price = await PalContract.getBuyPriceAfterFee(
-              this.currentTokenAddress,
-              ethers.parseEther("1"),
-            );
-            await PalContract.buyToken(
-              this.currentTokenAddress,
-              ethers.parseEther("1"),
-              price,
-            );*/
-            new TradeTokenPopup(this.currentTokenAddress);
+            new BuyTokenPopup(this.currentTokenAddress);
           }
         },
       }),
@@ -40,6 +31,8 @@ export default class TokenPurchaseForm extends DomNode {
     );
     if (!error && data !== true) {
       this.addClass("show");
+      return true;
     }
+    return false;
   }
 }

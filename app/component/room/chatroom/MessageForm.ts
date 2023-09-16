@@ -59,11 +59,9 @@ export default class MessageForm extends DomNode {
         }
       }
     });
+  }
 
-    setTimeout(() => {
-      if (this.messageInput.deleted !== true) {
-        this.messageInput.domElement.focus();
-      }
-    });
+  public focus(): void {
+    this.messageInput.domElement.focus();
   }
 }

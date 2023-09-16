@@ -1,13 +1,16 @@
 .token-purchase-form {
-    display : none;
-    position: absolute;
-    left    : 0;
-    top     : 60px;
-    width   : 100%;
-    height  : calc(100% - 60px);
+    display         : none;
+    position        : absolute;
+    left            : 0;
+    top             : 60px;
+    width           : 100%;
+    height          : calc(100% - 60px);
+    background-color: #222222;
 
     &.show {
-        display: block;
+        display        : flex;
+        align-items    : center;
+        justify-content: center;
     }
 
     >.buy-token-button {

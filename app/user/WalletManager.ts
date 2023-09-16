@@ -5,7 +5,7 @@ import {
   signMessage,
   watchAccount,
 } from "@wagmi/core";
-import { mainnet } from "@wagmi/core/chains";
+import { base, mainnet } from "@wagmi/core/chains";
 import {
   EthereumClient,
   w3mConnectors,
@@ -25,7 +25,7 @@ class WalletManager extends EventContainer {
   }
 
   public init() {
-    const chains = [mainnet];
+    const chains = [mainnet, base];
 
     const { publicClient } = configureChains(chains, [
       w3mProvider({ projectId: Config.walletConnectProjectID }),

@@ -43,8 +43,14 @@ export default class RoomView extends View {
     this.roomInfo = data;
     if (this.roomInfo) {
       this.titleBar.loadTokenInfo(tokenAddress);
-      this.tokenPurchaseForm.check(tokenAddress, this.roomInfo);
-      this.chatRoom.loadMessages(tokenAddress);
+      const [, formShowing] = await Promise.all([
+        this.chatRoom.loadMessages(tokenAddress),
+        this.tokenPurchaseForm.check(tokenAddress, this.roomInfo),
+      ]);
+
+      if (!formShowing) {
+        this.chatRoom.focusMessageForm();
+      }
     }
   }
 

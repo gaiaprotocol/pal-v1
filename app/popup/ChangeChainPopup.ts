@@ -5,8 +5,8 @@ import {
   ButtonType,
   Component,
   DomNode,
-  el,
   Popup,
+  el,
 } from "common-dapp-module";
 import Config from "../Config.js";
 

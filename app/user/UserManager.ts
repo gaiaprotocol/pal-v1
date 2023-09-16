@@ -1,6 +1,6 @@
 import { User } from "@supabase/supabase-js";
-import { getNetwork, getWalletClient, switchNetwork } from "@wagmi/core";
-import { Confirm, EventContainer } from "common-dapp-module";
+import { getNetwork, getWalletClient } from "@wagmi/core";
+import { EventContainer } from "common-dapp-module";
 import { BrowserProvider, JsonRpcSigner } from "ethers";
 import Config from "../Config.js";
 import OnlineUserManager from "../OnlineUserManager.js";
@@ -83,13 +83,7 @@ class UserManager extends EventContainer {
   public createToken() {
     const { chain } = getNetwork();
     if (chain?.id !== Config.palChainId) {
-      new Confirm({
-        title: "Wrong Network",
-        message: "Please switch to Base network to create tokens.",
-        confirmTitle: "Switch",
-      }, async () => {
-        switchNetwork({ chainId: Config.palChainId });
-      });
+      new ChangeChainPopup();
     } else {
       new CreateTokenPopup();
     }
