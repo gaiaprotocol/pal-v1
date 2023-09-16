@@ -263,7 +263,9 @@ ALTER TABLE "public"."tracked_event_blocks" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "update pal token's metadata" ON "public"."pal_tokens" FOR UPDATE USING (("owner" = ( SELECT "user_details"."wallet_address"
    FROM "public"."user_details"
-  WHERE ("user_details"."id" = "auth"."uid"())))) WITH CHECK ((("owner" = NULL::"text") AND ("name" = NULL::"text") AND ("symbol" = NULL::"text") AND ("hiding" = NULL::boolean) AND ("created_at" = NULL::timestamp with time zone) AND ("view_token_required" = NULL::numeric) AND ("write_token_required" = NULL::numeric) AND ("last_fetched_price" = NULL::numeric)));
+  WHERE ("user_details"."id" = "auth"."uid"())))) WITH CHECK (("owner" = ( SELECT "user_details"."wallet_address"
+   FROM "public"."user_details"
+  WHERE ("user_details"."id" = "auth"."uid"()))));
 
 ALTER TABLE "public"."user_details" ENABLE ROW LEVEL SECURITY;
 
@@ -273,7 +275,7 @@ CREATE POLICY "view only holder or owner" ON "public"."chat_messages" FOR SELECT
    FROM "public"."user_details"
   WHERE ("user_details"."id" = "auth"."uid"()))) OR (( SELECT "pal_tokens"."view_token_required"
    FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."token_address" = "chat_messages"."token_address")) >= ( SELECT "pal_token_balances"."last_fetched_balance"
+  WHERE ("pal_tokens"."token_address" = "chat_messages"."token_address")) <= ( SELECT "pal_token_balances"."last_fetched_balance"
    FROM "public"."pal_token_balances"
   WHERE (("pal_token_balances"."token_address" = "chat_messages"."token_address") AND ("pal_token_balances"."wallet_address" = ( SELECT "user_details"."wallet_address"
            FROM "public"."user_details"
@@ -285,7 +287,7 @@ CREATE POLICY "write only holder or owner" ON "public"."chat_messages" FOR INSER
    FROM "public"."user_details"
   WHERE ("user_details"."id" = "auth"."uid"()))) OR (( SELECT "pal_tokens"."write_token_required"
    FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."token_address" = "chat_messages"."token_address")) >= ( SELECT "pal_token_balances"."last_fetched_balance"
+  WHERE ("pal_tokens"."token_address" = "chat_messages"."token_address")) <= ( SELECT "pal_token_balances"."last_fetched_balance"
    FROM "public"."pal_token_balances"
   WHERE (("pal_token_balances"."token_address" = "chat_messages"."token_address") AND ("pal_token_balances"."wallet_address" = ( SELECT "user_details"."wallet_address"
            FROM "public"."user_details"
