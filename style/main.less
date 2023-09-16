@@ -10,6 +10,16 @@ body {
     font-size       : 14px;
 }
 
+@keyframes profile-image-loading {
+    0% {
+        background-position-x: -240px;
+    }
+
+    100% {
+        background-position-x: 24px;
+    }
+}
+
 @import "view/layout.less";
 @import "view/token-info.less";
 @import "view/rooms.less";
@@ -22,6 +32,7 @@ body {
 @import "component/token-summary.less";
 @import "component/list-loading.less";
 @import "component/tabs.less";
+@import "component/profile-image-display.less";
 
 @import "component/rooms/room-list.less";
 @import "component/rooms/room-item.less";
@@ -47,3 +58,4 @@ body {
 @import "popup/token/trade-token-popup.less";
 @import "popup/token/buy-token-popup.less";
 @import "popup/token/sell-token-popup.less";
+@import "popup/token/edit-token-info-popup.less";
