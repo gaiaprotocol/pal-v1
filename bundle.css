@@ -666,9 +666,12 @@ body {
   top: 60px;
   width: 100%;
   height: calc(100% - 60px);
+  background-color: #222222;
 }
 .token-purchase-form.show {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .token-purchase-form > .buy-token-button {
   width: 260px;
