@@ -514,7 +514,7 @@ body {
   background-size: 160px 160px;
   z-index: 9999;
 }
-.user-summary > .twitter-login-button {
+.user-summary > .x-login-button {
   cursor: pointer;
   min-width: 200px;
   height: 36px;
@@ -523,8 +523,7 @@ body {
   align-items: center;
   font-size: 16px;
   font-weight: bold;
-  background-color: #039be5;
-  background-image: linear-gradient(to top right, #039be5, #29b6f6);
+  background-color: #000;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-radius: 4px;
 }
@@ -955,6 +954,68 @@ body {
   margin-bottom: 24px;
 }
 .connect-wallet-popup > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+.user-info-popup {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.user-info-popup > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-info-popup > h1 > .profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+.user-info-popup > h1 > .name {
+  font-weight: bold;
+}
+.user-info-popup > main {
+  padding: 20px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+.user-info-popup > main > .social-links > li {
+  display: flex;
+  gap: 8px;
+}
+.user-info-popup > main > .social-links > li > a {
+  color: rgba(var(--primary-color));
+}
+.user-info-popup > main > .social-links > li > a:hover {
+  text-decoration: underline;
+}
+.user-info-popup > .tabs {
+  border-bottom: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+}
+.user-info-popup > .token-list {
+  display: none;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+.user-info-popup > .token-list.active {
+  display: block;
+}
+.user-info-popup > footer {
+  border-top: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
   padding: 8px;
   display: flex;
   justify-content: flex-end;

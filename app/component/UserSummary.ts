@@ -13,7 +13,7 @@ export default class UserSummary extends DomNode {
   private async init() {
     if (!UserManager.signedIn) {
       this.empty().append(
-        el("a.twitter-login-button", "Sign in with 𝕏", {
+        el("a.x-login-button", "Sign in with 𝕏", {
           click: () => UserManager.signIn(),
         }),
       );

@@ -5,6 +5,7 @@ import SupabaseManager from "../SupabaseManager.js";
 import PalContract from "../contract/PalContract.js";
 import TokenInfo from "../data/TokenInfo.js";
 import TokenInfoPopup from "../popup/token/TokenInfoPopup.js";
+import UserInfoPopup from "../popup/user/UserInfoPopup.js";
 
 export default class TokenSummary extends DomNode {
   constructor(private tokenInfo: TokenInfo) {
@@ -35,6 +36,10 @@ export default class TokenSummary extends DomNode {
     this.append(
       el("img.profile-image", {
         src: profileImageSrc,
+        click: (event) => {
+          event.stopPropagation();
+          new UserInfoPopup(tokenOwner);
+        },
       }),
       el("span.symbol", this.tokenInfo.symbol),
       el("span.price", `${ethers.formatEther(price)} ETH`),

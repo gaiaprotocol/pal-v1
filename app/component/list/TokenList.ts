@@ -12,12 +12,16 @@ export enum TokenListFilter {
   NewChat,
   Friends,
   OnlineUsers,
+  SpecificUser,
 }
 
 export default class TokenList extends DomNode {
   private list: DomNode;
 
-  constructor(private tokenListFilter: TokenListFilter) {
+  constructor(
+    private tokenListFilter: TokenListFilter,
+    private walletAddress?: string,
+  ) {
     super(".token-list");
     this.append(this.list = el("ul"));
     this.load();
@@ -78,6 +82,16 @@ export default class TokenList extends DomNode {
         data = result.data as any;
       }
       error = result.error;
+    } else if (this.tokenListFilter === TokenListFilter.SpecificUser) {
+      const result = await SupabaseManager.supabase.from(
+        "pal_tokens",
+      ).select(
+        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      ).eq("owner", this.walletAddress).limit(50);
+      if (result.data) {
+        data = result.data as any;
+      }
+      error = result.error;
     }
 
     if (error) {
@@ -96,5 +110,13 @@ export default class TokenList extends DomNode {
     for (const tokenInfo of data) {
       this.add(tokenInfo);
     }
+  }
+
+  public active(): void {
+    this.addClass("active");
+  }
+
+  public inactive(): void {
+    this.deleteClass("active");
   }
 }

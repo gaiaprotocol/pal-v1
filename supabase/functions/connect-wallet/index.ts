@@ -67,6 +67,9 @@ serveWithOptions(async (req) => {
           wallet_address: walletAddress,
           display_name: user.user_metadata.full_name,
           profile_image: user.user_metadata.avatar_url,
+          metadata: {
+            xUsername: user.user_metadata.user_name,
+          },
         })
         .eq("id", user.id);
 
