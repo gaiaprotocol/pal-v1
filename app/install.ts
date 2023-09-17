@@ -2,6 +2,7 @@ import { msg, Router } from "common-dapp-module";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
 import BlockTimeCacher from "./cacher/BlockTimeCacher.js";
+import SplashScreen from "./component/SplashScreen.js";
 import Config from "./Config.js";
 import PalContract from "./contract/PalContract.js";
 import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorContract.js";
@@ -23,14 +24,20 @@ export default async function install() {
     sessionStorage.removeItem("__spa_path");
   }
 
-  await msg.loadYAMLs({
-    en: ["/locales/en.yml"],
-  });
+  const splash = new SplashScreen();
 
-  await SupabaseManager.connect();
+  await Promise.all([
+    msg.loadYAMLs({
+      en: ["/locales/en.yml"],
+    }),
+    SupabaseManager.connect(),
+    BlockTimeCacher.init(),
+  ]);
+
+  splash.delete();
+
   WalletManager.init();
   OnlineUserManager.init();
-  await BlockTimeCacher.init();
 
   PalContract.init(Config.palAddress);
   TokenHoldingsAggregatorContract.init(Config.tokenHoldingsAggregatorAddress);
