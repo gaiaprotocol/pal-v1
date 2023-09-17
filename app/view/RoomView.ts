@@ -1,5 +1,6 @@
 import { BodyNode, DomNode, el, View, ViewParams } from "common-dapp-module";
 import ChatRoom from "../component/room/ChatRoom.js";
+import RoomLoading from "../component/room/RoomLoading.js";
 import RoomTitleBar from "../component/room/RoomTitleBar.js";
 import TokenPurchaseForm from "../component/room/TokenPurchaseForm.js";
 import RoomInfo from "../data/RoomInfo.js";
@@ -36,11 +37,14 @@ export default class RoomView extends View {
   }
 
   private async loadRoomInfo(tokenAddress: string) {
+    const loading = new RoomLoading().appendTo(this.container);
+
     const { data, error } = await SupabaseManager.supabase.functions.invoke(
       "get-room",
       { body: { tokenAddress } },
     );
     this.roomInfo = data;
+
     if (this.roomInfo) {
       this.titleBar.loadTokenInfo(tokenAddress);
       const [, formShowing] = await Promise.all([
@@ -52,6 +56,8 @@ export default class RoomView extends View {
         this.chatRoom.focusMessageForm();
       }
     }
+
+    if (!this.closed) loading.delete();
   }
 
   public close(): void {

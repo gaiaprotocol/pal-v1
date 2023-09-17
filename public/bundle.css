@@ -629,6 +629,71 @@ body {
   font-size: 12px;
   color: #7f7f7f;
 }
+@keyframes room-loading-animation {
+  0% {
+    transform: scale(0.95);
+  }
+  5% {
+    transform: scale(1.1);
+  }
+  39% {
+    transform: scale(0.85);
+  }
+  45% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(0.9);
+  }
+}
+.room-loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #1f1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.room-loading > main {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  transform: rotate(45deg);
+  transform-origin: 40px 40px;
+}
+.room-loading > main .spinner {
+  top: 32px;
+  left: 32px;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: rgba(var(--primary-color));
+  animation: room-loading-animation 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.room-loading > main .spinner:after,
+.room-loading > main .spinner:before {
+  content: " ";
+  position: absolute;
+  display: block;
+  width: 32px;
+  height: 32px;
+  background: rgba(var(--primary-color));
+}
+.room-loading > main .spinner:before {
+  left: -24px;
+  border-radius: 50% 0 0 50%;
+}
+.room-loading > main .spinner:after {
+  top: -24px;
+  border-radius: 50% 50% 0 0;
+}
 .room-title-bar {
   position: absolute;
   left: 0;
@@ -688,13 +753,43 @@ body {
 }
 .token-purchase-form.show {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.token-purchase-form > .profile-image-display {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+.token-purchase-form > .profile-image-display > img {
+  width: 120px;
+  height: 120px;
+}
+.token-purchase-form > .icon {
+  font-size: 30px;
+  color: #666;
+  margin-bottom: 12px;
+}
+.token-purchase-form > .message {
+  max-width: 300px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #999;
+}
+.token-purchase-form > .message > b {
+  color: rgba(var(--primary-color));
+  font-weight: bold;
 }
 .token-purchase-form > .buy-token-button {
   width: 260px;
   height: 40px;
   font-weight: bold;
+}
+.token-purchase-form > .last-message-sent-at {
+  margin-top: 20px;
+  color: #666;
+  font-size: 12px;
 }
 .chat-room {
   display: flex;

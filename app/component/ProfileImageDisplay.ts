@@ -11,7 +11,7 @@ export default class ProfileImageDisplay extends DomNode {
   public set src(src: string) {
     const img = el<HTMLImageElement>("img");
     img.onDom("load", () => {
-      this.append(img);
+      this.empty().append(img);
       this.deleteClass("loading");
     });
     img.domElement.src = src;
