@@ -35,11 +35,6 @@ class UserManager extends EventContainer {
     return data?.[0]?.wallet_address;
   }
 
-  public setSignedUserWalletAddress(walletAddress: string) {
-    this.userWalletAddress = walletAddress;
-    this.fireEvent("userWalletAddressChanged");
-  }
-
   public setSignedUserToken(token: TokenInfo) {
     this.userToken = token;
     this.fireEvent("userTokenChanged");
@@ -55,7 +50,15 @@ class UserManager extends EventContainer {
     return data?.[0] as any;
   }
 
+  private clearData() {
+    this.user = undefined;
+    this.userWalletAddress = undefined;
+    this.userToken = undefined;
+  }
+
   public async loadUser() {
+    this.clearData();
+
     const { data } = await SupabaseManager.supabase.auth.getSession();
     this.user = data?.session?.user;
     if (this.user) {
@@ -67,6 +70,7 @@ class UserManager extends EventContainer {
       }
       OnlineUserManager.track();
     }
+
     this.fireEvent("userLoaded");
   }
 

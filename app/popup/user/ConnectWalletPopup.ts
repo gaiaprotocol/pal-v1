@@ -56,7 +56,6 @@ export default class ConnectWalletPopup extends Popup {
                 this.connectWalletButton.title = "Connecting...";
 
                 await WalletConnectionManager.connect();
-                UserManager.setSignedUserWalletAddress(WalletManager.address!);
 
                 callback();
                 this.delete();

@@ -6,7 +6,7 @@ export default class UserSummary extends DomNode {
   constructor() {
     super(".user-summary");
     this.init();
-    this.onDelegate(UserManager, "userWalletAddressChanged", () => this.init());
+    this.onDelegate(UserManager, "userLoaded", () => this.init());
     this.onDelegate(UserManager, "userTokenChanged", () => this.init());
   }
 
