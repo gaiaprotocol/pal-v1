@@ -25,7 +25,21 @@
         }
 
         >.name {
+            flex-grow  : 1;
             font-weight: bold;
+        }
+
+        >.close-button {
+            cursor: pointer;
+            color : #999;
+
+            >.icon {
+                display: block;
+            }
+
+            &:hover {
+                color: #fff;
+            }
         }
     }
 

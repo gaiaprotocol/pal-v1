@@ -16,6 +16,7 @@ export default class UserInfoPopup extends Popup {
   public content: DomNode;
 
   private socialLinks: DomNode;
+  private timeline: DomNode;
   private tabs: Tabs;
   private tokenList: TokenList;
 
@@ -28,6 +29,9 @@ export default class UserInfoPopup extends Popup {
           "h1",
           new ProfileImageDisplay(userDetails.profile_image),
           el("span.name", userDetails.display_name),
+          el("a.close-button", new Icon("close"), {
+            click: () => this.delete(),
+          }),
         ),
         el(
           "main",
@@ -46,6 +50,7 @@ export default class UserInfoPopup extends Popup {
               ),
             ),
           ),
+          this.timeline = el(".timeline"),
         ),
         this.tabs = new Tabs([
           { id: "tokens", label: "Tokens" },
@@ -74,5 +79,18 @@ export default class UserInfoPopup extends Popup {
       }
     });
     this.tabs.select("tokens");
+
+    (window as any).twttr.widgets.createTimeline(
+      {
+        sourceType: "profile",
+        screenName: userDetails.metadata.xUsername,
+      },
+      this.timeline.domElement,
+      {
+        width: 552,
+        height: 300,
+        theme: "dark",
+      },
+    );
   }
 }
