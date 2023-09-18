@@ -53,5 +53,19 @@ describe("Pal", () => {
       ethers.parseEther("0.0000001"),
     );
     console.log(ethers.formatEther(palPrice2));
+
+    let test = 0n;
+    for (let i = 0; i < 100; i++) {
+      test += await Pal.getPrice(
+        ethers.parseEther(i.toString()),
+        ethers.parseEther("1"),
+      );
+    }
+    expect(test).to.equal(
+      await Pal.getPrice(
+        0n,
+        ethers.parseEther("100"),
+      ),
+    );
   });
 });

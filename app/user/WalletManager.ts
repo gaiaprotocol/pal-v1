@@ -1,6 +1,7 @@
 import {
   configureChains,
   createConfig,
+  fetchBalance,
   getAccount,
   signMessage,
   watchAccount,
@@ -82,6 +83,18 @@ class WalletManager extends EventContainer {
       throw new Error("Wallet is not connected");
     } else {
       return await signMessage({ message });
+    }
+  }
+
+  public async getBalance(): Promise<bigint> {
+    const walletAddress = this.address;
+    if (!walletAddress) {
+      throw new Error("Wallet is not connected");
+    } else {
+      const result = await fetchBalance({
+        address: this.address,
+      });
+      return result.value;
     }
   }
 }

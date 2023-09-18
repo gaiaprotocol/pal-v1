@@ -19,7 +19,9 @@ import PalTokenContract from "../../contract/PalTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserManager from "../../user/UserManager.js";
+import BuyTokenPopup from "./BuyTokenPopup.js";
 import EditTokenInfoPopup from "./EditTokenInfoPopup.js";
+import SellTokenPopup from "./SellTokenPopup.js";
 
 export default class TokenInfoPopup extends Popup {
   public content: DomNode;
@@ -58,12 +60,23 @@ export default class TokenInfoPopup extends Popup {
           "main",
           el("p", tokenInfo.metadata.description ?? "No description"),
           el(
-            ".balance",
-            el("img.profile-image", {
-              src: UserManager.user?.user_metadata.avatar_url,
+            ".trade-info",
+            el(
+              ".balance",
+              el("img.profile-image", {
+                src: UserManager.user?.user_metadata.avatar_url,
+              }),
+              el("label", "Your Balance"),
+              this.balanceDisplay = el("span.balance.loading"),
+            ),
+            new Button({
+              title: "Buy",
+              click: () => new BuyTokenPopup(tokenInfo.token_address),
             }),
-            el("label", "Your Balance"),
-            this.balanceDisplay = el("span.balance.loading"),
+            new Button({
+              title: "Sell",
+              click: () => new SellTokenPopup(tokenInfo.token_address),
+            }),
           ),
         ),
         tabs = new Tabs([

@@ -1,3 +1,6 @@
+/*!***********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../common-style/lib/reset.css ***!
+  \***********************************************************************************************************/
 /***
     The new CSS reset - version 1.8.4 (last updated 14.2.2023)
     GitHub page: https://github.com/elad2412/the-new-css-reset
@@ -97,6 +100,9 @@ meter {
 :where(dialog:modal) {
     all: revert;
 }
+/*!*********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/less-loader/dist/cjs.js!./public/style/main.less ***!
+  \*********************************************************************************************************************************************/
 @font-face {
   font-family: 'Noto Sans';
   font-style: normal;
@@ -248,6 +254,34 @@ button.component.text.disabled {
   padding: 0 24px 20px;
 }
 .alert.component > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+.error-alert.component {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.error-alert.component > h1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.error-alert.component > p {
+  padding: 0 24px 20px;
+}
+.error-alert.component > footer {
   padding: 8px;
   display: flex;
   justify-content: flex-end;
@@ -1232,7 +1266,12 @@ body {
   gap: 20px;
   align-items: flex-start;
 }
-.token-info-popup > main > .balance {
+.token-info-popup > main > .trade-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.token-info-popup > main > .trade-info > .balance {
   height: 36px;
   border-radius: 18px;
   background-color: #1e1e1e;
@@ -1244,17 +1283,17 @@ body {
   color: #e1e1e1;
   gap: 8px;
 }
-.token-info-popup > main > .balance > .profile-image {
+.token-info-popup > main > .trade-info > .balance > .profile-image {
   width: 24px;
   height: 24px;
   border-radius: 12px;
 }
-.token-info-popup > main > .balance > label {
+.token-info-popup > main > .trade-info > .balance > label {
   font-weight: bold;
   border-right: 1px solid #6e6e6e;
   padding-right: 8px;
 }
-.token-info-popup > main > .balance > .balance {
+.token-info-popup > main > .trade-info > .balance > .balance {
   color: #999;
 }
 .token-info-popup > .tabs {
@@ -1301,7 +1340,7 @@ body {
   justify-content: flex-end;
 }
 .buy-token-popup {
-  max-width: 600px;
+  max-width: 420px;
   width: 90%;
   margin: auto;
   border-radius: 4px;
@@ -1315,9 +1354,44 @@ body {
   padding: 16px 24px;
   font-size: 20px;
   font-weight: bold;
+  text-align: center;
 }
 .buy-token-popup > main {
-  padding: 0 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+}
+.buy-token-popup > main > .profile-image-display {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+.buy-token-popup > main > .profile-image-display > img {
+  width: 120px;
+  height: 120px;
+}
+.buy-token-popup > main > table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid rgba(var(--on-surface-color), 0.12);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.buy-token-popup > main > table > tr > th {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--on-surface-color), 0.12);
+  font-size: 14px;
+  color: rgba(var(--on-surface-color), 0.87);
+}
+.buy-token-popup > main > table > tr > td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--on-surface-color), 0.12);
+  font-size: 14px;
+  color: rgba(var(--on-surface-color), 0.87);
+  text-align: right;
 }
 .buy-token-popup > footer {
   padding: 8px;
@@ -1325,7 +1399,7 @@ body {
   justify-content: flex-end;
 }
 .sell-token-popup {
-  max-width: 600px;
+  max-width: 420px;
   width: 90%;
   margin: auto;
   border-radius: 4px;
@@ -1339,9 +1413,44 @@ body {
   padding: 16px 24px;
   font-size: 20px;
   font-weight: bold;
+  text-align: center;
 }
 .sell-token-popup > main {
-  padding: 0 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+}
+.sell-token-popup > main > .profile-image-display {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+.sell-token-popup > main > .profile-image-display > img {
+  width: 120px;
+  height: 120px;
+}
+.sell-token-popup > main > table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid rgba(var(--on-surface-color), 0.12);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.sell-token-popup > main > table > tr > th {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--on-surface-color), 0.12);
+  font-size: 14px;
+  color: rgba(var(--on-surface-color), 0.87);
+}
+.sell-token-popup > main > table > tr > td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--on-surface-color), 0.12);
+  font-size: 14px;
+  color: rgba(var(--on-surface-color), 0.87);
+  text-align: right;
 }
 .sell-token-popup > footer {
   padding: 8px;

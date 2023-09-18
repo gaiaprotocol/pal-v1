@@ -4,24 +4,58 @@ import {
   Component,
   DomNode,
   el,
+  ErrorAlert,
+  Input,
   Popup,
 } from "common-dapp-module";
+import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
+import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
 import PalContract from "../../contract/PalContract.js";
+import PalTokenContract from "../../contract/PalTokenContract.js";
+import SupabaseManager from "../../SupabaseManager.js";
+import UserManager from "../../user/UserManager.js";
 
 export default class SellTokenPopup extends Popup {
   public content: DomNode;
+
+  private title: DomNode;
+  private priceTitle: DomNode;
+  private profileImage: ProfileImageDisplay;
+  private amountInput: Input;
   private priceDisplay: DomNode;
+  private totalPriceDisplay: DomNode;
+  private sellButton: Button;
+
+  private symbol: string = "";
 
   constructor(private tokenAddress: string) {
     super({ barrierDismissible: true });
     this.append(
       this.content = new Component(
         ".sell-token-popup",
-        el("h1", "Sell Token"),
+        this.title = el("h1", "Sell Token"),
         el(
           "main",
-          this.priceDisplay = el("p"),
+          this.profileImage = new ProfileImageDisplay(),
+          this.amountInput = new Input({
+            label: "Amount",
+            placeholder: "Amount",
+            required: true,
+          }),
+          el(
+            "table",
+            el(
+              "tr",
+              this.priceTitle = el("th", "Price"),
+              this.priceDisplay = el("td"),
+            ),
+            el(
+              "tr",
+              el("th", "Total (including fee)"),
+              this.totalPriceDisplay = el("td"),
+            ),
+          ),
         ),
         el(
           "footer",
@@ -31,31 +65,112 @@ export default class SellTokenPopup extends Popup {
             click: () => this.delete(),
             title: "Cancel",
           }),
-          new Button({
+          this.sellButton = new Button({
             type: ButtonType.Text,
             tag: ".sell-token-button",
             click: async () => {
-              await PalContract.sellToken(
+              const balance = await new PalTokenContract(
                 this.tokenAddress,
-                ethers.parseEther("1"),
-              );
-              this.delete();
+              )
+                .balanceOf(UserManager.userWalletAddress!);
+              const amount = ethers.parseEther(this.amountInput.value);
+              if (amount > balance) {
+                new ErrorAlert({
+                  title: "Insufficient balance",
+                  message: `You need at least ${
+                    ethers.formatEther(amount)
+                  } ${this.symbol} to sell`,
+                });
+              } else {
+                await PalContract.sellToken(
+                  this.tokenAddress,
+                  ethers.parseEther(this.amountInput.value),
+                );
+                this.delete();
+              }
             },
             title: "Sell Token",
           }),
         ),
       ),
     );
-    this.loadPrice();
+    this.loadTokenInfo();
+    this.amountInput.on("change", () => this.displayTotalPrice());
   }
 
-  private async loadPrice() {
-    const price = await PalContract.getSellPriceAfterFee(
-      this.tokenAddress,
-      ethers.parseEther("1"),
-    );
-    this.priceDisplay.appendText(
-      `${ethers.formatEther(price)} ETH`,
-    );
+  private async loadTokenInfo() {
+    const { data: tokenData } = await SupabaseManager.supabase.from(
+      "pal_tokens",
+    )
+      .select(
+        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      )
+      .eq("token_address", this.tokenAddress).single();
+
+    if (tokenData) {
+      this.symbol = (tokenData as any).symbol;
+      this.title.text = `Sell ${this.symbol}`;
+
+      const totalSupply = await new PalTokenContract(
+        this.tokenAddress,
+      ).totalSupply();
+
+      if (totalSupply < 1n) {
+        this.priceTitle.text = `${
+          ethers.formatEther(totalSupply)
+        } ${this.symbol} Price`;
+        const currentPrice = await PalContract.getSellPriceAfterFee(
+          this.tokenAddress,
+          totalSupply,
+        );
+        this.priceDisplay.text = `${ethers.formatEther(currentPrice)} ETH`;
+      } else {
+        this.priceTitle.text = `Price per ${this.symbol}`;
+        const currentPrice = await PalContract.getSellPriceAfterFee(
+          this.tokenAddress,
+          ethers.parseEther("1"),
+        );
+        this.priceDisplay.text = `${ethers.formatEther(currentPrice)} ETH`;
+      }
+
+      this.displayTotalPrice();
+      this.loadOwnerInfo((tokenData as any).owner);
+    }
+  }
+
+  private async loadOwnerInfo(owner: string) {
+    const { data, error } = await SupabaseManager.supabase.from("user_details")
+      .select().eq("wallet_address", owner);
+    const tokenOwner = data?.[0];
+    if (tokenOwner) {
+      this.profileImage.src = tokenOwner.profile_image.replace("_normal", "");
+    } else {
+      this.profileImage.src = generateJazziconDataURL(owner);
+    }
+  }
+
+  private async displayTotalPrice() {
+    this.totalPriceDisplay.text = "Calculating...";
+    this.sellButton.disable();
+    this.sellButton.title = "Calculating...";
+
+    const amount = this.amountInput.value;
+    if (amount) {
+      try {
+        const totalPrice = await PalContract.getSellPriceAfterFee(
+          this.tokenAddress,
+          ethers.parseEther(amount),
+        );
+        this.totalPriceDisplay.text = `${ethers.formatEther(totalPrice)} ETH`;
+      } catch (e) {
+        console.error(e);
+        this.totalPriceDisplay.text = "Invalid amount";
+      }
+    } else {
+      this.totalPriceDisplay.text = "";
+    }
+
+    this.sellButton.enable();
+    this.sellButton.title = "Sell Token";
   }
 }

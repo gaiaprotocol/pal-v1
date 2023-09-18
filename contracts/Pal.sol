@@ -21,7 +21,7 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
 
     mapping(address => bool) public isPalUserToken;
 
-    event TokenCreated(address indexed owner, address tokenAddress, string name, string symbol);
+    event UserTokenCreated(address indexed owner, address tokenAddress, string name, string symbol);
     event Trade(
         address indexed trader,
         address indexed tokenAddress,
@@ -85,7 +85,7 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
 
         isPalUserToken[address(newToken)] = true;
 
-        emit TokenCreated(msg.sender, address(newToken), name, symbol);
+        emit UserTokenCreated(msg.sender, address(newToken), name, symbol);
         return address(newToken);
     }
 
