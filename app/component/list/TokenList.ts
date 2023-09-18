@@ -6,6 +6,7 @@ import SupabaseManager from "../../SupabaseManager.js";
 import UserDataCacher from "../../cacher/UserDataCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import TokenItem from "./TokenItem.js";
+import ListLoading from "../ListLoading.js";
 
 export enum TokenListFilter {
   Top,
@@ -18,13 +19,16 @@ export enum TokenListFilter {
 
 export default class TokenList extends DomNode {
   private list: DomNode;
+  private loadingComponent: ListLoading | undefined;
 
   constructor(
     private tokenListFilter: TokenListFilter,
     private walletAddress?: string,
   ) {
     super(".token-list");
-    this.append(this.list = el("ul"));
+    this.append(
+      this.list = el("ul", this.loadingComponent = new ListLoading()),
+    );
     this.load();
     if (this.tokenListFilter === TokenListFilter.NewChat) {
       this.onDelegate(
@@ -33,6 +37,7 @@ export default class TokenList extends DomNode {
         () => this.load(),
       );
     }
+    this.loadingComponent.on("delete", () => this.loadingComponent = undefined);
   }
 
   public add(tokenInfo: TokenInfo): TokenItem {

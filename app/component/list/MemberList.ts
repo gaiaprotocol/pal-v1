@@ -4,14 +4,19 @@ import UserDataCacher from "../../cacher/UserDataCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import UserDetails from "../../data/UserDetails.js";
 import MemberItem from "./MemberItem.js";
+import ListLoading from "../ListLoading.js";
 
 export default class MemberList extends DomNode {
   private list: DomNode;
+  private loadingComponent: ListLoading | undefined;
 
   constructor(private tokenInfo: TokenInfo) {
     super(".member-list");
-    this.append(this.list = el("ul"));
+    this.append(
+      this.list = el("ul", this.loadingComponent = new ListLoading()),
+    );
     this.load();
+    this.loadingComponent.on("delete", () => this.loadingComponent = undefined);
   }
 
   public add(userDetails: UserDetails, balance: bigint): MemberItem {

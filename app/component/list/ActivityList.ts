@@ -5,13 +5,18 @@ import UserDataCacher from "../../cacher/UserDataCacher.js";
 import Activity, { eventToActivity, EventType } from "../../data/Activity.js";
 import TokenCreatedActivityItem from "./TokenCreatedActivityItem.js";
 import TradeActivityItem from "./TradeActivityItem.js";
+import ListLoading from "../ListLoading.js";
 
 export default class ActivityList extends DomNode {
   private list: DomNode;
+  private loadingComponent: ListLoading | undefined;
 
   constructor() {
     super(".activity-list");
-    this.append(this.list = el("ul"));
+    this.append(
+      this.list = el("ul", this.loadingComponent = new ListLoading()),
+    );
+    this.loadingComponent.on("delete", () => this.loadingComponent = undefined);
   }
 
   public add(activity: Activity): TokenCreatedActivityItem | TradeActivityItem {
