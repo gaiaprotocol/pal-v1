@@ -11,6 +11,7 @@ import ChangeWalletAddressPopup from "../popup/ChangeWalletAddressPopup.js";
 import CreateTokenPopup from "../popup/token/CreateTokenPopup.js";
 import ConnectWalletPopup from "../popup/user/ConnectWalletPopup.js";
 import WalletManager from "./WalletManager.js";
+import Constants from "../Constants.js";
 
 class UserManager extends EventContainer {
   public user: User | undefined;
@@ -44,7 +45,7 @@ class UserManager extends EventContainer {
     const { data } = await SupabaseManager.supabase
       .from("pal_tokens")
       .select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       )
       .eq("owner", userWalletAddress);
     return data?.[0] as any;

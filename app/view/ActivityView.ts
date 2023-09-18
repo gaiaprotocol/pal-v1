@@ -3,6 +3,7 @@ import ActivityList from "../component/list/ActivityList.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
+import Constants from "../Constants.js";
 
 export default class ActivityView extends View {
   private container: DomNode;
@@ -52,9 +53,10 @@ export default class ActivityView extends View {
   private async loadTokens(): Promise<void> {
     const { data, error } = await SupabaseManager.supabase.from(
       "pal_tokens",
-    ).select(
-      "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
-    ).eq("owner", UserManager.userWalletAddress);
+    ).select(Constants.PAL_TOKENS_SELECT_QUERY).eq(
+      "owner",
+      UserManager.userWalletAddress,
+    );
     if (data) {
       const tokenAddresses = [];
       for (const token of data as any) {

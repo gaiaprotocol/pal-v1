@@ -1278,16 +1278,39 @@ body {
 .token-info-popup > h1 > .edit-button-container > a.hidden {
   display: none;
 }
-.token-info-popup > h1 > .price {
-  font-size: 16px;
-  color: #999;
-}
 .token-info-popup > main {
   padding: 20px 24px 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   align-items: flex-start;
+}
+.token-info-popup > main > .price-and-fees {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+.token-info-popup > main > .price-and-fees > .price-container,
+.token-info-popup > main > .price-and-fees > .fees-container {
+  width: 50%;
+  border: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.token-info-popup > main > .price-and-fees > .price-container > label,
+.token-info-popup > main > .price-and-fees > .fees-container > label {
+  font-size: 12px;
+  color: #999;
+}
+.token-info-popup > main > .price-and-fees > .price-container > .price,
+.token-info-popup > main > .price-and-fees > .fees-container > .price,
+.token-info-popup > main > .price-and-fees > .price-container > .fees,
+.token-info-popup > main > .price-and-fees > .fees-container > .fees {
+  font-size: 16px;
+  font-weight: bold;
 }
 .token-info-popup > main > .trade-info {
   display: flex;

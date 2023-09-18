@@ -14,6 +14,7 @@ import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
 import PalContract from "../../contract/PalContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import WalletManager from "../../user/WalletManager.js";
+import Constants from "../../Constants.js";
 
 export default class BuyTokenPopup extends Popup {
   public content: DomNode;
@@ -77,12 +78,23 @@ export default class BuyTokenPopup extends Popup {
                   } ETH to buy this token`,
                 });
               } else {
-                await PalContract.buyToken(
-                  this.tokenAddress,
-                  ethers.parseEther(this.amountInput.value),
-                  this.totalPrice,
-                );
-                this.delete();
+                this.buyButton.disable();
+                this.buyButton.title = "Buying...";
+
+                try {
+                  await PalContract.buyToken(
+                    this.tokenAddress,
+                    ethers.parseEther(this.amountInput.value),
+                    this.totalPrice,
+                  );
+                  this.fireEvent("buyToken");
+                  this.delete();
+                } catch (e) {
+                  console.error(e);
+
+                  this.buyButton.enable();
+                  this.buyButton.title = "Buy Token";
+                }
               }
             },
             title: "Buy Token",
@@ -99,7 +111,7 @@ export default class BuyTokenPopup extends Popup {
       "pal_tokens",
     )
       .select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       )
       .eq("token_address", this.tokenAddress).single();
 

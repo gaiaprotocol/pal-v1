@@ -10,5 +10,6 @@ export default interface TokenInfo {
   view_token_required: string;
   write_token_required: string;
   last_fetched_price: string;
+  trading_fees_earned: string;
   hiding?: boolean;
 }

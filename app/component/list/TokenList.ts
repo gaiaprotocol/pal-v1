@@ -1,5 +1,6 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { DomNode, el } from "common-dapp-module";
+import Constants from "../../Constants.js";
 import OnlineUserManager from "../../OnlineUserManager.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserDataCacher from "../../cacher/UserDataCacher.js";
@@ -47,7 +48,7 @@ export default class TokenList extends DomNode {
       const result = await SupabaseManager.supabase.from(
         "pal_tokens",
       ).select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       ).order("last_fetched_price", { ascending: false }).limit(50);
       if (result.data) {
         data = result.data as any;
@@ -59,7 +60,7 @@ export default class TokenList extends DomNode {
       const result = await SupabaseManager.supabase.from(
         "pal_tokens",
       ).select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       ).order("last_message_sent_at", { ascending: false }).limit(
         50,
       );
@@ -76,7 +77,7 @@ export default class TokenList extends DomNode {
       const result = await SupabaseManager.supabase.from(
         "pal_tokens",
       ).select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       ).in("owner", ownerWalletAddresses);
       if (result.data) {
         data = result.data as any;
@@ -86,7 +87,7 @@ export default class TokenList extends DomNode {
       const result = await SupabaseManager.supabase.from(
         "pal_tokens",
       ).select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       ).eq("owner", this.walletAddress).limit(50);
       if (result.data) {
         data = result.data as any;

@@ -20,6 +20,7 @@ export default class RoomView extends View {
   private tokenPurchaseForm: TokenPurchaseForm;
   private chatRoom: ChatRoom;
 
+  private currentTokenAddress: string | undefined;
   private roomInfo: RoomInfo | undefined;
 
   constructor(params: ViewParams) {
@@ -33,6 +34,13 @@ export default class RoomView extends View {
         this.tokenPurchaseForm = new TokenPurchaseForm(),
       ),
     );
+
+    this.tokenPurchaseForm.on("buyToken", () => {
+      if (this.currentTokenAddress) {
+        this.loadRoomInfo(this.currentTokenAddress);
+      }
+    });
+
     if (params.tokenAddress) {
       this.loadRoomInfo(params.tokenAddress);
     }
@@ -45,6 +53,8 @@ export default class RoomView extends View {
   }
 
   private async loadRoomInfo(tokenAddress: string) {
+    this.currentTokenAddress = tokenAddress;
+
     if (!UserManager.user) {
       new Confirm({
         title: "Sign In",

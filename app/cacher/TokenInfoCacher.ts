@@ -1,3 +1,4 @@
+import Constants from "../Constants.js";
 import SupabaseManager from "../SupabaseManager.js";
 import TokenInfo from "../data/TokenInfo.js";
 
@@ -23,7 +24,7 @@ class TokenInfoCacher {
     const { data, error } = await SupabaseManager.supabase.from(
       "pal_tokens",
     ).select(
-      "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+      Constants.PAL_TOKENS_SELECT_QUERY,
     ).in("token_address", tokenAddresses);
     if (error) {
       throw error;

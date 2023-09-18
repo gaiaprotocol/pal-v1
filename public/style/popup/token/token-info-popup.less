@@ -74,11 +74,6 @@
                 }
             }
         }
-
-        >.price {
-            font-size: 16px;
-            color    : #999;
-        }
     }
 
     >main {
@@ -87,6 +82,34 @@
         flex-direction: column;
         gap           : 20px;
         align-items   : flex-start;
+
+        >.price-and-fees {
+            width  : 100%;
+            display: flex;
+            gap    : 20px;
+
+            >.price-container,
+            >.fees-container {
+                width         : 50%;
+                border        : 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+                border-radius : 4px;
+                padding       : 12px;
+                display       : flex;
+                flex-direction: column;
+                gap           : 8px;
+
+                >label {
+                    font-size: 12px;
+                    color    : #999;
+                }
+
+                >.price,
+                >.fees {
+                    font-size  : 16px;
+                    font-weight: bold;
+                }
+            }
+        }
 
         >.trade-info {
             display    : flex;

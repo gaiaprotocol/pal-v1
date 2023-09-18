@@ -48,7 +48,7 @@ and (
          SELECT pal_tokens.view_token_required
          FROM pal_tokens
          WHERE (pal_tokens.token_address = parameter_token_address)
-      ) >= (
+      ) <= (
          SELECT pal_token_balances.last_fetched_balance
          FROM pal_token_balances
          WHERE (
@@ -67,6 +67,21 @@ and (
 end;$$;
 
 ALTER FUNCTION "public"."check_view_granted"("parameter_token_address" "text") OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."increment_trading_fees_earned"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$begin
+  IF new.event_type = 1 THEN
+    update pal_tokens
+    set
+      trading_fees_earned = trading_fees_earned + new.args[7]::numeric
+    where
+      token_address = new.args[2];
+  END IF;
+  return null;
+end;$$;
+
+ALTER FUNCTION "public"."increment_trading_fees_earned"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."new_pal_token"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -173,7 +188,8 @@ CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
     "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "last_fetched_price" numeric DEFAULT '0'::numeric NOT NULL,
     "last_message_sent_at" timestamp with time zone,
-    "hiding" boolean DEFAULT false NOT NULL
+    "hiding" boolean DEFAULT false NOT NULL,
+    "trading_fees_earned" numeric DEFAULT '0'::numeric NOT NULL
 );
 
 ALTER TABLE "public"."pal_tokens" OWNER TO "postgres";
@@ -230,6 +246,8 @@ ALTER TABLE ONLY "public"."user_details"
 
 ALTER TABLE ONLY "public"."user_details"
     ADD CONSTRAINT "user_wallets_wallet_address_key" UNIQUE ("wallet_address");
+
+CREATE TRIGGER "increment_trading_fees_earned" AFTER INSERT ON "public"."pal_contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."increment_trading_fees_earned"();
 
 CREATE TRIGGER "new_pal_token" AFTER INSERT ON "public"."pal_contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."new_pal_token"();
 
@@ -302,6 +320,10 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "anon";
 GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."increment_trading_fees_earned"() TO "anon";
+GRANT ALL ON FUNCTION "public"."increment_trading_fees_earned"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."increment_trading_fees_earned"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "anon";
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "authenticated";

@@ -2,6 +2,7 @@ import { DomNode, el } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import Icon from "../Icon.js";
 import TokenSummary from "../TokenSummary.js";
+import Constants from "../../Constants.js";
 
 export default class RoomTitleBar extends DomNode {
   private infoContainer: DomNode;
@@ -22,7 +23,7 @@ export default class RoomTitleBar extends DomNode {
       "pal_tokens",
     )
       .select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       ).eq("token_address", tokenAddress).single();
     if (error) {
       console.error(error);

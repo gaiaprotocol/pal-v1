@@ -15,6 +15,7 @@ import PalContract from "../../contract/PalContract.js";
 import PalTokenContract from "../../contract/PalTokenContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserManager from "../../user/UserManager.js";
+import Constants from "../../Constants.js";
 
 export default class SellTokenPopup extends Popup {
   public content: DomNode;
@@ -82,11 +83,21 @@ export default class SellTokenPopup extends Popup {
                   } ${this.symbol} to sell`,
                 });
               } else {
-                await PalContract.sellToken(
-                  this.tokenAddress,
-                  ethers.parseEther(this.amountInput.value),
-                );
-                this.delete();
+                this.sellButton.disable();
+                this.sellButton.title = "Selling...";
+
+                try {
+                  await PalContract.sellToken(
+                    this.tokenAddress,
+                    ethers.parseEther(this.amountInput.value),
+                  );
+                  this.delete();
+                } catch (e) {
+                  console.error(e);
+
+                  this.sellButton.enable();
+                  this.sellButton.title = "Sell Token";
+                }
               }
             },
             title: "Sell Token",
@@ -103,7 +114,7 @@ export default class SellTokenPopup extends Popup {
       "pal_tokens",
     )
       .select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       )
       .eq("token_address", this.tokenAddress).single();
 

@@ -54,10 +54,22 @@ export default class TokenInfoPopup extends Popup {
               click: () => new EditTokenInfoPopup(tokenInfo),
             }),
           ),
-          this.priceDisplay = el("span.price"),
         ),
         el(
           "main",
+          el(
+            ".price-and-fees",
+            el(
+              ".price-container",
+              el("label", "Price"),
+              this.priceDisplay = el("span.price"),
+            ),
+            el(
+              ".fees-container",
+              el("label", "Trading Fees Earned"),
+              el("span.fees", ethers.formatEther(tokenInfo.trading_fees_earned) + " ETH"),
+            ),
+          ),
           el("p", tokenInfo.metadata.description ?? "No description"),
           el(
             ".trade-info",

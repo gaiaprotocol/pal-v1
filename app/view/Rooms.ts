@@ -4,6 +4,7 @@ import TokenHoldingsAggregatorContract from "../contract/TokenHoldingsAggregator
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
+import Constants from "../Constants.js";
 
 export default class Rooms extends View {
   private container: DomNode;
@@ -41,7 +42,7 @@ export default class Rooms extends View {
   private async loadMyTokenRooms(): Promise<void> {
     const { data } = await SupabaseManager.supabase.from("pal_tokens")
       .select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       )
       .eq("owner", UserManager.userWalletAddress)
       .neq("hiding", true);
@@ -54,7 +55,7 @@ export default class Rooms extends View {
     if (UserManager.userWalletAddress) {
       const { data } = await SupabaseManager.supabase.from("pal_tokens")
         .select(
-          "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+          Constants.PAL_TOKENS_SELECT_QUERY,
         )
         .neq("hiding", true);
       if (data) {
@@ -89,7 +90,7 @@ export default class Rooms extends View {
   private async loadTopRooms(): Promise<void> {
     const { data } = await SupabaseManager.supabase.from("pal_tokens")
       .select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       )
       .neq("hiding", true)
       .order("last_fetched_price", { ascending: false })

@@ -1,12 +1,13 @@
 import { Button, DomNode, el } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
+import dayjs from "dayjs";
 import { ethers } from "ethers";
 import SupabaseManager from "../../SupabaseManager.js";
 import RoomInfo from "../../data/RoomInfo.js";
 import BuyTokenPopup from "../../popup/token/BuyTokenPopup.js";
 import Icon from "../Icon.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
-import dayjs from "dayjs";
+import Constants from "../../Constants.js";
 
 export default class TokenPurchaseForm extends DomNode {
   private currentTokenAddress: string | undefined;
@@ -26,7 +27,8 @@ export default class TokenPurchaseForm extends DomNode {
         title: "Buy Token",
         click: async () => {
           if (this.currentTokenAddress) {
-            new BuyTokenPopup(this.currentTokenAddress);
+            const popup = new BuyTokenPopup(this.currentTokenAddress);
+            popup.on("buyToken", () => this.fireEvent("buyToken"));
           }
         },
       }),
@@ -67,7 +69,7 @@ export default class TokenPurchaseForm extends DomNode {
       "pal_tokens",
     )
       .select(
-        "*, view_token_required::text, write_token_required::text, last_fetched_price::text",
+        Constants.PAL_TOKENS_SELECT_QUERY,
       )
       .eq("token_address", this.currentTokenAddress).single();
     if (tokenData) {
