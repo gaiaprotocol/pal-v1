@@ -42,7 +42,10 @@ class WalletManager extends EventContainer {
     const ethereumClient = new EthereumClient(wagmiConfig, chains);
     this.web3modal = new Web3Modal({
       projectId: Config.walletConnectProjectID,
+      themeMode: "dark",
       themeVariables: {
+        "--w3m-accent-color": "#824dff",
+        "--w3m-background-color": "#530087",
         "--w3m-z-index": "999999",
       },
     }, ethereumClient);
