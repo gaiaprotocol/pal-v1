@@ -1,9 +1,37 @@
 .settings-view {
     background-color: #1e1e1e;
-    min-height      : 100%;
+    height          : 100%;
     padding         : 20px;
+    overflow-y      : auto;
 
     >h1 {
         font-size: 32px;
+    }
+
+    >section {
+        margin-top   : 20px;
+        border       : 1px solid #333;
+        border-radius: 4px;
+        padding      : 20px;
+
+        >h2 {
+            font-size    : 24px;
+            color        : #999;
+            margin-bottom: 10px;
+        }
+
+        >p {
+            color        : #999;
+            margin-bottom: 10px;
+
+            >a {
+                color : rgba(var(--primary-color));
+                cursor: pointer;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
     }
 }

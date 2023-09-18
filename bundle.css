@@ -252,6 +252,34 @@ button.component.text.disabled {
   display: flex;
   justify-content: flex-end;
 }
+.error-alert.component {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+}
+.error-alert.component > h1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.error-alert.component > p {
+  padding: 0 24px 20px;
+}
+.error-alert.component > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
 .confirm.component {
   max-width: 600px;
   width: 90%;
@@ -489,11 +517,34 @@ body {
 }
 .settings-view {
   background-color: #1e1e1e;
-  min-height: 100%;
+  height: 100%;
   padding: 20px;
+  overflow-y: auto;
 }
 .settings-view > h1 {
   font-size: 32px;
+}
+.settings-view > section {
+  margin-top: 20px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 20px;
+}
+.settings-view > section > h2 {
+  font-size: 24px;
+  color: #999;
+  margin-bottom: 10px;
+}
+.settings-view > section > p {
+  color: #999;
+  margin-bottom: 10px;
+}
+.settings-view > section > p > a {
+  color: rgba(var(--primary-color));
+  cursor: pointer;
+}
+.settings-view > section > p > a:hover {
+  text-decoration: underline;
 }
 .splash-screen {
   position: fixed;
@@ -646,10 +697,10 @@ body {
 .room-loading {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 60px;
   width: 100%;
-  height: 100%;
-  background-color: #1f1f1f;
+  height: calc(100% - 60px);
+  background-color: #222222;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1221,10 +1272,6 @@ body {
 .token-info-popup > h1 > .edit-button-container > a.hidden {
   display: none;
 }
-.token-info-popup > h1 > .price {
-  font-size: 16px;
-  color: #999;
-}
 .token-info-popup > main {
   padding: 20px 24px 20px;
   display: flex;
@@ -1232,7 +1279,39 @@ body {
   gap: 20px;
   align-items: flex-start;
 }
-.token-info-popup > main > .balance {
+.token-info-popup > main > .price-and-fees {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+.token-info-popup > main > .price-and-fees > .price-container,
+.token-info-popup > main > .price-and-fees > .fees-container {
+  width: 50%;
+  border: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.token-info-popup > main > .price-and-fees > .price-container > label,
+.token-info-popup > main > .price-and-fees > .fees-container > label {
+  font-size: 12px;
+  color: #999;
+}
+.token-info-popup > main > .price-and-fees > .price-container > .price,
+.token-info-popup > main > .price-and-fees > .fees-container > .price,
+.token-info-popup > main > .price-and-fees > .price-container > .fees,
+.token-info-popup > main > .price-and-fees > .fees-container > .fees {
+  font-size: 16px;
+  font-weight: bold;
+}
+.token-info-popup > main > .trade-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.token-info-popup > main > .trade-info > .balance {
   height: 36px;
   border-radius: 18px;
   background-color: #1e1e1e;
@@ -1244,17 +1323,17 @@ body {
   color: #e1e1e1;
   gap: 8px;
 }
-.token-info-popup > main > .balance > .profile-image {
+.token-info-popup > main > .trade-info > .balance > .profile-image {
   width: 24px;
   height: 24px;
   border-radius: 12px;
 }
-.token-info-popup > main > .balance > label {
+.token-info-popup > main > .trade-info > .balance > label {
   font-weight: bold;
   border-right: 1px solid #6e6e6e;
   padding-right: 8px;
 }
-.token-info-popup > main > .balance > .balance {
+.token-info-popup > main > .trade-info > .balance > .balance {
   color: #999;
 }
 .token-info-popup > .tabs {
@@ -1301,7 +1380,7 @@ body {
   justify-content: flex-end;
 }
 .buy-token-popup {
-  max-width: 600px;
+  max-width: 420px;
   width: 90%;
   margin: auto;
   border-radius: 4px;
@@ -1315,9 +1394,44 @@ body {
   padding: 16px 24px;
   font-size: 20px;
   font-weight: bold;
+  text-align: center;
 }
 .buy-token-popup > main {
-  padding: 0 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+}
+.buy-token-popup > main > .profile-image-display {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+.buy-token-popup > main > .profile-image-display > img {
+  width: 120px;
+  height: 120px;
+}
+.buy-token-popup > main > table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid rgba(var(--on-surface-color), 0.12);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.buy-token-popup > main > table > tr > th {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--on-surface-color), 0.12);
+  font-size: 14px;
+  color: rgba(var(--on-surface-color), 0.87);
+}
+.buy-token-popup > main > table > tr > td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--on-surface-color), 0.12);
+  font-size: 14px;
+  color: rgba(var(--on-surface-color), 0.87);
+  text-align: right;
 }
 .buy-token-popup > footer {
   padding: 8px;
@@ -1325,7 +1439,7 @@ body {
   justify-content: flex-end;
 }
 .sell-token-popup {
-  max-width: 600px;
+  max-width: 420px;
   width: 90%;
   margin: auto;
   border-radius: 4px;
@@ -1339,9 +1453,44 @@ body {
   padding: 16px 24px;
   font-size: 20px;
   font-weight: bold;
+  text-align: center;
 }
 .sell-token-popup > main {
-  padding: 0 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+}
+.sell-token-popup > main > .profile-image-display {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+.sell-token-popup > main > .profile-image-display > img {
+  width: 120px;
+  height: 120px;
+}
+.sell-token-popup > main > table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid rgba(var(--on-surface-color), 0.12);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.sell-token-popup > main > table > tr > th {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--on-surface-color), 0.12);
+  font-size: 14px;
+  color: rgba(var(--on-surface-color), 0.87);
+}
+.sell-token-popup > main > table > tr > td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--on-surface-color), 0.12);
+  font-size: 14px;
+  color: rgba(var(--on-surface-color), 0.87);
+  text-align: right;
 }
 .sell-token-popup > footer {
   padding: 8px;
