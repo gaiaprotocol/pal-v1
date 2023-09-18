@@ -80,8 +80,13 @@ class UserManager extends EventContainer {
     });
   }
 
-  public connectWallet() {
-    new ConnectWalletPopup(() => this.loadUser());
+  public async connectWallet() {
+    return new Promise<void>((resolve) => {
+      new ConnectWalletPopup(() => {
+        this.loadUser();
+        resolve();
+      });
+    });
   }
 
   public createToken() {

@@ -344,7 +344,7 @@ body {
 .layout {
   padding-top: 60px;
   padding-left: 80px;
-  min-height: 100%;
+  height: 100%;
 }
 @media only screen and (max-width: 859px) {
   .layout {
@@ -523,8 +523,9 @@ body {
 }
 .settings-view {
   background-color: #1e1e1e;
-  min-height: 100%;
+  height: 100%;
   padding: 20px;
+  overflow-y: auto;
 }
 .settings-view > h1 {
   font-size: 32px;

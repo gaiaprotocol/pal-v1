@@ -1,10 +1,18 @@
-import { BodyNode, DomNode, el, View, ViewParams } from "common-dapp-module";
+import {
+  BodyNode,
+  Confirm,
+  DomNode,
+  el,
+  View,
+  ViewParams,
+} from "common-dapp-module";
 import ChatRoom from "../component/room/ChatRoom.js";
 import RoomLoading from "../component/room/RoomLoading.js";
 import RoomTitleBar from "../component/room/RoomTitleBar.js";
 import TokenPurchaseForm from "../component/room/TokenPurchaseForm.js";
 import RoomInfo from "../data/RoomInfo.js";
 import SupabaseManager from "../SupabaseManager.js";
+import UserManager from "../user/UserManager.js";
 
 export default class RoomView extends View {
   private container: DomNode;
@@ -37,27 +45,45 @@ export default class RoomView extends View {
   }
 
   private async loadRoomInfo(tokenAddress: string) {
-    const loading = new RoomLoading().appendTo(this.container);
+    if (!UserManager.user) {
+      new Confirm({
+        title: "Sign In",
+        message: "You need to sign in to view this room.",
+      }, async () => {
+        await UserManager.signIn();
+        this.loadRoomInfo(tokenAddress);
+      });
+    } else if (!UserManager.userWalletAddress) {
+      new Confirm({
+        title: "Connect Wallet",
+        message: "You need to connect your wallet to view this room.",
+      }, async () => {
+        await UserManager.connectWallet();
+        this.loadRoomInfo(tokenAddress);
+      });
+    } else {
+      const loading = new RoomLoading().appendTo(this.container);
 
-    const { data, error } = await SupabaseManager.supabase.functions.invoke(
-      "get-room",
-      { body: { tokenAddress } },
-    );
-    this.roomInfo = data;
+      const { data, error } = await SupabaseManager.supabase.functions.invoke(
+        "get-room",
+        { body: { tokenAddress } },
+      );
+      this.roomInfo = data;
 
-    if (this.roomInfo) {
-      this.titleBar.loadTokenInfo(tokenAddress);
-      const [, formShowing] = await Promise.all([
-        this.chatRoom.loadMessages(tokenAddress),
-        this.tokenPurchaseForm.check(tokenAddress, this.roomInfo),
-      ]);
+      if (this.roomInfo) {
+        this.titleBar.loadTokenInfo(tokenAddress);
+        const [, formShowing] = await Promise.all([
+          this.chatRoom.loadMessages(tokenAddress),
+          this.tokenPurchaseForm.check(tokenAddress, this.roomInfo),
+        ]);
 
-      if (!formShowing) {
-        this.chatRoom.focusMessageForm();
+        if (!formShowing) {
+          this.chatRoom.focusMessageForm();
+        }
       }
-    }
 
-    if (!this.closed) loading.delete();
+      if (!this.closed) loading.delete();
+    }
   }
 
   public close(): void {
