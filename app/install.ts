@@ -15,8 +15,6 @@ import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import RoomView from "./view/RoomView.js";
 import Settings from "./view/Settings.js";
-import BuyTokenPopup from "./popup/token/BuyTokenPopup.js";
-import SellTokenPopup from "./popup/token/SellTokenPopup.js";
 
 dayjs.extend(relativeTime);
 
@@ -58,6 +56,4 @@ export default async function install() {
     "explorer",
     "settings",
   ]);
-
-  new SellTokenPopup("0xA8E8aCF139dD77622ecD1707656083E9A336828f");
 }
