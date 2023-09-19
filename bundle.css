@@ -358,6 +358,11 @@ body {
   align-items: center;
   padding: 0 24px;
 }
+@media only screen and (max-width: 859px) {
+  .layout > header {
+    padding: 0 12px 0 18px;
+  }
+}
 .layout > header > .logo {
   cursor: pointer;
   display: flex;
@@ -538,6 +543,7 @@ body {
 .settings-view > section > p {
   color: #999;
   margin-bottom: 10px;
+  word-break: break-all;
 }
 .settings-view > section > p > a {
   color: rgba(var(--primary-color));
@@ -910,10 +916,27 @@ body {
 .message-form > input.upload-input {
   display: none;
 }
-.message-form > input {
+.message-form > .emoji-button,
+.message-form > .upload-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #999;
+}
+.message-form > .emoji-button:hover,
+.message-form > .upload-button:hover {
+  color: #fff;
+}
+.message-form > form {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.message-form > form > input {
   flex-grow: 1;
   height: 100%;
-  padding: 8px;
+  padding: 8px 0;
   background-color: #252526;
   color: #dcdcdc;
   font-family: NotoSansKR;

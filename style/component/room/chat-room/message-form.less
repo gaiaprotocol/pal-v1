@@ -10,13 +10,32 @@
         display: none;
     }
 
-    >input {
-        flex-grow       : 1;
-        height          : 100%;
-        padding         : 8px;
-        background-color: #252526;
-        color           : #dcdcdc;
-        font-family     : NotoSansKR;
-        font-size       : 15px;
+    >.emoji-button,
+    >.upload-button {
+        display    : flex;
+        align-items: center;
+        cursor     : pointer;
+        color      : #999;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    >form {
+        flex-grow  : 1;
+        display    : flex;
+        align-items: center;
+        gap        : 6px;
+
+        >input {
+            flex-grow       : 1;
+            height          : 100%;
+            padding         : 8px 0;
+            background-color: #252526;
+            color           : #dcdcdc;
+            font-family     : NotoSansKR;
+            font-size       : 15px;
+        }
     }
 }
