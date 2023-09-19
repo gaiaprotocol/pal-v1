@@ -40,7 +40,7 @@ export default class RoomView extends View {
     });
 
     if (params.tokenAddress) {
-      this.loadRoomInfo(params.tokenAddress);
+      this.loadRoomInfo("0x" + params.tokenAddress);
     }
 
     if (window.visualViewport) {
@@ -57,7 +57,7 @@ export default class RoomView extends View {
 
   public changeParams(params: ViewParams): void {
     if (params.tokenAddress) {
-      this.loadRoomInfo(params.tokenAddress);
+      this.loadRoomInfo("0x" + params.tokenAddress);
     }
   }
 

@@ -17,6 +17,7 @@ import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
 import RoomView from "./view/RoomView.js";
 import Settings from "./view/Settings.js";
+import UserInfoView from "./view/UserInfoView.js";
 
 dayjs.extend(relativeTime);
 
@@ -50,14 +51,12 @@ export default async function install() {
   Router.route("activity", ActivityView);
   Router.route("explorer", Explorer);
   Router.route("settings", Settings);
-  Router.route(["", "{tokenAddress}"], Rooms, [
+  Router.route(["", "0x{tokenAddress}"], Rooms);
+  Router.route("0x{tokenAddress}", RoomView);
+  Router.route("{xUsername}", UserInfoView, [
     "activity",
     "explorer",
     "settings",
-  ]);
-  Router.route("{tokenAddress}", RoomView, [
-    "activity",
-    "explorer",
-    "settings",
+    "0x{tokenAddress}",
   ]);
 }
