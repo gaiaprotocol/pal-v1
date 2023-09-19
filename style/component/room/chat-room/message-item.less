@@ -5,17 +5,23 @@
     font-size  : 15px;
     line-height: 1.6;
 
-    >.profile-image {
-        background-color: #fff;
-        width           : 20px;
-        height          : 20px;
-        border-radius   : 5px;
-        margin-top      : 2px;
-    }
+    >.author {
+        display: flex;
+        gap    : 5px;
+        cursor : pointer;
 
-    >.name {
-        font-weight: bold;
-        color      : #6699cc;
+        >.profile-image {
+            background-color: #fff;
+            width           : 20px;
+            height          : 20px;
+            border-radius   : 5px;
+            margin-top      : 2px;
+        }
+
+        >.name {
+            font-weight: bold;
+            color      : #6699cc;
+        }
     }
 
     >.message {
