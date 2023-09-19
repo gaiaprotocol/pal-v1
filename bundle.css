@@ -556,8 +556,13 @@ body {
   background-image: url('/images/logo.png');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 160px 160px;
+  background-size: 120px 120px;
   z-index: 9999;
+}
+@media only screen and (max-width: 859px) {
+  .splash-screen {
+    background-size: 48px 48px;
+  }
 }
 .user-summary > .x-login-button {
   cursor: pointer;
@@ -639,6 +644,7 @@ body {
   border-bottom: 2px solid rgba(var(--primary-color));
 }
 .profile-image-display {
+  position: relative;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -651,6 +657,16 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
+}
+.profile-image-display.online::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #00ff00;
 }
 .room-list {
   border-bottom: 1px solid #2d2d2d;
