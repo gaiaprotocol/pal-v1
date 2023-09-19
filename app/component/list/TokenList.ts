@@ -76,9 +76,8 @@ export default class TokenList extends DomNode {
     } else if (this.tokenListFilter === TokenListFilter.Friends) {
       //TODO:
     } else if (this.tokenListFilter === TokenListFilter.OnlineUsers) {
-      const ownerWalletAddresses: string[] = OnlineUserManager.onlineUsers.map(
-        (onlineUser) => onlineUser.walletAddress,
-      );
+      const ownerWalletAddresses: string[] = [...OnlineUserManager.onlineUsers]
+        .map(([, onlineUser]) => onlineUser.walletAddress);
       const result = await SupabaseManager.supabase.from(
         "pal_tokens",
       ).select(

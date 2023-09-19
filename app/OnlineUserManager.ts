@@ -3,35 +3,30 @@ import { EventContainer } from "common-dapp-module";
 import SupabaseManager from "./SupabaseManager.js";
 import UserManager from "./user/UserManager.js";
 
+interface OnlineUser {
+  userId: string;
+  userName: string;
+  profileImage: string;
+  walletAddress: string;
+  onlineAt: string;
+}
+
 class OnlineUserManager extends EventContainer {
   private _channel: RealtimeChannel | undefined;
-  public onlineUsers: {
-    userId: string;
-    userName: string;
-    profileImage: string;
-    walletAddress: string;
-    onlineAt: string;
-  }[] = [];
+  public onlineUsers: Map<string, OnlineUser> = new Map<string, OnlineUser>();
 
   public init() {
-    this.createChannel();
-  }
-
-  private createChannel() {
-    if (this._channel !== undefined) {
-      SupabaseManager.supabase.removeChannel(this._channel);
-    }
     const channel = SupabaseManager.supabase.channel("online_users");
     channel.on(
       "presence",
       { event: "sync" },
       () => {
         const newState: any = channel.presenceState();
-        this.onlineUsers = [];
+        this.onlineUsers = new Map<string, OnlineUser>();
         for (const state of Object.values<any>(newState)) {
           for (const data of state) {
-            if (!this.onlineUsers.find((u) => u.userId === data.userId)) {
-              this.onlineUsers.push(data);
+            if (!this.onlineUsers.has(data.walletAddress)) {
+              this.onlineUsers.set(data.walletAddress, data);
             }
           }
         }
@@ -57,6 +52,10 @@ class OnlineUserManager extends EventContainer {
         onlineAt: new Date().toISOString(),
       });
     }
+  }
+
+  public checkOnline(walletAddress: string): boolean {
+    return this.onlineUsers.has(walletAddress);
   }
 }
 

@@ -650,6 +650,7 @@ body {
   border-bottom: 2px solid rgba(var(--primary-color));
 }
 .profile-image-display {
+  position: relative;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -662,6 +663,16 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
+}
+.profile-image-display.online::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #00ff00;
 }
 .room-list {
   border-bottom: 1px solid #2d2d2d;

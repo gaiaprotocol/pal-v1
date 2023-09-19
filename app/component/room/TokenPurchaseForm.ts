@@ -1,13 +1,13 @@
 import { Button, DomNode, el } from "common-dapp-module";
-import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
+import Constants from "../../Constants.js";
 import SupabaseManager from "../../SupabaseManager.js";
+import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import RoomInfo from "../../data/RoomInfo.js";
 import BuyTokenPopup from "../../popup/token/BuyTokenPopup.js";
 import Icon from "../Icon.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
-import Constants from "../../Constants.js";
 
 export default class TokenPurchaseForm extends DomNode {
   private currentTokenAddress: string | undefined;
@@ -56,37 +56,33 @@ export default class TokenPurchaseForm extends DomNode {
   }
 
   private async loadProfileImage(owner: string, symbol: string) {
-    const { data, error } = await SupabaseManager.supabase.from("user_details")
-      .select().eq("wallet_address", owner);
-    const tokenOwner = data?.[0];
+    this.profileImage.load(owner);
+
+    const tokenOwner = await UserDetailsCacher.get(owner);
     if (tokenOwner) {
-      this.profileImage.src = tokenOwner.profile_image.replace("_normal", "");
-    } else {
-      this.profileImage.src = generateJazziconDataURL(owner);
-    }
-
-    const { data: tokenData } = await SupabaseManager.supabase.from(
-      "pal_tokens",
-    )
-      .select(
-        Constants.PAL_TOKENS_SELECT_QUERY,
+      const { data: tokenData } = await SupabaseManager.supabase.from(
+        "pal_tokens",
       )
-      .eq("token_address", this.currentTokenAddress).single();
-    if (tokenData) {
-      this.messageDisplay.empty().append(
-        "Hold at least ",
-        el("b", ethers.formatEther((tokenData as any).view_token_required)),
-        ` ${symbol} to read messages and at least `,
-        el("b", ethers.formatEther((tokenData as any).write_token_required)),
-        ` ${symbol} to send messages. This was set by ${tokenOwner.display_name}.`,
-      );
+        .select(
+          Constants.PAL_TOKENS_SELECT_QUERY,
+        )
+        .eq("token_address", this.currentTokenAddress).single();
+      if (tokenData) {
+        this.messageDisplay.empty().append(
+          "Hold at least ",
+          el("b", ethers.formatEther((tokenData as any).view_token_required)),
+          ` ${symbol} to read messages and at least `,
+          el("b", ethers.formatEther((tokenData as any).write_token_required)),
+          ` ${symbol} to send messages. This was set by ${tokenOwner.display_name}.`,
+        );
 
-      this.lastMessageSentAtDisplay.text =
-        !(tokenData as any).last_message_sent_at
-          ? ""
-          : "Last message sent " + dayjs(
-            (tokenData as any).last_message_sent_at,
-          ).fromNow();
+        this.lastMessageSentAtDisplay.text =
+          !(tokenData as any).last_message_sent_at
+            ? ""
+            : "Last message sent " + dayjs(
+              (tokenData as any).last_message_sent_at,
+            ).fromNow();
+      }
     }
   }
 }

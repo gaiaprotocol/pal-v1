@@ -6,11 +6,11 @@ import {
   el,
   Popup,
 } from "common-dapp-module";
+import Icon from "../../component/Icon.js";
 import TokenList, { TokenListFilter } from "../../component/list/TokenList.js";
 import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
 import Tabs from "../../component/tab/Tabs.js";
 import UserDetails from "../../data/UserDetails.js";
-import Icon from "../../component/Icon.js";
 
 export default class UserInfoPopup extends Popup {
   public content: DomNode;
@@ -22,12 +22,14 @@ export default class UserInfoPopup extends Popup {
 
   constructor(userDetails: UserDetails) {
     super({ barrierDismissible: true });
+
+    let profileImage;
     this.append(
       this.content = new Component(
         ".user-info-popup",
         el(
           "h1",
-          new ProfileImageDisplay(userDetails.profile_image),
+          profileImage = new ProfileImageDisplay(),
           el("span.name", userDetails.display_name),
           el("a.close-button", new Icon("close"), {
             click: () => this.delete(),
@@ -70,6 +72,8 @@ export default class UserInfoPopup extends Popup {
         ),
       ),
     );
+
+    profileImage.load(userDetails.wallet_address);
 
     this.tabs.on("select", (id: string) => {
       this.tokenList.inactive();

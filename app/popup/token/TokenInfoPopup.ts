@@ -7,9 +7,9 @@ import {
   Popup,
   Router,
 } from "common-dapp-module";
-import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
+import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import Icon from "../../component/Icon.js";
 import ActivityList from "../../component/list/ActivityList.js";
 import MemberList from "../../component/list/MemberList.js";
@@ -18,7 +18,6 @@ import Tabs from "../../component/tab/Tabs.js";
 import PalContract from "../../contract/PalContract.js";
 import PalTokenContract from "../../contract/PalTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
-import SupabaseManager from "../../SupabaseManager.js";
 import UserManager from "../../user/UserManager.js";
 import BuyTokenPopup from "./BuyTokenPopup.js";
 import EditTokenInfoPopup from "./EditTokenInfoPopup.js";
@@ -177,19 +176,10 @@ export default class TokenInfoPopup extends Popup {
   }
 
   private async loadOwner(tokenInfo: TokenInfo) {
-    const { data, error } = await SupabaseManager.supabase.from("user_details")
-      .select().eq("wallet_address", tokenInfo.owner);
+    this.profileImage.load(tokenInfo.owner);
 
-    const tokenOwner = data?.[0];
-    let profileImageSrc;
-    if (tokenOwner) {
-      profileImageSrc = tokenOwner.profile_image;
-    } else {
-      profileImageSrc = generateJazziconDataURL(tokenInfo.owner);
-    }
-    this.profileImage.src = profileImageSrc;
-
-    if (tokenOwner.wallet_address === UserManager.userWalletAddress) {
+    const tokenOwner = await UserDetailsCacher.get(tokenInfo.owner);
+    if (tokenOwner?.wallet_address === UserManager.userWalletAddress) {
       this.editButton.deleteClass("hidden");
     }
   }

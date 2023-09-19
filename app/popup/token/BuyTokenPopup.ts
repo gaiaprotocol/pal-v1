@@ -8,13 +8,12 @@ import {
   Input,
   Popup,
 } from "common-dapp-module";
-import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
 import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
+import Constants from "../../Constants.js";
 import PalContract from "../../contract/PalContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import WalletManager from "../../user/WalletManager.js";
-import Constants from "../../Constants.js";
 
 export default class BuyTokenPopup extends Popup {
   public content: DomNode;
@@ -37,7 +36,7 @@ export default class BuyTokenPopup extends Popup {
         this.title = el("h1", "Buy Token"),
         el(
           "main",
-          this.profileImage = new ProfileImageDisplay(),
+          this.profileImage = new ProfileImageDisplay(true),
           this.amountInput = new Input({
             label: "Amount",
             placeholder: "Amount",
@@ -127,18 +126,7 @@ export default class BuyTokenPopup extends Popup {
       this.priceDisplay.text = `${ethers.formatEther(currentPrice)} ETH`;
       this.displayTotalPrice();
 
-      this.loadOwnerInfo((tokenData as any).owner);
-    }
-  }
-
-  private async loadOwnerInfo(owner: string) {
-    const { data, error } = await SupabaseManager.supabase.from("user_details")
-      .select().eq("wallet_address", owner);
-    const tokenOwner = data?.[0];
-    if (tokenOwner) {
-      this.profileImage.src = tokenOwner.profile_image.replace("_normal", "");
-    } else {
-      this.profileImage.src = generateJazziconDataURL(owner);
+      this.profileImage.load((tokenData as any).owner);
     }
   }
 
