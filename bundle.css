@@ -907,6 +907,9 @@ body {
   padding: 6px;
   gap: 6px;
 }
+.message-form > input.upload-input {
+  display: none;
+}
 .message-form > input {
   flex-grow: 1;
   height: 100%;
