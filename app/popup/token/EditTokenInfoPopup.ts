@@ -11,6 +11,7 @@ import PalTokenContract from "../../contract/PalTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import SupabaseManager from "../../SupabaseManager.js";
+import UserManager from "../../user/UserManager.js";
 
 export default class EditTokenInfoPopup extends Popup {
   public content: DomNode;
@@ -48,7 +49,10 @@ export default class EditTokenInfoPopup extends Popup {
                       this.tokenNameInput.value,
                     );
                     SupabaseManager.supabase.functions.invoke("get-room", {
-                      body: { tokenAddress },
+                      body: {
+                        walletAddress: UserManager.userWalletAddress,
+                        tokenAddress,
+                      },
                     });
                   } catch (error) {
                     console.error(error);
@@ -80,7 +84,10 @@ export default class EditTokenInfoPopup extends Popup {
                       this.tokenSymbolInput.value,
                     );
                     SupabaseManager.supabase.functions.invoke("get-room", {
-                      body: { tokenAddress },
+                      body: {
+                        walletAddress: UserManager.userWalletAddress,
+                        tokenAddress,
+                      },
                     });
                   } catch (error) {
                     console.error(error);

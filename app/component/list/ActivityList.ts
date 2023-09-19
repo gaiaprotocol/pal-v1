@@ -80,9 +80,11 @@ export default class ActivityList extends DomNode {
       }
       await UserDetailsCacher.load(Array.from(walletAddresses));
 
-      this.list.empty();
-      for (const activity of activityList) {
-        this.add(activity);
+      if (!this.deleted) {
+        this.list.empty();
+        for (const activity of activityList) {
+          this.add(activity);
+        }
       }
     }
   }

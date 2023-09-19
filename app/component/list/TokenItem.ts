@@ -1,12 +1,12 @@
 import { DomNode, el, StringUtil } from "common-dapp-module";
-import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import SupabaseManager from "../../SupabaseManager.js";
+import ProfileImageDisplay from "../ProfileImageDisplay.js";
 
 export default class TokenItem extends DomNode {
-  private ownerProfileImage: DomNode<HTMLImageElement>;
+  private ownerProfileImage: ProfileImageDisplay;
   private ownerNameDisplay: DomNode;
   private memberCountDisplay: DomNode;
 
@@ -17,7 +17,7 @@ export default class TokenItem extends DomNode {
         ".profile-image-container",
         el(
           ".profile-image",
-          this.ownerProfileImage = el("img"),
+          this.ownerProfileImage = new ProfileImageDisplay(),
         ),
       ),
       el(
@@ -41,14 +41,12 @@ export default class TokenItem extends DomNode {
       ),
     );
 
+    this.ownerProfileImage.load(tokenInfo.owner);
+
     const ownerData = UserDetailsCacher.getCached(tokenInfo.owner);
     if (ownerData) {
-      this.ownerProfileImage.domElement.src = ownerData.profile_image;
       this.ownerNameDisplay.text = ownerData.display_name;
     } else {
-      this.ownerProfileImage.domElement.src = generateJazziconDataURL(
-        tokenInfo.owner,
-      );
       this.ownerNameDisplay.text = StringUtil.shortenEthereumAddress(
         tokenInfo.owner,
       );
@@ -68,6 +66,8 @@ export default class TokenItem extends DomNode {
       console.error(error);
       return;
     }
-    this.memberCountDisplay.text = data.length.toString();
+    if (!this.deleted) {
+      this.memberCountDisplay.text = data.length.toString();
+    }
   }
 }

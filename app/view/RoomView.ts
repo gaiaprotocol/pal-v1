@@ -10,7 +10,6 @@ import ChatRoom from "../component/room/ChatRoom.js";
 import RoomLoading from "../component/room/RoomLoading.js";
 import RoomTitleBar from "../component/room/RoomTitleBar.js";
 import TokenPurchaseForm from "../component/room/TokenPurchaseForm.js";
-import RoomInfo from "../data/RoomInfo.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 
@@ -21,7 +20,6 @@ export default class RoomView extends View {
   private chatRoom: ChatRoom;
 
   private currentTokenAddress: string | undefined;
-  private roomInfo: RoomInfo | undefined;
 
   constructor(params: ViewParams) {
     super();
@@ -74,22 +72,37 @@ export default class RoomView extends View {
     } else {
       const loading = new RoomLoading().appendTo(this.container);
 
-      const { data, error } = await SupabaseManager.supabase.functions.invoke(
-        "get-room",
-        { body: { tokenAddress } },
-      );
-      this.roomInfo = data;
+      this.titleBar.loadTokenInfo(tokenAddress);
 
-      if (this.roomInfo) {
-        this.titleBar.loadTokenInfo(tokenAddress);
-        const [, formShowing] = await Promise.all([
-          this.chatRoom.loadMessages(tokenAddress),
-          this.tokenPurchaseForm.check(tokenAddress, this.roomInfo),
-        ]);
+      const now = Date.now();
 
-        if (!formShowing) {
-          this.chatRoom.focusMessageForm();
-        }
+      const { data: roomInfo, error } = await SupabaseManager.supabase.functions
+        .invoke(
+          "get-room",
+          {
+            body: {
+              walletAddress: UserManager.userWalletAddress,
+              tokenAddress,
+            },
+          },
+        );
+
+      if (roomInfo) {
+        this.tokenPurchaseForm.loadProfileImage(
+          roomInfo.owner,
+          roomInfo.symbol,
+        );
+      }
+
+      console.log("get-room time taken:", Date.now() - now);
+
+      const [formShowing] = await Promise.all([
+        this.tokenPurchaseForm.check(tokenAddress),
+        this.chatRoom.loadMessages(tokenAddress),
+      ]);
+
+      if (!formShowing) {
+        this.chatRoom.focusMessageForm();
       }
 
       if (!this.closed) loading.delete();

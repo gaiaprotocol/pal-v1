@@ -13,9 +13,17 @@ interface OnlineUser {
 
 class OnlineUserManager extends EventContainer {
   private _channel: RealtimeChannel | undefined;
+
   public onlineUsers: Map<string, OnlineUser> = new Map<string, OnlineUser>();
 
   public init() {
+    this.createChannel();
+  }
+
+  private createChannel() {
+    if (this._channel !== undefined) {
+      SupabaseManager.supabase.removeChannel(this._channel);
+    }
     const channel = SupabaseManager.supabase.channel("online_users");
     channel.on(
       "presence",

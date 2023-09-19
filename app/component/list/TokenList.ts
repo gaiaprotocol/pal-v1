@@ -111,9 +111,11 @@ export default class TokenList extends DomNode {
     }
     await UserDetailsCacher.load(ownerWalletAddresses);
 
-    this.list.empty();
-    for (const tokenInfo of data) {
-      this.add(tokenInfo);
+    if (!this.deleted) {
+      this.list.empty();
+      for (const tokenInfo of data) {
+        this.add(tokenInfo);
+      }
     }
   }
 

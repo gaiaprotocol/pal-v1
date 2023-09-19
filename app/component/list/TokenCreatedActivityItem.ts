@@ -1,12 +1,12 @@
 import { DomNode, el, Router, StringUtil } from "common-dapp-module";
-import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import dayjs from "dayjs";
 import BlockTimeCacher from "../../cacher/BlockTimeCacher.js";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import { TokenCreatedActivity } from "../../data/Activity.js";
+import ProfileImageDisplay from "../ProfileImageDisplay.js";
 
 export default class TokenCreatedActivityItem extends DomNode {
-  private ownerProfileImage: DomNode<HTMLImageElement>;
+  private ownerProfileImage: ProfileImageDisplay;
   private ownerNameDisplay: DomNode;
   private nameDisplay: DomNode;
   private symbolDisplay: DomNode;
@@ -19,7 +19,7 @@ export default class TokenCreatedActivityItem extends DomNode {
         ".profile-image-container",
         el(
           ".profile-image",
-          this.ownerProfileImage = el("img"),
+          this.ownerProfileImage = new ProfileImageDisplay(),
         ),
       ),
       el(
@@ -44,14 +44,12 @@ export default class TokenCreatedActivityItem extends DomNode {
       ),
     );
 
+    this.ownerProfileImage.load(activity.owner);
+
     const ownerData = UserDetailsCacher.getCached(activity.owner);
     if (ownerData) {
-      this.ownerProfileImage.domElement.src = ownerData.profile_image;
       this.ownerNameDisplay.text = ownerData.display_name;
     } else {
-      this.ownerProfileImage.domElement.src = generateJazziconDataURL(
-        activity.owner,
-      );
       this.ownerNameDisplay.text = StringUtil.shortenEthereumAddress(
         activity.owner,
       );

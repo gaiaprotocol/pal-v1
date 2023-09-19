@@ -4,7 +4,6 @@ import { ethers } from "ethers";
 import Constants from "../../Constants.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
-import RoomInfo from "../../data/RoomInfo.js";
 import BuyTokenPopup from "../../popup/token/BuyTokenPopup.js";
 import Icon from "../Icon.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
@@ -36,10 +35,10 @@ export default class TokenPurchaseForm extends DomNode {
     );
   }
 
-  public async check(tokenAddress: string, roomInfo: RoomInfo) {
-    this.deleteClass("show");
+  public async check(tokenAddress: string) {
+    const now = Date.now();
 
-    this.loadProfileImage(roomInfo.owner, roomInfo.symbol);
+    this.deleteClass("show");
 
     this.currentTokenAddress = tokenAddress;
     const { data, error } = await SupabaseManager.supabase.rpc(
@@ -48,6 +47,9 @@ export default class TokenPurchaseForm extends DomNode {
         parameter_token_address: tokenAddress,
       },
     );
+
+    console.log("check_view_granted time taken:", Date.now() - now);
+
     if (!error && data !== true) {
       this.addClass("show");
       return true;
@@ -55,7 +57,7 @@ export default class TokenPurchaseForm extends DomNode {
     return false;
   }
 
-  private async loadProfileImage(owner: string, symbol: string) {
+  public async loadProfileImage(owner: string, symbol: string) {
     this.profileImage.load(owner);
 
     const tokenOwner = await UserDetailsCacher.get(owner);

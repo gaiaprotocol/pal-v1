@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.31.0";
+import { ethers } from "https://esm.sh/ethers@6.7.0";
 import { response, responseError, serveWithOptions } from "../_shared/cors.ts";
 import { getTokenInfo } from "../_shared/token.ts";
-import { getSignedUser } from "../_shared/user.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
@@ -9,30 +9,21 @@ const supabase = createClient(
 );
 
 serveWithOptions(async (req) => {
-  const user = await getSignedUser(req);
-  if (!user) {
-    return responseError("Unauthorized");
-  }
-
-  const { data: userWallets } = await supabase
-    .from("user_details")
-    .select("wallet_address")
-    .eq("id", user.id)
-    .single();
-
-  if (!userWallets) {
+  let { walletAddress, tokenAddress } = await req.json();
+  if (!walletAddress) {
     return responseError("No wallet address");
   }
-
-  const { tokenAddress } = await req.json();
+  walletAddress = ethers.getAddress(walletAddress);
   if (!tokenAddress) {
     return responseError("No token address");
   }
 
-  const tokenInfo = await getTokenInfo(
-    tokenAddress,
-    userWallets.wallet_address,
-  );
+  let now = Date.now();
+
+  const tokenInfo = await getTokenInfo(tokenAddress, walletAddress);
+
+  console.log("get token info time taken:", Date.now() - now);
+  now = Date.now();
 
   await Promise.all([
     supabase.from("pal_tokens").upsert({
@@ -44,10 +35,12 @@ serveWithOptions(async (req) => {
     }),
     supabase.from("pal_token_balances").upsert({
       token_address: tokenAddress,
-      wallet_address: userWallets.wallet_address,
+      wallet_address: walletAddress,
       last_fetched_balance: tokenInfo.balance.toString(),
     }),
   ]);
+
+  console.log("upsert time taken:", Date.now() - now);
 
   return response({
     name: tokenInfo.name,

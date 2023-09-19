@@ -45,18 +45,24 @@ export default class MemberList extends DomNode {
         walletAddresses.push(balanceInfo.wallet_address);
       }
       await UserDetailsCacher.load(walletAddresses);
-      for (const balanceInfo of data as any) {
-        const userData = UserDetailsCacher.getCached(
-          balanceInfo.wallet_address,
-        );
-        if (userData) {
-          this.add(
-            userData,
-            BigInt(balanceInfo.last_fetched_balance),
-            tokenInfo.symbol,
+
+      if (!this.deleted) {
+        this.list.empty();
+        for (const balanceInfo of data as any) {
+          const userData = UserDetailsCacher.getCached(
+            balanceInfo.wallet_address,
           );
+          if (userData) {
+            this.add(
+              userData,
+              BigInt(balanceInfo.last_fetched_balance),
+              tokenInfo.symbol,
+            );
+          }
         }
       }
+    } else if (!this.deleted) {
+      this.list.empty();
     }
   }
 
