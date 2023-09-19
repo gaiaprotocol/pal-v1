@@ -8,6 +8,7 @@ import {
 } from "common-dapp-module";
 import Icon from "../../component/Icon.js";
 import TokenList, { TokenListFilter } from "../../component/list/TokenList.js";
+import ListLoading from "../../component/ListLoading.js";
 import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
 import Tabs from "../../component/tab/Tabs.js";
 import UserDetails from "../../data/UserDetails.js";
@@ -17,6 +18,7 @@ export default class UserInfoPopup extends Popup {
 
   private socialLinks: DomNode;
   private timeline: DomNode;
+  private timelineLoading: ListLoading;
   private tabs: Tabs;
   private tokenList: TokenList;
 
@@ -52,7 +54,10 @@ export default class UserInfoPopup extends Popup {
               ),
             ),
           ),
-          this.timeline = el(".timeline"),
+          this.timeline = el(
+            ".timeline",
+            this.timelineLoading = new ListLoading(),
+          ),
         ),
         this.tabs = new Tabs([
           { id: "tokens", label: "Tokens" },
@@ -91,10 +96,10 @@ export default class UserInfoPopup extends Popup {
       },
       this.timeline.domElement,
       {
-        width: 552,
+        width: this.content.rect.width - 48,
         height: 300,
         theme: "dark",
       },
-    );
+    ).then(() => this.timelineLoading.delete());
   }
 }
