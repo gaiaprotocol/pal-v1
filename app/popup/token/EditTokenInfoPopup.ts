@@ -9,8 +9,8 @@ import {
 } from "common-dapp-module";
 import PalTokenContract from "../../contract/PalTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import SupabaseManager from "../../SupabaseManager.js";
-import UserManager from "../../user/UserManager.js";
 
 export default class EditTokenInfoPopup extends Popup {
   public content: DomNode;
@@ -19,7 +19,9 @@ export default class EditTokenInfoPopup extends Popup {
   private tokenSymbolInput: Input;
   private tokenDescriptionInput: Input;
 
-  constructor(tokenInfo: TokenInfo) {
+  private currentTokenMetadata: any;
+
+  constructor(private tokenAddress: string) {
     super({ barrierDismissible: true });
     this.append(
       this.content = new Component(
@@ -33,7 +35,6 @@ export default class EditTokenInfoPopup extends Popup {
             this.tokenNameInput = new Input({
               label: "Name (e.g. Pal Token)",
               placeholder: "Name",
-              value: tokenInfo.name,
             }),
             el(
               "footer",
@@ -43,18 +44,12 @@ export default class EditTokenInfoPopup extends Popup {
                   button.text = "Saving...";
 
                   try {
-                    await new PalTokenContract(tokenInfo.token_address).setName(
+                    await new PalTokenContract(tokenAddress).setName(
                       this.tokenNameInput.value,
                     );
-
-                    SupabaseManager.supabase.functions.invoke(
-                      "get-room",
-                      { body: { tokenAddress: tokenInfo.token_address } },
-                    );
-
-                    const newTokenInfo = structuredClone(tokenInfo);
-                    newTokenInfo.name = this.tokenSymbolInput.value;
-                    UserManager.setSignedUserToken(newTokenInfo);
+                    SupabaseManager.supabase.functions.invoke("get-room", {
+                      body: { tokenAddress },
+                    });
                   } catch (error) {
                     console.error(error);
                   }
@@ -72,7 +67,6 @@ export default class EditTokenInfoPopup extends Popup {
             this.tokenSymbolInput = new Input({
               label: "Symbol (e.g. PAL)",
               placeholder: "Symbol",
-              value: tokenInfo.symbol,
             }),
             el(
               "footer",
@@ -82,19 +76,12 @@ export default class EditTokenInfoPopup extends Popup {
                   button.text = "Saving...";
 
                   try {
-                    await new PalTokenContract(tokenInfo.token_address)
-                      .setSymbol(
-                        this.tokenSymbolInput.value,
-                      );
-
-                    SupabaseManager.supabase.functions.invoke(
-                      "get-room",
-                      { body: { tokenAddress: tokenInfo.token_address } },
+                    await new PalTokenContract(tokenAddress).setSymbol(
+                      this.tokenSymbolInput.value,
                     );
-
-                    const newTokenInfo = structuredClone(tokenInfo);
-                    newTokenInfo.symbol = this.tokenSymbolInput.value;
-                    UserManager.setSignedUserToken(newTokenInfo);
+                    SupabaseManager.supabase.functions.invoke("get-room", {
+                      body: { tokenAddress },
+                    });
                   } catch (error) {
                     console.error(error);
                   }
@@ -112,7 +99,6 @@ export default class EditTokenInfoPopup extends Popup {
             this.tokenDescriptionInput = new Input({
               label: "Description",
               placeholder: "Description",
-              value: tokenInfo.metadata.description,
               multiline: true,
             }),
             el(
@@ -123,15 +109,12 @@ export default class EditTokenInfoPopup extends Popup {
                   button.text = "Saving...";
 
                   try {
-                    const newTokenInfo = structuredClone(tokenInfo);
-                    newTokenInfo.metadata.description =
-                      this.tokenDescriptionInput.value;
+                    const metadata = structuredClone(this.currentTokenMetadata);
+                    metadata.description = this.tokenDescriptionInput.value;
 
                     await SupabaseManager.supabase.from("pal_tokens").update({
-                      metadata: newTokenInfo.metadata,
-                    }).eq("token_address", tokenInfo.token_address);
-
-                    UserManager.setSignedUserToken(newTokenInfo);
+                      metadata,
+                    }).eq("token_address", tokenAddress);
                   } catch (error) {
                     console.error(error);
                   }
@@ -155,5 +138,20 @@ export default class EditTokenInfoPopup extends Popup {
         ),
       ),
     );
+    this.load();
+  }
+
+  private async load() {
+    const tokenInfo = await TokenInfoCacher.get(this.tokenAddress);
+    if (tokenInfo) {
+      this.displayTokenInfo(tokenInfo);
+    }
+  }
+
+  private displayTokenInfo(tokenInfo: TokenInfo) {
+    this.tokenNameInput.value = tokenInfo.name;
+    this.tokenSymbolInput.value = tokenInfo.symbol;
+    this.tokenDescriptionInput.value = tokenInfo.metadata.description ?? "";
+    this.currentTokenMetadata = tokenInfo.metadata;
   }
 }

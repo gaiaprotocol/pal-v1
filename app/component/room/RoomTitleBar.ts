@@ -1,11 +1,12 @@
 import { DomNode, el } from "common-dapp-module";
-import SupabaseManager from "../../SupabaseManager.js";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
+import TokenInfo from "../../data/TokenInfo.js";
 import Icon from "../Icon.js";
 import TokenSummary from "../TokenSummary.js";
-import Constants from "../../Constants.js";
 
 export default class RoomTitleBar extends DomNode {
   private infoContainer: DomNode;
+  private currentTokenAddress: string | undefined;
 
   constructor() {
     super(".room-title-bar");
@@ -15,24 +16,31 @@ export default class RoomTitleBar extends DomNode {
         click: () => history.back(),
       }),
     );
+
+    this.onDelegate(
+      TokenInfoCacher,
+      "tokenInfoChanged",
+      (tokenInfo: TokenInfo) => {
+        if (tokenInfo.token_address === this.currentTokenAddress) {
+          this.displayTokenInfo(tokenInfo);
+        }
+      },
+    );
   }
 
   public async loadTokenInfo(tokenAddress: string) {
+    this.currentTokenAddress = tokenAddress;
     this.infoContainer.empty();
-    const { data, error } = await SupabaseManager.supabase.from(
-      "pal_tokens",
-    )
-      .select(
-        Constants.PAL_TOKENS_SELECT_QUERY,
-      ).eq("token_address", tokenAddress).single();
-    if (error) {
-      console.error(error);
-      return;
+    const tokenInfo = await TokenInfoCacher.get(tokenAddress);
+    if (tokenInfo) {
+      this.displayTokenInfo(tokenInfo);
     }
-    const tokenInfo = data as any;
+  }
+
+  private displayTokenInfo(tokenInfo: TokenInfo) {
     this.infoContainer.empty().append(
       el("h1", tokenInfo.metadata.roomName ?? tokenInfo.name),
-      new TokenSummary(tokenInfo),
+      new TokenSummary(tokenInfo.token_address),
     );
   }
 }

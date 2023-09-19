@@ -3,20 +3,20 @@ import { getNetwork, getWalletClient } from "@wagmi/core";
 import { EventContainer } from "common-dapp-module";
 import { BrowserProvider, JsonRpcSigner } from "ethers";
 import Config from "../Config.js";
+import Constants from "../Constants.js";
 import OnlineUserManager from "../OnlineUserManager.js";
 import SupabaseManager from "../SupabaseManager.js";
-import TokenInfo from "../data/TokenInfo.js";
+import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
 import ChangeChainPopup from "../popup/ChangeChainPopup.js";
 import ChangeWalletAddressPopup from "../popup/ChangeWalletAddressPopup.js";
 import CreateTokenPopup from "../popup/token/CreateTokenPopup.js";
 import ConnectWalletPopup from "../popup/user/ConnectWalletPopup.js";
 import WalletManager from "./WalletManager.js";
-import Constants from "../Constants.js";
 
 class UserManager extends EventContainer {
   public user: User | undefined;
   public userWalletAddress: string | undefined;
-  public userToken: TokenInfo | undefined;
+  public userTokenAddress: string | undefined;
 
   public get signedIn() {
     return this.user !== undefined;
@@ -25,7 +25,7 @@ class UserManager extends EventContainer {
     return this.userWalletAddress !== undefined;
   }
   public get tokenCreated() {
-    return this.userToken !== undefined;
+    return this.userTokenAddress !== undefined;
   }
 
   public async getUserWalletAddress(userId: string) {
@@ -36,25 +36,29 @@ class UserManager extends EventContainer {
     return data?.[0]?.wallet_address;
   }
 
-  public setSignedUserToken(token: TokenInfo) {
-    this.userToken = token;
+  public setSignedUserTokenAddress(tokenAddress: string) {
+    this.userTokenAddress = tokenAddress;
     this.fireEvent("userTokenChanged");
   }
 
-  public async getUserToken(userWalletAddress: string) {
+  public async getUserTokenAddress(userWalletAddress: string) {
     const { data } = await SupabaseManager.supabase
       .from("pal_tokens")
       .select(
         Constants.PAL_TOKENS_SELECT_QUERY,
       )
       .eq("owner", userWalletAddress);
-    return data?.[0] as any;
+    const tokenInfo = data?.[0] as any;
+    if (tokenInfo) {
+      TokenInfoCacher.set(tokenInfo);
+      return tokenInfo.token_address;
+    }
   }
 
   private clearData() {
     this.user = undefined;
     this.userWalletAddress = undefined;
-    this.userToken = undefined;
+    this.userTokenAddress = undefined;
   }
 
   public async loadUser() {
@@ -65,7 +69,7 @@ class UserManager extends EventContainer {
     if (this.user) {
       this.userWalletAddress = await this.getUserWalletAddress(this.user.id);
       if (this.userWalletAddress) {
-        this.userToken = await this.getUserToken(
+        this.userTokenAddress = await this.getUserTokenAddress(
           this.userWalletAddress,
         );
       }

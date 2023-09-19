@@ -9,6 +9,7 @@ import {
 } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import Icon from "../../component/Icon.js";
 import ActivityList from "../../component/list/ActivityList.js";
 import MemberList from "../../component/list/MemberList.js";
@@ -27,13 +28,18 @@ export default class TokenInfoPopup extends Popup {
   public content: DomNode;
 
   private profileImage: ProfileImageDisplay;
-  private editButton: DomNode;
+  private nameDisplay: DomNode;
+  private symbolDisplay: DomNode;
+  private descriptionDisplay: DomNode;
   private priceDisplay: DomNode;
+  private feesDisplay: DomNode;
+
+  private editButton: DomNode;
   private balanceDisplay: DomNode;
   private memberList: MemberList;
   private activityList: ActivityList;
 
-  constructor(private tokenInfo: TokenInfo) {
+  constructor(private tokenAddress: string) {
     super({ barrierDismissible: true });
 
     let tabs;
@@ -45,13 +51,13 @@ export default class TokenInfoPopup extends Popup {
           this.profileImage = new ProfileImageDisplay(),
           el(
             ".name-and-symbol",
-            el("span.name", tokenInfo.name),
-            el("span.symbol", tokenInfo.symbol),
+            this.nameDisplay = el("span.name"),
+            this.symbolDisplay = el("span.symbol"),
           ),
           el(
             ".edit-button-container",
             this.editButton = el("a.hidden", new Icon("edit"), {
-              click: () => new EditTokenInfoPopup(tokenInfo),
+              click: () => new EditTokenInfoPopup(tokenAddress),
             }),
           ),
         ),
@@ -67,10 +73,10 @@ export default class TokenInfoPopup extends Popup {
             el(
               ".fees-container",
               el("label", "Trading Fees Earned"),
-              el("span.fees", ethers.formatEther(tokenInfo.trading_fees_earned) + " ETH"),
+              this.feesDisplay = el("span.fees"),
             ),
           ),
-          el("p", tokenInfo.metadata.description ?? "No description"),
+          this.descriptionDisplay = el("p"),
           el(
             ".trade-info",
             el(
@@ -83,11 +89,11 @@ export default class TokenInfoPopup extends Popup {
             ),
             new Button({
               title: "Buy",
-              click: () => new BuyTokenPopup(tokenInfo.token_address),
+              click: () => new BuyTokenPopup(tokenAddress),
             }),
             new Button({
               title: "Sell",
-              click: () => new SellTokenPopup(tokenInfo.token_address),
+              click: () => new SellTokenPopup(tokenAddress),
             }),
           ),
         ),
@@ -95,7 +101,7 @@ export default class TokenInfoPopup extends Popup {
           { id: "members", label: "Members" },
           { id: "activity", label: "Activity" },
         ]),
-        this.memberList = new MemberList(tokenInfo),
+        this.memberList = new MemberList(),
         this.activityList = new ActivityList(),
         el(
           "footer",
@@ -103,7 +109,7 @@ export default class TokenInfoPopup extends Popup {
             type: ButtonType.Text,
             tag: ".chat-room-button",
             click: () => {
-              Router.go("/" + this.tokenInfo.token_address);
+              Router.go("/" + tokenAddress);
               this.delete();
             },
             title: "Go Chat Room",
@@ -118,11 +124,11 @@ export default class TokenInfoPopup extends Popup {
       ),
     );
 
-    this.loadOwner();
     this.loadPrice();
     this.loadBalance();
+
     this.activityList.load({
-      tokenAddresses: [tokenInfo.token_address],
+      tokenAddresses: [tokenAddress],
     });
 
     tabs.on("select", (id: string) => {
@@ -136,20 +142,50 @@ export default class TokenInfoPopup extends Popup {
       }
     });
     tabs.select("members");
+
+    this.onDelegate(
+      TokenInfoCacher,
+      "tokenInfoChanged",
+      (tokenInfo: TokenInfo) => {
+        if (tokenInfo.token_address === tokenAddress) {
+          this.displayTokenInfo(tokenInfo);
+        }
+      },
+    );
+    this.load();
   }
 
-  private async loadOwner() {
+  private async load() {
+    const tokenInfo = await TokenInfoCacher.get(this.tokenAddress);
+    if (tokenInfo) {
+      this.displayTokenInfo(tokenInfo);
+    }
+  }
+
+  private displayTokenInfo(tokenInfo: TokenInfo) {
+    this.nameDisplay.text = tokenInfo.name;
+    this.symbolDisplay.text = tokenInfo.symbol;
+    this.descriptionDisplay.text = tokenInfo.metadata.description ??
+      "No description";
+    this.feesDisplay.text = `${
+      ethers.formatEther(tokenInfo.trading_fees_earned)
+    } ETH`;
+
+    this.memberList.load(tokenInfo);
+
+    this.loadOwner(tokenInfo);
+  }
+
+  private async loadOwner(tokenInfo: TokenInfo) {
     const { data, error } = await SupabaseManager.supabase.from("user_details")
-      .select().eq("wallet_address", this.tokenInfo.owner);
+      .select().eq("wallet_address", tokenInfo.owner);
 
     const tokenOwner = data?.[0];
     let profileImageSrc;
     if (tokenOwner) {
       profileImageSrc = tokenOwner.profile_image;
     } else {
-      profileImageSrc = generateJazziconDataURL(
-        this.tokenInfo.owner,
-      );
+      profileImageSrc = generateJazziconDataURL(tokenInfo.owner);
     }
     this.profileImage.src = profileImageSrc;
 
@@ -160,7 +196,7 @@ export default class TokenInfoPopup extends Popup {
 
   private async loadPrice() {
     const price = await PalContract.getBuyPrice(
-      this.tokenInfo.token_address,
+      this.tokenAddress,
       ethers.parseEther("1"),
     );
     this.priceDisplay.text = `${ethers.formatEther(price)} ETH`;
@@ -168,7 +204,7 @@ export default class TokenInfoPopup extends Popup {
 
   private async loadBalance() {
     if (UserManager.userWalletAddress) {
-      const balance = await new PalTokenContract(this.tokenInfo.token_address)
+      const balance = await new PalTokenContract(this.tokenAddress)
         .balanceOf(UserManager.userWalletAddress);
       this.balanceDisplay.text = ethers.formatEther(balance);
     }

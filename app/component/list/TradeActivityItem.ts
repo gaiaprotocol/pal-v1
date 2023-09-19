@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { ethers } from "ethers";
 import BlockTimeCacher from "../../cacher/BlockTimeCacher.js";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
-import UserDataCacher from "../../cacher/UserDataCacher.js";
+import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import { TradeActivity } from "../../data/Activity.js";
 
 export default class TradeActivityItem extends DomNode {
@@ -58,7 +58,7 @@ export default class TradeActivityItem extends DomNode {
       BlockTimeCacher.blockToTime(activity.blockNumber),
     ).fromNow();
 
-    const traderData = UserDataCacher.getCachedUserData(activity.trader);
+    const traderData = UserDetailsCacher.getCached(activity.trader);
     if (traderData) {
       this.traderProfileImage.domElement.src = traderData.profile_image;
       this.traderNameDisplay.text = traderData.display_name;
@@ -71,11 +71,11 @@ export default class TradeActivityItem extends DomNode {
       );
     }
 
-    const tokenInfo = TokenInfoCacher.getCachedTokenInfo(activity.token);
+    const tokenInfo = TokenInfoCacher.getCached(activity.token);
     if (tokenInfo) {
       this.symbolDisplay.text = tokenInfo.symbol;
 
-      const ownerData = UserDataCacher.getCachedUserData(tokenInfo.owner);
+      const ownerData = UserDetailsCacher.getCached(tokenInfo.owner);
       if (ownerData) {
         this.ownerProfileImage.domElement.src = ownerData.profile_image;
         this.ownerNameDisplay.text = ownerData.display_name;

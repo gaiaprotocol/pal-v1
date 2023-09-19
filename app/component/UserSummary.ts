@@ -34,7 +34,7 @@ export default class UserSummary extends DomNode {
         }),
       );
     } else {
-      this.empty().append(new TokenSummary(UserManager.userToken!));
+      this.empty().append(new TokenSummary(UserManager.userTokenAddress!));
     }
   }
 }

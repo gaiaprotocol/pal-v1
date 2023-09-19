@@ -2,7 +2,7 @@ import { DomNode, el, Router, StringUtil } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import dayjs from "dayjs";
 import BlockTimeCacher from "../../cacher/BlockTimeCacher.js";
-import UserDataCacher from "../../cacher/UserDataCacher.js";
+import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import { TokenCreatedActivity } from "../../data/Activity.js";
 
 export default class TokenCreatedActivityItem extends DomNode {
@@ -44,7 +44,7 @@ export default class TokenCreatedActivityItem extends DomNode {
       ),
     );
 
-    const ownerData = UserDataCacher.getCachedUserData(activity.owner);
+    const ownerData = UserDetailsCacher.getCached(activity.owner);
     if (ownerData) {
       this.ownerProfileImage.domElement.src = ownerData.profile_image;
       this.ownerNameDisplay.text = ownerData.display_name;

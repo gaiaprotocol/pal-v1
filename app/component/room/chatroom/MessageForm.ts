@@ -37,7 +37,7 @@ export default class MessageForm extends DomNode {
         item.wait();
 
         const { data, error } = await SupabaseManager.supabase.from(
-          "chat_messages",
+          "token_chat_messages",
         )
           .insert({
             token_address: tokenAddress,

@@ -3,10 +3,10 @@ import { DomNode, el } from "common-dapp-module";
 import Constants from "../../Constants.js";
 import OnlineUserManager from "../../OnlineUserManager.js";
 import SupabaseManager from "../../SupabaseManager.js";
-import UserDataCacher from "../../cacher/UserDataCacher.js";
+import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
-import TokenItem from "./TokenItem.js";
 import ListLoading from "../ListLoading.js";
+import TokenItem from "./TokenItem.js";
 
 export enum TokenListFilter {
   Top,
@@ -110,7 +110,7 @@ export default class TokenList extends DomNode {
         ownerWalletAddresses.push(tokenInfo.owner);
       }
     }
-    await UserDataCacher.getMultipleUserData(ownerWalletAddresses);
+    await UserDetailsCacher.load(ownerWalletAddresses);
 
     this.list.empty();
     for (const tokenInfo of data) {

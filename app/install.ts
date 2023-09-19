@@ -2,6 +2,8 @@ import { msg, Router } from "common-dapp-module";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
 import BlockTimeCacher from "./cacher/BlockTimeCacher.js";
+import TokenInfoCacher from "./cacher/TokenInfoCacher.js";
+import UserDetailsCacher from "./cacher/UserDetailsCacher.js";
 import SplashScreen from "./component/SplashScreen.js";
 import Config from "./Config.js";
 import PalContract from "./contract/PalContract.js";
@@ -36,6 +38,8 @@ export default async function install() {
 
   splash.delete();
 
+  TokenInfoCacher.init();
+  UserDetailsCacher.init();
   WalletManager.init();
   OnlineUserManager.init();
 

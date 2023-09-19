@@ -1,37 +1,40 @@
 import { DomNode, el } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
-import UserDataCacher from "../../cacher/UserDataCacher.js";
+import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import UserDetails from "../../data/UserDetails.js";
-import MemberItem from "./MemberItem.js";
 import ListLoading from "../ListLoading.js";
+import MemberItem from "./MemberItem.js";
 
 export default class MemberList extends DomNode {
   private list: DomNode;
   private loadingComponent: ListLoading | undefined;
 
-  constructor(private tokenInfo: TokenInfo) {
+  constructor() {
     super(".member-list");
     this.append(
       this.list = el("ul", this.loadingComponent = new ListLoading()),
     );
-    this.load();
     this.loadingComponent.on("delete", () => this.loadingComponent = undefined);
   }
 
-  public add(userDetails: UserDetails, balance: bigint): MemberItem {
-    const item = new MemberItem(userDetails, balance, this.tokenInfo.symbol)
+  public add(
+    userDetails: UserDetails,
+    balance: bigint,
+    symbol: string,
+  ): MemberItem {
+    const item = new MemberItem(userDetails, balance, symbol)
       .appendTo(this.list);
     return item;
   }
 
-  private async load() {
+  public async load(tokenInfo: TokenInfo) {
     const { data, error } = await SupabaseManager.supabase.from(
       "pal_token_balances",
     ).select("*, last_fetched_balance::text").eq(
       "token_address",
-      this.tokenInfo.token_address,
-    ).gte("last_fetched_balance", this.tokenInfo.view_token_required);
+      tokenInfo.token_address,
+    ).gte("last_fetched_balance", tokenInfo.view_token_required);
     if (error) {
       console.error(error);
       return;
@@ -41,13 +44,17 @@ export default class MemberList extends DomNode {
       for (const balanceInfo of data as any) {
         walletAddresses.push(balanceInfo.wallet_address);
       }
-      await UserDataCacher.getMultipleUserData(walletAddresses);
+      await UserDetailsCacher.load(walletAddresses);
       for (const balanceInfo of data as any) {
-        const userData = UserDataCacher.getCachedUserData(
+        const userData = UserDetailsCacher.getCached(
           balanceInfo.wallet_address,
         );
         if (userData) {
-          this.add(userData, BigInt(balanceInfo.last_fetched_balance));
+          this.add(
+            userData,
+            BigInt(balanceInfo.last_fetched_balance),
+            tokenInfo.symbol,
+          );
         }
       }
     }

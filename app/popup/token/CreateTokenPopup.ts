@@ -94,7 +94,7 @@ export default class CreateTokenPopup extends Popup {
                     throw error;
                   }
 
-                  UserManager.setSignedUserToken(data);
+                  UserManager.setSignedUserTokenAddress(tokenAddress);
 
                   SupabaseManager.supabase.functions.invoke("track-events");
 

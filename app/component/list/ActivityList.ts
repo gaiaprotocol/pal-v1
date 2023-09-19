@@ -1,7 +1,7 @@
 import { DomNode, el } from "common-dapp-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
-import UserDataCacher from "../../cacher/UserDataCacher.js";
+import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import Activity, { eventToActivity, EventType } from "../../data/Activity.js";
 import TokenCreatedActivityItem from "./TokenCreatedActivityItem.js";
 import TradeActivityItem from "./TradeActivityItem.js";
@@ -72,13 +72,13 @@ export default class ActivityList extends DomNode {
         activityList.push(activity);
       }
 
-      const tokenInfoSet = await TokenInfoCacher.getMultipleTokenInfo(
+      const tokenInfoSet = await TokenInfoCacher.load(
         Array.from(tokenAddresses),
       );
       for (const tokenInfo of tokenInfoSet) {
         walletAddresses.add(tokenInfo.owner);
       }
-      await UserDataCacher.getMultipleUserData(Array.from(walletAddresses));
+      await UserDetailsCacher.load(Array.from(walletAddresses));
 
       this.list.empty();
       for (const activity of activityList) {

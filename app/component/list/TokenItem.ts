@@ -1,7 +1,7 @@
 import { DomNode, el, StringUtil } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
-import UserDataCacher from "../../cacher/UserDataCacher.js";
+import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import SupabaseManager from "../../SupabaseManager.js";
 
@@ -41,7 +41,7 @@ export default class TokenItem extends DomNode {
       ),
     );
 
-    const ownerData = UserDataCacher.getCachedUserData(tokenInfo.owner);
+    const ownerData = UserDetailsCacher.getCached(tokenInfo.owner);
     if (ownerData) {
       this.ownerProfileImage.domElement.src = ownerData.profile_image;
       this.ownerNameDisplay.text = ownerData.display_name;

@@ -11,7 +11,7 @@ export default class ChatRoom extends DomNode {
   }
 
   public async loadMessages(tokenAddress: string) {
-    const { data, error } = await SupabaseManager.supabase.from("chat_messages")
+    const { data, error } = await SupabaseManager.supabase.from("token_chat_messages")
       .select().eq(
         "token_address",
         tokenAddress,

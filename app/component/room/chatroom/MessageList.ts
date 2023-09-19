@@ -21,7 +21,7 @@ export default class MessageList extends DomNode {
         {
           event: "INSERT",
           schema: "public",
-          table: "chat_messages",
+          table: "token_chat_messages",
           filter: "token_address=eq." + tokenAddress,
         },
         (payload: any) => {
@@ -35,7 +35,7 @@ export default class MessageList extends DomNode {
   private async loadMessages() {
     this.items = [];
 
-    const { data, error } = await SupabaseManager.supabase.from("chat_messages")
+    const { data, error } = await SupabaseManager.supabase.from("token_chat_messages")
       .select()
       .eq("token_address", this.tokenAddress)
       .order("created_at", { ascending: false })
