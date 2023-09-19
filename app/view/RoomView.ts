@@ -42,7 +42,18 @@ export default class RoomView extends View {
     if (params.tokenAddress) {
       this.loadRoomInfo(params.tokenAddress);
     }
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", this.setViewportHeight);
+    }
   }
+
+  private setViewportHeight = () => {
+    this.container.style({
+      top: `${window.visualViewport!.offsetTop}px`,
+      height: `${window.visualViewport!.height}px`,
+    });
+  };
 
   public changeParams(params: ViewParams): void {
     if (params.tokenAddress) {
@@ -110,6 +121,12 @@ export default class RoomView extends View {
   }
 
   public close(): void {
+    if (window.visualViewport) {
+      window.visualViewport.removeEventListener(
+        "resize",
+        this.setViewportHeight,
+      );
+    }
     this.container.delete();
     super.close();
   }
