@@ -27,7 +27,7 @@ export default class ChatRoom extends DomNode {
     let list;
     this.empty().append(
       list = new MessageList(tokenAddress),
-      this.messageForm = new MessageForm(list, tokenAddress),
+      this.messageForm = new MessageForm(list),
     );
   }
 

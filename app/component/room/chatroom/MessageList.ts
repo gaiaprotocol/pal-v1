@@ -10,7 +10,7 @@ export default class MessageList extends DomNode {
 
   private _channel: RealtimeChannel;
 
-  constructor(private tokenAddress: string) {
+  constructor(public tokenAddress: string) {
     super(".message-list");
     this.append(this.list = el("ul"));
     this.loadMessages();

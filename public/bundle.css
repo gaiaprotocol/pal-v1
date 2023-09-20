@@ -882,6 +882,7 @@ body {
   margin: 8px;
   font-size: 15px;
   line-height: 1.6;
+  align-items: flex-start;
 }
 .message-item > .author {
   display: flex;
@@ -1146,6 +1147,66 @@ body {
   color: rgba(var(--primary-color));
 }
 .change-wallet-address-popup > footer {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+@keyframes emoji-loading {
+  0% {
+    background-position-x: -16px;
+  }
+  100% {
+    background-position-x: 16px;
+  }
+}
+.select-emoji-popup {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--box-shadow);
+  background-color: rgba(var(--surface-conatiner-color));
+  color: rgba(var(--on-surface-conatiner-color));
+  min-height: 0;
+}
+.select-emoji-popup > h1 {
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.select-emoji-popup > main {
+  padding: 0 24px 20px;
+  overflow-y: auto;
+  text-align: center;
+}
+.select-emoji-popup > main > button {
+  box-sizing: border-box;
+  border: none;
+  color: transparent;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  min-width: 46px;
+  min-height: 46px;
+  border-radius: 4px;
+  border: 1px solid rgba(var(--on-surface-conatiner-color), 0.2);
+}
+.select-emoji-popup > main > button.selected {
+  border-color: rgba(var(--primary-color));
+  background: rgba(var(--primary-color), 0.2);
+}
+.select-emoji-popup > main > button > img {
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: auto;
+}
+.select-emoji-popup > main > button > img.loading {
+  background: linear-gradient(0.25turn, #1e1e1e, #2e2e2e 45% 55%, #1e1e1e);
+  animation: emoji-loading 2s infinite linear;
+}
+.select-emoji-popup > footer {
   padding: 8px;
   display: flex;
   justify-content: flex-end;

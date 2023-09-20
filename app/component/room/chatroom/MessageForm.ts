@@ -2,16 +2,18 @@ import { Button, DomNode, el } from "common-dapp-module";
 import { v4 as uuidv4 } from "uuid";
 import SupabaseManager from "../../../SupabaseManager.js";
 import { MessageType, UploadedFile } from "../../../data/ChatMessage.js";
+import SelectEmojiPopup from "../../../popup/SelectEmojiPopup.js";
 import UserManager from "../../../user/UserManager.js";
 import Icon from "../../Icon.js";
 import MessageList from "./MessageList.js";
 
 export default class MessageForm extends DomNode {
+  private emojiButton: DomNode<HTMLButtonElement>;
   private uploadInput: DomNode<HTMLInputElement>;
   private uploadButton: DomNode<HTMLButtonElement>;
   private messageInput: DomNode<HTMLInputElement>;
 
-  constructor(private list: MessageList, private tokenAddress: string) {
+  constructor(private list: MessageList) {
     super(".message-form");
 
     this.append(
@@ -25,10 +27,11 @@ export default class MessageForm extends DomNode {
           }
         },
       }),
-      el("a.emoji-button", new Icon("mood"), {
-        click: () => {
-          //TODO:
-        },
+      this.emojiButton = el("a.emoji-button", new Icon("mood"), {
+        click: () =>
+          new SelectEmojiPopup((selectedEmoji) =>
+            this.sendEmoji(selectedEmoji)
+          ),
       }),
       this.uploadButton = el(
         "a.upload-button",
@@ -118,7 +121,7 @@ export default class MessageForm extends DomNode {
     if (UserManager.user) {
       const item = this.list.add({
         id: -1,
-        token_address: this.tokenAddress,
+        token_address: this.list.tokenAddress,
         message_type: MessageType.FILE_UPLOAD,
         rich: {
           files: [file],
@@ -133,7 +136,7 @@ export default class MessageForm extends DomNode {
         "token_chat_messages",
       )
         .insert({
-          token_address: this.tokenAddress,
+          token_address: this.list.tokenAddress,
           message_type: MessageType.FILE_UPLOAD,
           rich: {
             files: [file],
@@ -155,6 +158,54 @@ export default class MessageForm extends DomNode {
     }
   }
 
+  private async sendEmoji(emoji: string) {
+    this.emojiButton.domElement.disabled = true;
+    this.emojiButton.empty().addClass("loading");
+
+    if (UserManager.user) {
+      const item = this.list.add({
+        id: -1,
+        token_address: this.list.tokenAddress,
+        message_type: MessageType.EMOJI,
+        rich: {
+          emojis: [`openmoji:${emoji}`],
+        },
+        author: UserManager.user.id,
+        author_name: UserManager.user.user_metadata.full_name,
+        author_avatar_url: UserManager.user.user_metadata.avatar_url,
+      });
+      item.wait();
+
+      const { data, error } = await SupabaseManager.supabase.from(
+        "token_chat_messages",
+      )
+        .insert({
+          token_address: this.list.tokenAddress,
+          message_type: MessageType.EMOJI,
+          rich: {
+            emojis: [`openmoji:${emoji}`],
+          },
+          author_name: UserManager.user.user_metadata.full_name,
+          author_avatar_url: UserManager.user.user_metadata.avatar_url,
+        }).select();
+
+      if (error) {
+        console.error(error);
+      }
+
+      if (data?.[0]) {
+        const id = data[0].id;
+        this.list.findItem(id)?.delete();
+        item.message.id = id;
+        item.done();
+      }
+    }
+
+    this.emojiButton.domElement.disabled = false;
+    this.emojiButton.deleteClass("loading");
+    this.emojiButton.empty().append(new Icon("mood"));
+  }
+
   private async sendMessage() {
     const message = this.messageInput.domElement.value;
     if (!message) {
@@ -164,7 +215,7 @@ export default class MessageForm extends DomNode {
     if (UserManager.user) {
       const item = this.list.add({
         id: -1,
-        token_address: this.tokenAddress,
+        token_address: this.list.tokenAddress,
         message,
         message_type: MessageType.MESSAGE,
         author: UserManager.user.id,
@@ -177,7 +228,7 @@ export default class MessageForm extends DomNode {
         "token_chat_messages",
       )
         .insert({
-          token_address: this.tokenAddress,
+          token_address: this.list.tokenAddress,
           message,
           message_type: MessageType.MESSAGE,
           author_name: UserManager.user.user_metadata.full_name,
