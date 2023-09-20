@@ -1,6 +1,7 @@
 import { DomNode, el } from "common-dapp-module";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
+import TokenInfoPopup from "../../popup/token/TokenInfoPopup.js";
 import FavoriteButton from "../FavoriteButton.js";
 import Icon from "../Icon.js";
 import TokenSummary from "../TokenSummary.js";
@@ -16,7 +17,13 @@ export default class RoomTitleBar extends DomNode {
   constructor() {
     super(".room-title-bar");
     this.append(
-      this.title = el("h1"),
+      this.title = el("h1", {
+        click: () => {
+          if (this.currentTokenAddress) {
+            new TokenInfoPopup(this.currentTokenAddress);
+          }
+        },
+      }),
       this.pcFavoriteButton = new FavoriteButton({
         tag: ".pc-favorite-button",
       }),

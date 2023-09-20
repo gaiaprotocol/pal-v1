@@ -1,4 +1,5 @@
 import { ArrayUtil, DomNode, el } from "common-dapp-module";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import ListLoading from "../ListLoading.js";
 import RoomItem from "./RoomItem.js";
@@ -15,6 +16,17 @@ export default class RoomList extends DomNode {
       this.list = el("ul", this.loadingComponent = new ListLoading()),
     );
     this.loadingComponent.on("delete", () => this.loadingComponent = undefined);
+
+    this.onDelegate(
+      TokenInfoCacher,
+      "tokenInfoChanged",
+      (tokenInfo: TokenInfo) => {
+        const item = this.findItem(tokenInfo.token_address);
+        if (item) {
+          item.load(tokenInfo);
+        }
+      },
+    );
   }
 
   public loaded() {
@@ -38,8 +50,6 @@ export default class RoomList extends DomNode {
   }
 
   public findItem(tokenAddress: string) {
-    return this.items.find((item) =>
-      item.tokenInfo.token_address === tokenAddress
-    );
+    return this.items.find((item) => item.currentTokenAddress === tokenAddress);
   }
 }

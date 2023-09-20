@@ -6,37 +6,34 @@ import TokenInfo from "../../data/TokenInfo.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
 
 export default class RoomItem extends DomNode {
+  private roomNameDisplay: DomNode;
+  private priceDisplay: DomNode;
+  private lastMessageDisplay: DomNode;
+  private lastMessageSentAtDisplay: DomNode;
+
   private tokenOwnerProfileImage: ProfileImageDisplay;
   private tokenOwnerName: DomNode;
 
-  constructor(public tokenInfo: TokenInfo) {
+  public currentTokenAddress: string;
+
+  constructor(tokenInfo: TokenInfo) {
     super("li.room-item");
+
+    this.currentTokenAddress = tokenInfo.token_address;
     this.append(
       this.tokenOwnerProfileImage = new ProfileImageDisplay({ noClick: true }),
       el(
         ".info",
         el(
           ".room-info",
-          el("span.room-name", tokenInfo.metadata.roomName ?? tokenInfo.name),
+          this.roomNameDisplay = el("span.room-name"),
           this.tokenOwnerName = el("span.token-owner"),
-          el(
-            "span.price" +
-              (tokenInfo.is_price_up === undefined ||
-                  tokenInfo.is_price_up === null
-                ? ""
-                : (tokenInfo.is_price_up ? ".up" : ".down")),
-            ethers.formatEther(tokenInfo.last_fetched_price) + " ETH",
-          ),
+          this.priceDisplay = el("span.price"),
         ),
         el(
           ".last-message",
-          el("span.message", tokenInfo.last_message ?? ""),
-          el(
-            "span.time",
-            !tokenInfo.last_message_sent_at
-              ? ""
-              : dayjs(tokenInfo.last_message_sent_at).fromNow(),
-          ),
+          this.lastMessageDisplay = el("span.message"),
+          this.lastMessageSentAtDisplay = el("span.time"),
         ),
       ),
     );
@@ -44,18 +41,37 @@ export default class RoomItem extends DomNode {
       Router.go("/" + tokenInfo.token_address);
     });
 
-    this.load();
+    this.load(tokenInfo);
   }
 
-  private async load() {
-    this.tokenOwnerProfileImage.load(this.tokenInfo.owner);
+  public async load(tokenInfo: TokenInfo) {
+    this.currentTokenAddress = tokenInfo.token_address;
 
-    const tokenOwner = await UserDetailsCacher.get(this.tokenInfo.owner);
+    this.roomNameDisplay.text = tokenInfo.metadata.roomName ?? tokenInfo.name;
+    if (
+      tokenInfo.is_price_up === undefined ||
+      tokenInfo.is_price_up === null
+    ) {
+      this.priceDisplay.deleteClass("up");
+      this.priceDisplay.deleteClass("down");
+    } else {
+      this.priceDisplay.addClass(tokenInfo.is_price_up ? "up" : "down");
+    }
+    this.priceDisplay.text = ethers.formatEther(tokenInfo.last_fetched_price) +
+      " ETH";
+    this.lastMessageDisplay.text = tokenInfo.last_message ?? "";
+    this.lastMessageSentAtDisplay.text = !tokenInfo.last_message_sent_at
+      ? ""
+      : dayjs(tokenInfo.last_message_sent_at).fromNow();
+
+    this.tokenOwnerProfileImage.load(tokenInfo.owner);
+
+    const tokenOwner = await UserDetailsCacher.get(tokenInfo.owner);
     if (tokenOwner) {
       this.tokenOwnerName.text = " by " + tokenOwner.display_name;
     } else {
       this.tokenOwnerName.text = " by " +
-        StringUtil.shortenEthereumAddress(this.tokenInfo.owner);
+        StringUtil.shortenEthereumAddress(tokenInfo.owner);
     }
   }
 }

@@ -907,6 +907,7 @@ body {
 }
 .room-title-bar > h1 {
   font-size: 20px;
+  cursor: pointer;
 }
 @media only screen and (max-width: 859px) {
   .room-title-bar > h1 {
