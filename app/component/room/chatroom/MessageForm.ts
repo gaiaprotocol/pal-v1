@@ -129,6 +129,7 @@ export default class MessageForm extends DomNode {
         author: UserManager.user.id,
         author_name: UserManager.user.user_metadata.full_name,
         author_avatar_url: UserManager.user.user_metadata.avatar_url,
+        created_at: new Date().toISOString(),
       });
       item.wait();
 
@@ -173,6 +174,7 @@ export default class MessageForm extends DomNode {
         author: UserManager.user.id,
         author_name: UserManager.user.user_metadata.full_name,
         author_avatar_url: UserManager.user.user_metadata.avatar_url,
+        created_at: new Date().toISOString(),
       });
       item.wait();
 
@@ -221,6 +223,7 @@ export default class MessageForm extends DomNode {
         author: UserManager.user.id,
         author_name: UserManager.user.user_metadata.full_name,
         author_avatar_url: UserManager.user.user_metadata.avatar_url,
+        created_at: new Date().toISOString(),
       });
       item.wait();
 

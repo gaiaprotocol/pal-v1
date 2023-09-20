@@ -26,4 +26,5 @@ export default interface ChatMessage {
     files?: UploadedFile[];
     emojis?: Emoji[];
   };
+  created_at: string;
 }

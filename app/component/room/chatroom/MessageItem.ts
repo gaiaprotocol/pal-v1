@@ -1,4 +1,5 @@
 import { DomNode, el } from "common-dapp-module";
+import dayjs from "dayjs";
 import SupabaseManager from "../../../SupabaseManager.js";
 import ChatMessage, { UploadedFile } from "../../../data/ChatMessage.js";
 import OpenMoji from "../../../openmoji/OpenMoji.js";
@@ -29,6 +30,7 @@ export default class MessageItem extends DomNode {
       ),
       !message.message ? undefined : el("span.message", message.message),
       !message.rich ? undefined : this.getRich(message.rich),
+      el("span.time", dayjs(message.created_at).fromNow()),
     );
   }
 

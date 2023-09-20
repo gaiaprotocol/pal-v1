@@ -34,18 +34,24 @@ export default class UserInfoView extends View {
   }
 
   private async loadXUser(xUsername: string): Promise<void> {
-    const { data: userDetails, error } = await SupabaseManager.supabase.from(
+    const { data, error } = await SupabaseManager.supabase.from(
       "user_details",
     )
       .select("*")
-      .eq("metadata ->> xUsername", xUsername).single();
+      .eq("metadata ->> xUsername", xUsername);
     if (error) {
       console.error(error);
       return;
     }
 
+    const userDetails = data?.[0];
+
     this.container.empty();
-    if (userDetails) {
+    if (!userDetails) {
+      this.container.append(
+        el("h1", "User not found"),
+      );
+    } else {
       let profileImage;
       this.container.append(
         el(
