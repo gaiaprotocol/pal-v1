@@ -111,7 +111,7 @@ export default class TokenInfoPopup extends Popup {
               Router.go("/" + tokenAddress);
               this.delete();
             },
-            title: "Go Chat Room",
+            title: "Go to Chat Room",
           }),
           new Button({
             type: ButtonType.Text,

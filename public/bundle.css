@@ -429,10 +429,6 @@ body {
 .layout > nav > a.active {
   color: #fff;
 }
-.token-info-view {
-  background-color: #1e1e1e;
-  min-height: 100%;
-}
 .rooms-view {
   height: 100%;
 }
@@ -557,6 +553,56 @@ body {
 }
 .settings-view > section > p > a:hover {
   text-decoration: underline;
+}
+.user-info-view {
+  background-color: #1e1e1e;
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+.user-info-view > h1 {
+  padding-bottom: 16px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-info-view > h1 > .profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+.user-info-view > h1 > .name {
+  flex-grow: 1;
+  font-weight: bold;
+}
+.user-info-view > main {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+.user-info-view > main > .social-links > li {
+  display: flex;
+  gap: 8px;
+}
+.user-info-view > main > .social-links > li > a {
+  color: rgba(var(--primary-color));
+}
+.user-info-view > main > .social-links > li > a:hover {
+  text-decoration: underline;
+}
+.user-info-view > .tabs {
+  border-bottom: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
+}
+.user-info-view > .token-list {
+  display: none;
+}
+.user-info-view > .token-list.active {
+  display: block;
 }
 .splash-screen {
   position: fixed;
@@ -1036,6 +1082,7 @@ body {
   display: flex;
   padding: 8px 16px;
   gap: 16px;
+  cursor: pointer;
 }
 .token-item > .profile-image-container {
   display: flex;

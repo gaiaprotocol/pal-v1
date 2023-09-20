@@ -2,6 +2,7 @@ import { DomNode, el, StringUtil } from "common-dapp-module";
 import { ethers } from "ethers";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
+import TokenInfoPopup from "../../popup/token/TokenInfoPopup.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
 
@@ -17,7 +18,7 @@ export default class TokenItem extends DomNode {
         ".profile-image-container",
         el(
           ".profile-image",
-          this.ownerProfileImage = new ProfileImageDisplay(),
+          this.ownerProfileImage = new ProfileImageDisplay({ noClick: true }),
         ),
       ),
       el(
@@ -40,6 +41,8 @@ export default class TokenItem extends DomNode {
         ),
       ),
     );
+
+    this.onDom("click", () => new TokenInfoPopup(tokenInfo.token_address));
 
     this.ownerProfileImage.load(tokenInfo.owner);
 

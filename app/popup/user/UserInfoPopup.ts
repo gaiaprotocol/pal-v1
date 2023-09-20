@@ -5,6 +5,7 @@ import {
   DomNode,
   el,
   Popup,
+  Router,
 } from "common-dapp-module";
 import Icon from "../../component/Icon.js";
 import TokenList, { TokenListFilter } from "../../component/list/TokenList.js";
@@ -68,6 +69,15 @@ export default class UserInfoPopup extends Popup {
         ),
         el(
           "footer",
+          new Button({
+            type: ButtonType.Text,
+            tag: ".user-page-button",
+            click: () => {
+              Router.go("/" + userDetails.metadata.xUsername);
+              this.delete();
+            },
+            title: "Go to User Page",
+          }),
           new Button({
             type: ButtonType.Text,
             tag: ".close-button",
