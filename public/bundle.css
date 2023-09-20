@@ -434,18 +434,27 @@ body {
 .rooms-view {
   height: 100%;
 }
+@media only screen and (max-width: 859px) {
+  .rooms-view {
+    overflow-y: auto;
+    padding-bottom: 60px;
+  }
+}
 .rooms-view > .rooms {
   width: 360px;
   height: 100%;
   border-right: 1px solid #2d2d2d;
   background-color: #1e1e1e;
   overflow-y: auto;
+  padding-bottom: 60px;
 }
 @media only screen and (max-width: 859px) {
   .rooms-view > .rooms {
     width: 100%;
     height: auto;
     border: none;
+    overflow-y: auto;
+    padding-bottom: 0;
   }
 }
 .room-view {
@@ -876,6 +885,7 @@ body {
   height: 60px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 24px;
   gap: 24px;
 }
@@ -885,34 +895,29 @@ body {
     background-color: #530087;
   }
 }
-.room-title-bar > .info-container {
+.room-title-bar > h1 {
   flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.room-title-bar > .info-container > h1 {
   font-size: 20px;
 }
 @media only screen and (max-width: 859px) {
-  .room-title-bar > .info-container > h1 {
+  .room-title-bar > h1 {
     display: none;
   }
 }
-.room-title-bar > a {
+.room-title-bar > .close-button {
   display: none;
   cursor: pointer;
   color: #999;
 }
 @media only screen and (max-width: 859px) {
-  .room-title-bar > a {
+  .room-title-bar > .close-button {
     display: block;
   }
 }
-.room-title-bar > a > .icon {
+.room-title-bar > .close-button > .icon {
   display: block;
 }
-.room-title-bar > a:hover {
+.room-title-bar > .close-button:hover {
   color: #fff;
 }
 .token-purchase-form {

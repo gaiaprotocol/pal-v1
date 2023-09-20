@@ -7,6 +7,7 @@
     height          : 60px;
     display         : flex;
     align-items     : center;
+    justify-content : space-between;
     padding         : 0 24px;
     gap             : 24px;
 
@@ -15,22 +16,16 @@
         background-color: #530087;
     }
 
-    >.info-container {
-        flex-grow      : 1;
-        display        : flex;
-        align-items    : center;
-        justify-content: space-between;
+    >h1 {
+        flex-grow: 1;
+        font-size: 20px;
 
-        >h1 {
-            font-size: 20px;
-
-            @media @phone {
-                display: none;
-            }
+        @media @phone {
+            display: none;
         }
     }
 
-    >a {
+    >.close-button {
         display: none;
         cursor : pointer;
         color  : #999;

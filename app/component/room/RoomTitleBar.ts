@@ -5,14 +5,16 @@ import Icon from "../Icon.js";
 import TokenSummary from "../TokenSummary.js";
 
 export default class RoomTitleBar extends DomNode {
-  private infoContainer: DomNode;
+  private title: DomNode;
+  private tokenSummaryContainer: DomNode;
   private currentTokenAddress: string | undefined;
 
   constructor() {
     super(".room-title-bar");
     this.append(
-      this.infoContainer = el(".info-container"),
-      el("a", new Icon("close"), {
+      this.title = el("h1"),
+      this.tokenSummaryContainer = el(".token-summary-container"),
+      el("a.close-button", new Icon("close"), {
         click: () => history.back(),
       }),
     );
@@ -29,8 +31,10 @@ export default class RoomTitleBar extends DomNode {
   }
 
   public async loadTokenInfo(tokenAddress: string) {
+    this.tokenSummaryContainer.empty().append(new TokenSummary(tokenAddress));
+
     this.currentTokenAddress = tokenAddress;
-    this.infoContainer.empty();
+    this.title.empty();
     const tokenInfo = await TokenInfoCacher.get(tokenAddress);
     if (tokenInfo) {
       this.displayTokenInfo(tokenInfo);
@@ -38,9 +42,6 @@ export default class RoomTitleBar extends DomNode {
   }
 
   private displayTokenInfo(tokenInfo: TokenInfo) {
-    this.infoContainer.empty().append(
-      el("h1", tokenInfo.metadata.roomName ?? tokenInfo.name),
-      new TokenSummary(tokenInfo.token_address),
-    );
+    this.title.text = tokenInfo.metadata.roomName ?? tokenInfo.name;
   }
 }
