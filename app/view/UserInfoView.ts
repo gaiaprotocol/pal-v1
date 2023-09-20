@@ -1,4 +1,5 @@
 import { DomNode, el, View, ViewParams } from "common-dapp-module";
+import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
 import TokenList, { TokenListFilter } from "../component/list/TokenList.js";
 import ListLoading from "../component/ListLoading.js";
 import ProfileImageDisplay from "../component/ProfileImageDisplay.js";
@@ -52,6 +53,8 @@ export default class UserInfoView extends View {
         el("h1", "User not found"),
       );
     } else {
+      UserDetailsCacher.set(userDetails);
+
       let profileImage;
       this.container.append(
         el(

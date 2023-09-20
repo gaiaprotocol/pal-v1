@@ -9,8 +9,8 @@ import {
   Popup,
 } from "common-dapp-module";
 import { ethers } from "ethers";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
-import Constants from "../../Constants.js";
 import PalContract from "../../contract/PalContract.js";
 import PalTokenContract from "../../contract/PalTokenContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
@@ -119,16 +119,9 @@ export default class SellTokenPopup extends Popup {
   }
 
   private async loadTokenInfo() {
-    const { data: tokenData } = await SupabaseManager.supabase.from(
-      "pal_tokens",
-    )
-      .select(
-        Constants.PAL_TOKENS_SELECT_QUERY,
-      )
-      .eq("token_address", this.tokenAddress).single();
-
-    if (tokenData) {
-      this.symbol = (tokenData as any).symbol;
+    const tokenInfo = await TokenInfoCacher.get(this.tokenAddress);
+    if (tokenInfo) {
+      this.symbol = tokenInfo.symbol;
       this.title.text = `Sell ${this.symbol}`;
 
       const totalSupply = await new PalTokenContract(
@@ -155,7 +148,7 @@ export default class SellTokenPopup extends Popup {
 
       this.displayTotalPrice();
 
-      this.profileImage.load((tokenData as any).owner);
+      this.profileImage.load(tokenInfo.owner);
     }
   }
 

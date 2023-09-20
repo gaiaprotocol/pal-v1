@@ -1,6 +1,7 @@
 import { DomNode, el } from "common-dapp-module";
 import dayjs from "dayjs";
 import SupabaseManager from "../../../SupabaseManager.js";
+import UserDetailsCacher from "../../../cacher/UserDetailsCacher.js";
 import ChatMessage, { UploadedFile } from "../../../data/ChatMessage.js";
 import OpenMoji from "../../../openmoji/OpenMoji.js";
 import UserInfoPopup from "../../../popup/user/UserInfoPopup.js";
@@ -23,6 +24,7 @@ export default class MessageItem extends DomNode {
               throw error;
             }
             if (data) {
+              UserDetailsCacher.set(data);
               new UserInfoPopup(data);
             }
           },

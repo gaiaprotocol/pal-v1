@@ -1,9 +1,9 @@
 import { DomNode, el } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
-import SupabaseManager from "../SupabaseManager.js";
-import PalContract from "../contract/PalContract.js";
 import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
+import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
+import PalContract from "../contract/PalContract.js";
 import TokenInfoPopup from "../popup/token/TokenInfoPopup.js";
 import UserInfoPopup from "../popup/user/UserInfoPopup.js";
 
@@ -22,12 +22,7 @@ export default class TokenSummary extends DomNode {
 
     const tokenInfo = await TokenInfoCacher.get(this.tokenAddress);
     if (tokenInfo) {
-      const { data, error } = await SupabaseManager.supabase.from(
-        "user_details",
-      )
-        .select().eq("wallet_address", tokenInfo.owner);
-
-      const tokenOwner = data?.[0];
+      const tokenOwner = await UserDetailsCacher.get(tokenInfo.owner);
       let profileImageSrc;
       if (tokenOwner) {
         profileImageSrc = tokenOwner.profile_image;
@@ -37,7 +32,7 @@ export default class TokenSummary extends DomNode {
         );
       }
 
-      if (!this.deleted) {
+      if (tokenOwner && !this.deleted) {
         this.append(
           el("img.profile-image", {
             src: profileImageSrc,

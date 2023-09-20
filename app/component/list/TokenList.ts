@@ -3,6 +3,7 @@ import { DomNode, el } from "common-dapp-module";
 import Constants from "../../Constants.js";
 import OnlineUserManager from "../../OnlineUserManager.js";
 import SupabaseManager from "../../SupabaseManager.js";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import ListLoading from "../ListLoading.js";
@@ -116,6 +117,16 @@ export default class TokenList extends DomNode {
       for (const tokenInfo of data) {
         this.add(tokenInfo);
       }
+
+      TokenInfoCacher.cache(data);
+      SupabaseManager.supabase.functions.invoke(
+        "refresh-token-prices-and-balances",
+        {
+          body: {
+            tokenAddresses: data.map((token) => token.token_address),
+          },
+        },
+      );
     }
   }
 

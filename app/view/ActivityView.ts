@@ -1,9 +1,10 @@
 import { DomNode, el, View, ViewParams } from "common-dapp-module";
+import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
 import ActivityList from "../component/list/ActivityList.js";
+import Constants from "../Constants.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
-import Constants from "../Constants.js";
 
 export default class ActivityView extends View {
   private container: DomNode;
@@ -65,6 +66,16 @@ export default class ActivityView extends View {
       this.yourTokensActivityList.load({
         tokenAddresses,
       });
+
+      TokenInfoCacher.cache(data as any);
+      SupabaseManager.supabase.functions.invoke(
+        "refresh-token-prices-and-balances",
+        {
+          body: {
+            tokenAddresses: data.map((token: any) => token.token_address),
+          },
+        },
+      );
     }
   }
 

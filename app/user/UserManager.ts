@@ -8,6 +8,7 @@ import FavoriteManager from "../FavoriteManager.js";
 import OnlineUserManager from "../OnlineUserManager.js";
 import SupabaseManager from "../SupabaseManager.js";
 import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
+import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
 import ChangeChainPopup from "../popup/ChangeChainPopup.js";
 import ChangeWalletAddressPopup from "../popup/ChangeWalletAddressPopup.js";
 import CreateTokenPopup from "../popup/token/CreateTokenPopup.js";
@@ -34,7 +35,11 @@ class UserManager extends EventContainer {
       .from("user_details")
       .select()
       .eq("id", userId);
-    return data?.[0]?.wallet_address;
+    const user = data?.[0];
+    if (user) {
+      UserDetailsCacher.set(user);
+      return user.wallet_address;
+    }
   }
 
   public setSignedUserTokenAddress(tokenAddress: string) {

@@ -1,4 +1,5 @@
 import { Button, DomNode, el, View } from "common-dapp-module";
+import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
 import UserInfoPopup from "../popup/user/UserInfoPopup.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
@@ -48,17 +49,13 @@ export default class Settings extends View {
           "Linked to: ",
           el("a", UserManager.user?.user_metadata.full_name, {
             click: async () => {
-              const { data, error } = await SupabaseManager.supabase.from(
-                "user_details",
-              )
-                .select().eq(
-                  "wallet_address",
-                  UserManager.userWalletAddress ?? "",
+              if (UserManager.userWalletAddress) {
+                const tokenOwner = await UserDetailsCacher.get(
+                  UserManager.userWalletAddress,
                 );
-
-              const tokenOwner = data?.[0];
-              if (tokenOwner) {
-                new UserInfoPopup(tokenOwner);
+                if (tokenOwner) {
+                  new UserInfoPopup(tokenOwner);
+                }
               }
             },
           }),

@@ -9,8 +9,8 @@ import {
   Popup,
 } from "common-dapp-module";
 import { ethers } from "ethers";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
-import Constants from "../../Constants.js";
 import PalContract from "../../contract/PalContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import WalletManager from "../../user/WalletManager.js";
@@ -116,17 +116,10 @@ export default class BuyTokenPopup extends Popup {
   }
 
   private async loadTokenInfo() {
-    const { data: tokenData } = await SupabaseManager.supabase.from(
-      "pal_tokens",
-    )
-      .select(
-        Constants.PAL_TOKENS_SELECT_QUERY,
-      )
-      .eq("token_address", this.tokenAddress).single();
-
-    if (tokenData) {
-      this.title.text = `Buy ${(tokenData as any).symbol}`;
-      this.priceTitle.text = `Price per ${(tokenData as any).symbol}`;
+    const tokenInfo = await TokenInfoCacher.get(this.tokenAddress);
+    if (tokenInfo) {
+      this.title.text = `Buy ${tokenInfo.symbol}`;
+      this.priceTitle.text = `Price per ${tokenInfo.symbol}`;
 
       const currentPrice = await PalContract.getBuyPriceAfterFee(
         this.tokenAddress,
@@ -136,7 +129,7 @@ export default class BuyTokenPopup extends Popup {
       this.priceDisplay.text = `${ethers.formatEther(currentPrice)} ETH`;
       this.displayTotalPrice();
 
-      this.profileImage.load((tokenData as any).owner);
+      this.profileImage.load(tokenInfo.owner);
     }
   }
 

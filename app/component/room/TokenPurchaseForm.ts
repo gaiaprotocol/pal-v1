@@ -1,14 +1,13 @@
 import { Button, DomNode, el } from "common-dapp-module";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
-import Constants from "../../Constants.js";
 import SupabaseManager from "../../SupabaseManager.js";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
-import TokenInfo from "../../data/TokenInfo.js";
 import BuyTokenPopup from "../../popup/token/BuyTokenPopup.js";
+import WalletManager from "../../user/WalletManager.js";
 import Icon from "../Icon.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
-import WalletManager from "../../user/WalletManager.js";
 
 export default class TokenPurchaseForm extends DomNode {
   private currentTokenAddress: string | undefined;
@@ -66,16 +65,8 @@ export default class TokenPurchaseForm extends DomNode {
     this.profileImage.load(owner);
 
     const tokenOwner = await UserDetailsCacher.get(owner);
-    if (tokenOwner) {
-      const { data } = await SupabaseManager.supabase.from(
-        "pal_tokens",
-      )
-        .select(
-          Constants.PAL_TOKENS_SELECT_QUERY,
-        )
-        .eq("token_address", this.currentTokenAddress).single();
-
-      const tokenInfo: TokenInfo | null = data as any;
+    if (tokenOwner && this.currentTokenAddress) {
+      const tokenInfo = await TokenInfoCacher.get(this.currentTokenAddress);
       if (tokenInfo) {
         this.messageDisplay.empty().append(
           "Hold at least ",

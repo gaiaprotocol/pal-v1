@@ -29,7 +29,7 @@ class UserDetailsCacher extends EventContainer {
       .subscribe();
   }
 
-  private set(userDetails: UserDetails) {
+  public set(userDetails: UserDetails) {
     this.userDataMap.set(userDetails.wallet_address, userDetails);
     this.fireEvent("userDetailsChanged", userDetails);
   }
