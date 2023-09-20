@@ -1,8 +1,9 @@
-import { DomNode, el, StringUtil } from "common-dapp-module";
+import { DomNode, el, ErrorAlert, StringUtil } from "common-dapp-module";
 import { ethers } from "ethers";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import TokenInfoPopup from "../../popup/token/TokenInfoPopup.js";
+import UserInfoPopup from "../../popup/user/UserInfoPopup.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
 
@@ -18,7 +19,7 @@ export default class TokenItem extends DomNode {
         ".profile-image-container",
         el(
           ".profile-image",
-          this.ownerProfileImage = new ProfileImageDisplay({ noClick: true }),
+          this.ownerProfileImage = new ProfileImageDisplay(),
         ),
       ),
       el(
@@ -27,9 +28,13 @@ export default class TokenItem extends DomNode {
           ".info",
           this.ownerNameDisplay = el("a.name"),
           "'s token ",
-          el("span.name", tokenInfo.name),
+          el("a.name", tokenInfo.name, {
+            click: () => new TokenInfoPopup(tokenInfo.token_address),
+          }),
           " (",
-          el("span.symbol", tokenInfo.symbol),
+          el("a.symbol", tokenInfo.symbol, {
+            click: () => new TokenInfoPopup(tokenInfo.token_address),
+          }),
           ").",
         ),
         el(
@@ -48,16 +53,22 @@ export default class TokenItem extends DomNode {
       ),
     );
 
-    this.onDom("click", () => new TokenInfoPopup(tokenInfo.token_address));
-
     this.ownerProfileImage.load(tokenInfo.owner);
 
     const ownerData = UserDetailsCacher.getCached(tokenInfo.owner);
     if (ownerData) {
       this.ownerNameDisplay.text = ownerData.display_name;
+      this.ownerNameDisplay.onDom(
+        "click",
+        () => new UserInfoPopup(ownerData),
+      );
     } else {
       this.ownerNameDisplay.text = StringUtil.shortenEthereumAddress(
         tokenInfo.owner,
+      );
+      this.ownerNameDisplay.onDom(
+        "click",
+        () => new ErrorAlert({ title: "Error", message: "User not found" }),
       );
     }
 

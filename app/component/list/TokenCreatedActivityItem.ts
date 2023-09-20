@@ -1,8 +1,10 @@
-import { DomNode, el, Router, StringUtil } from "common-dapp-module";
+import { DomNode, el, ErrorAlert, StringUtil } from "common-dapp-module";
 import dayjs from "dayjs";
 import BlockTimeCacher from "../../cacher/BlockTimeCacher.js";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import { TokenCreatedActivity } from "../../data/Activity.js";
+import TokenInfoPopup from "../../popup/token/TokenInfoPopup.js";
+import UserInfoPopup from "../../popup/user/UserInfoPopup.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
 
 export default class TokenCreatedActivityItem extends DomNode {
@@ -29,11 +31,18 @@ export default class TokenCreatedActivityItem extends DomNode {
           this.ownerNameDisplay = el("a.name"),
           " created a token ",
           this.nameDisplay = el("a.name", {
-            click: () => Router.go("/" + activity.address),
+            click: async () => {
+              const userInfo = await UserDetailsCacher.get(activity.owner);
+              if (userInfo) {
+                new UserInfoPopup(userInfo);
+              } else {
+                new ErrorAlert({ title: "Error", message: "User not found" });
+              }
+            },
           }),
           " (",
           this.symbolDisplay = el("a.symbol", {
-            click: () => Router.go("/" + activity.address),
+            click: () => new TokenInfoPopup(activity.address),
           }),
           ").",
         ),
@@ -49,9 +58,17 @@ export default class TokenCreatedActivityItem extends DomNode {
     const ownerData = UserDetailsCacher.getCached(activity.owner);
     if (ownerData) {
       this.ownerNameDisplay.text = ownerData.display_name;
+      this.ownerNameDisplay.onDom(
+        "click",
+        () => new UserInfoPopup(ownerData),
+      );
     } else {
       this.ownerNameDisplay.text = StringUtil.shortenEthereumAddress(
         activity.owner,
+      );
+      this.ownerNameDisplay.onDom(
+        "click",
+        () => new ErrorAlert({ title: "Error", message: "User not found" }),
       );
     }
 

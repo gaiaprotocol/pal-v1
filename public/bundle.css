@@ -1147,14 +1147,18 @@ body {
   flex-direction: column;
   gap: 4px;
 }
-.trade-activity-item > .info-container > .info > .name {
-  font-weight: bold;
-}
 .trade-activity-item > .info-container > .info > .price.up {
   color: rgba(var(--rising-color));
 }
 .trade-activity-item > .info-container > .info > .price.down {
   color: rgba(var(--falling-color));
+}
+.trade-activity-item > .info-container > .info > a {
+  color: rgba(var(--primary-color));
+  cursor: pointer;
+}
+.trade-activity-item > .info-container > .info > a:hover {
+  text-decoration: underline;
 }
 .token-created-activity-item {
   display: flex;
@@ -1180,8 +1184,12 @@ body {
   flex-direction: column;
   gap: 4px;
 }
-.token-created-activity-item > .info-container > .info > .name {
-  font-weight: bold;
+.token-created-activity-item > .info-container > .info > a {
+  color: rgba(var(--primary-color));
+  cursor: pointer;
+}
+.token-created-activity-item > .info-container > .info > a:hover {
+  text-decoration: underline;
 }
 .token-item {
   display: flex;
@@ -1208,14 +1216,18 @@ body {
   flex-direction: column;
   gap: 4px;
 }
-.token-item > .info-container > .info > .name {
-  font-weight: bold;
-}
 .token-item > .info-container > .info > .price.up {
   color: rgba(var(--rising-color));
 }
 .token-item > .info-container > .info > .price.down {
   color: rgba(var(--falling-color));
+}
+.token-item > .info-container > .info > a {
+  color: rgba(var(--primary-color));
+  cursor: pointer;
+}
+.token-item > .info-container > .info > a:hover {
+  text-decoration: underline;
 }
 .member-item {
   display: flex;

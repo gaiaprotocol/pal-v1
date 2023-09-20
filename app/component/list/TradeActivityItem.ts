@@ -1,10 +1,12 @@
-import { DomNode, el, StringUtil } from "common-dapp-module";
+import { DomNode, el, ErrorAlert, StringUtil } from "common-dapp-module";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import BlockTimeCacher from "../../cacher/BlockTimeCacher.js";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import { TradeActivity } from "../../data/Activity.js";
+import TokenInfoPopup from "../../popup/token/TokenInfoPopup.js";
+import UserInfoPopup from "../../popup/user/UserInfoPopup.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
 
 export default class TradeActivityItem extends DomNode {
@@ -41,7 +43,7 @@ export default class TradeActivityItem extends DomNode {
           " ",
           this.ownerNameDisplay = el("a.name"),
           "'s ",
-          this.symbolDisplay = el("span.symbol"),
+          this.symbolDisplay = el("a.symbol"),
         ),
         el(
           ".info",
@@ -66,24 +68,44 @@ export default class TradeActivityItem extends DomNode {
     const traderData = UserDetailsCacher.getCached(activity.trader);
     if (traderData) {
       this.traderNameDisplay.text = traderData.display_name;
+      this.traderNameDisplay.onDom(
+        "click",
+        () => new UserInfoPopup(traderData),
+      );
     } else {
       this.traderNameDisplay.text = StringUtil.shortenEthereumAddress(
         activity.trader,
+      );
+      this.traderNameDisplay.onDom(
+        "click",
+        () => new ErrorAlert({ title: "Error", message: "User not found" }),
       );
     }
 
     const tokenInfo = TokenInfoCacher.getCached(activity.token);
     if (tokenInfo) {
       this.symbolDisplay.text = tokenInfo.symbol;
+      this.symbolDisplay.onDom(
+        "click",
+        () => new TokenInfoPopup(activity.token),
+      );
 
       this.ownerProfileImage.load(tokenInfo.owner);
 
       const ownerData = UserDetailsCacher.getCached(tokenInfo.owner);
       if (ownerData) {
         this.ownerNameDisplay.text = ownerData.display_name;
+        this.ownerNameDisplay.onDom(
+          "click",
+          () => new UserInfoPopup(ownerData),
+        );
       } else {
         this.ownerNameDisplay.text = StringUtil.shortenEthereumAddress(
           tokenInfo.owner,
+        );
+        this.ownerNameDisplay.onDom(
+          "click",
+          () => new ErrorAlert({ title: "Error", message: "User not found" }),
         );
       }
     }

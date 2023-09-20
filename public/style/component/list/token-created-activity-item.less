@@ -29,8 +29,13 @@
         gap           : 4px;
 
         >.info {
-            >.name {
-                font-weight: bold;
+            >a {
+                color : rgba(var(--primary-color));
+                cursor: pointer;
+
+                &:hover {
+                    text-decoration: underline;
+                }
             }
         }
     }
