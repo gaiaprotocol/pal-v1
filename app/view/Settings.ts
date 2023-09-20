@@ -1,4 +1,4 @@
-import { Button, DomNode, el, View } from "common-dapp-module";
+import { Button, DomNode, el, Router, View } from "common-dapp-module";
 import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
 import UserInfoPopup from "../popup/user/UserInfoPopup.js";
 import SupabaseManager from "../SupabaseManager.js";
@@ -7,6 +7,7 @@ import Layout from "./Layout.js";
 
 export default class Settings extends View {
   private container: DomNode;
+  private myProfilePageContainer: DomNode;
   private socialContainer: DomNode;
   private walletContainer: DomNode;
 
@@ -16,6 +17,10 @@ export default class Settings extends View {
       this.container = el(
         ".settings-view",
         el("h1", "Settings"),
+        this.myProfilePageContainer = el(
+          "section.my-profile-page",
+          el("h2", "My Profile Page"),
+        ),
         this.socialContainer = el(
           "section.social",
           el("h2", "Linked Social Accounts"),
@@ -43,6 +48,24 @@ export default class Settings extends View {
         }),
       );
     } else {
+      const xUsername = UserManager.user?.user_metadata.user_name;
+      this.myProfilePageContainer.append(
+        el(
+          "p",
+          el(
+            "a",
+            `https://pal.social/${xUsername}`,
+            {
+              href: `https://pal.social/${xUsername}`,
+              click: (event) => {
+                event.preventDefault();
+                Router.go("/" + xUsername);
+              },
+            },
+          ),
+        ),
+      );
+
       this.socialContainer.append(
         el(
           "p",
