@@ -38,7 +38,13 @@
             }
 
             >.price {
-                color: rgba(var(--primary-color));
+                &.up {
+                    color: rgba(var(--rising-color));
+                }
+
+                &.down {
+                    color: rgba(var(--falling-color));
+                }
             }
         }
     }
