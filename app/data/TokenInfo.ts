@@ -11,5 +11,8 @@ export default interface TokenInfo {
   write_token_required: string;
   last_fetched_price: string;
   trading_fees_earned: string;
+  last_message: string;
+  last_message_sent_at: string;
   hiding?: boolean;
+  is_price_up?: boolean;
 }

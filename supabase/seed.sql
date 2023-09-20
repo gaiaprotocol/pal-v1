@@ -97,18 +97,33 @@ end;$$;
 
 ALTER FUNCTION "public"."new_pal_token"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."update_last_message_sent_at"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."update_last_message"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   update pal_tokens
   set
+    last_message = new.author_name || ': ' || new.message,
     last_message_sent_at = now()
   where
     token_address = new.token_address;
   return null;
 end;$$;
 
-ALTER FUNCTION "public"."update_last_message_sent_at"() OWNER TO "postgres";
+ALTER FUNCTION "public"."update_last_message"() OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."update_price_trend"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$BEGIN
+  IF NEW.last_fetched_price > OLD.last_fetched_price THEN
+    NEW.is_price_up := TRUE;
+  ELSIF NEW.last_fetched_price < OLD.last_fetched_price THEN
+    NEW.is_price_up := FALSE;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION "public"."update_price_trend"() OWNER TO "postgres";
 
 SET default_tablespace = '';
 
@@ -189,7 +204,9 @@ CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
     "last_fetched_price" numeric DEFAULT '0'::numeric NOT NULL,
     "last_message_sent_at" timestamp with time zone,
     "hiding" boolean DEFAULT false NOT NULL,
-    "trading_fees_earned" numeric DEFAULT '0'::numeric NOT NULL
+    "trading_fees_earned" numeric DEFAULT '0'::numeric NOT NULL,
+    "last_message" "text",
+    "is_price_up" boolean
 );
 
 ALTER TABLE "public"."pal_tokens" OWNER TO "postgres";
@@ -251,7 +268,9 @@ CREATE TRIGGER "increment_trading_fees_earned" AFTER INSERT ON "public"."pal_con
 
 CREATE TRIGGER "new_pal_token" AFTER INSERT ON "public"."pal_contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."new_pal_token"();
 
-CREATE TRIGGER "update_last_message_sent_at" AFTER INSERT ON "public"."token_chat_messages" FOR EACH ROW EXECUTE FUNCTION "public"."update_last_message_sent_at"();
+CREATE TRIGGER "trigger_update_price_trend" BEFORE UPDATE ON "public"."pal_tokens" FOR EACH ROW EXECUTE FUNCTION "public"."update_price_trend"();
+
+CREATE TRIGGER "update_last_message" AFTER INSERT ON "public"."token_chat_messages" FOR EACH ROW EXECUTE FUNCTION "public"."update_last_message"();
 
 ALTER TABLE ONLY "public"."token_chat_messages"
     ADD CONSTRAINT "token_chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "auth"."users"("id");
@@ -329,9 +348,13 @@ GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "anon";
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."new_pal_token"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."update_last_message_sent_at"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_last_message_sent_at"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_last_message_sent_at"() TO "service_role";
+GRANT ALL ON FUNCTION "public"."update_last_message"() TO "anon";
+GRANT ALL ON FUNCTION "public"."update_last_message"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."update_last_message"() TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."update_price_trend"() TO "anon";
+GRANT ALL ON FUNCTION "public"."update_price_trend"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."update_price_trend"() TO "service_role";
 
 GRANT ALL ON TABLE "public"."token_chat_messages" TO "anon";
 GRANT ALL ON TABLE "public"."token_chat_messages" TO "authenticated";

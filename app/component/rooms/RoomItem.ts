@@ -1,4 +1,6 @@
 import { DomNode, el, Router, StringUtil } from "common-dapp-module";
+import dayjs from "dayjs";
+import { ethers } from "ethers";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
@@ -11,8 +13,32 @@ export default class RoomItem extends DomNode {
     super("li.room-item");
     this.append(
       this.tokenOwnerProfileImage = new ProfileImageDisplay({ noClick: true }),
-      el("span.room-name", tokenInfo.metadata.roomName ?? tokenInfo.name),
-      this.tokenOwnerName = el("span.token-owner"),
+      el(
+        ".info",
+        el(
+          ".room-info",
+          el("span.room-name", tokenInfo.metadata.roomName ?? tokenInfo.name),
+          this.tokenOwnerName = el("span.token-owner"),
+          el(
+            "span.price" +
+              (tokenInfo.is_price_up === undefined ||
+                  tokenInfo.is_price_up === null
+                ? ""
+                : (tokenInfo.is_price_up ? ".up" : ".down")),
+            ethers.formatEther(tokenInfo.last_fetched_price) + " ETH",
+          ),
+        ),
+        el(
+          ".last-message",
+          el("span.message", tokenInfo.last_message ?? ""),
+          el(
+            "span.time",
+            !tokenInfo.last_message_sent_at
+              ? ""
+              : dayjs(tokenInfo.last_message_sent_at).fromNow(),
+          ),
+        ),
+      ),
     );
     this.onDom("click", () => {
       Router.go("/" + tokenInfo.token_address);

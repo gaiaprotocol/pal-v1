@@ -10,6 +10,7 @@ import { ethers } from "ethers";
 import PalContract from "../../contract/PalContract.js";
 import BuyTokenPopup from "./BuyTokenPopup.js";
 import SellTokenPopup from "./SellTokenPopup.js";
+import WalletManager from "../../user/WalletManager.js";
 
 export default class TradeTokenPopup extends Popup {
   public content: DomNode;
@@ -26,11 +27,21 @@ export default class TradeTokenPopup extends Popup {
           this.priceDisplay = el("p"),
           new Button({
             title: "Buy Token",
-            click: () => new BuyTokenPopup(tokenAddress),
+            click: async () => {
+              if (!WalletManager.connected) {
+                await WalletManager.connect();
+              }
+              new BuyTokenPopup(tokenAddress);
+            },
           }),
           new Button({
             title: "Sell Token",
-            click: () => new SellTokenPopup(tokenAddress),
+            click: async () => {
+              if (!WalletManager.connected) {
+                await WalletManager.connect();
+              }
+              new SellTokenPopup(tokenAddress);
+            },
           }),
         ),
         el(

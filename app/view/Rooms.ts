@@ -1,15 +1,16 @@
 import { DomNode, el, View } from "common-dapp-module";
 import RoomList from "../component/rooms/RoomList.js";
+import Constants from "../Constants.js";
 import TokenHoldingsAggregatorContract from "../contract/TokenHoldingsAggregatorContract.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
-import Constants from "../Constants.js";
 
 export default class Rooms extends View {
   private container: DomNode;
 
   private myRooms: RoomList;
+  private favoriteRooms: RoomList;
   private holdingRooms: RoomList;
   //private friendsRooms: RoomList;
   private topRooms: RoomList;
@@ -22,6 +23,7 @@ export default class Rooms extends View {
         el(
           ".rooms",
           this.myRooms = new RoomList("My Rooms"),
+          this.favoriteRooms = new RoomList("Favorite Rooms"),
           this.holdingRooms = new RoomList("Holding Token's Rooms"),
           //this.friendsRooms = new RoomList("Friends Rooms"),
           this.topRooms = new RoomList("Top Rooms"),

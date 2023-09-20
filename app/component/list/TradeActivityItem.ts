@@ -45,15 +45,18 @@ export default class TradeActivityItem extends DomNode {
         ),
         el(
           ".info",
-          this.priceDisplay = el("span.price"),
-          " ETH, ",
+          this.priceDisplay = el(
+            "span.price" +
+              (activity.isBuy ? ".up" : ".down"),
+          ),
+          ", ",
           this.timeDisplay = el("span.time"),
         ),
       ),
     );
 
     this.amountDisplay.text = ethers.formatEther(activity.amount);
-    this.priceDisplay.text = ethers.formatEther(activity.price);
+    this.priceDisplay.text = ethers.formatEther(activity.price) + " ETH";
     this.timeDisplay.text = dayjs(
       BlockTimeCacher.blockToTime(activity.blockNumber),
     ).fromNow();

@@ -33,6 +33,16 @@
             >.name {
                 font-weight: bold;
             }
+
+            >.price {
+                &.up {
+                    color: rgba(var(--rising-color));
+                }
+
+                &.down {
+                    color: rgba(var(--falling-color));
+                }
+            }
         }
     }
 }

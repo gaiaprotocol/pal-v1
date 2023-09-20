@@ -4,9 +4,11 @@ import { ethers } from "ethers";
 import Constants from "../../Constants.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
+import TokenInfo from "../../data/TokenInfo.js";
 import BuyTokenPopup from "../../popup/token/BuyTokenPopup.js";
 import Icon from "../Icon.js";
 import ProfileImageDisplay from "../ProfileImageDisplay.js";
+import WalletManager from "../../user/WalletManager.js";
 
 export default class TokenPurchaseForm extends DomNode {
   private currentTokenAddress: string | undefined;
@@ -26,6 +28,9 @@ export default class TokenPurchaseForm extends DomNode {
         title: "Buy Token",
         click: async () => {
           if (this.currentTokenAddress) {
+            if (!WalletManager.connected) {
+              await WalletManager.connect();
+            }
             const popup = new BuyTokenPopup(this.currentTokenAddress);
             popup.on("buyToken", () => this.fireEvent("buyToken"));
           }
@@ -62,28 +67,29 @@ export default class TokenPurchaseForm extends DomNode {
 
     const tokenOwner = await UserDetailsCacher.get(owner);
     if (tokenOwner) {
-      const { data: tokenData } = await SupabaseManager.supabase.from(
+      const { data } = await SupabaseManager.supabase.from(
         "pal_tokens",
       )
         .select(
           Constants.PAL_TOKENS_SELECT_QUERY,
         )
         .eq("token_address", this.currentTokenAddress).single();
-      if (tokenData) {
+
+      const tokenInfo: TokenInfo | null = data as any;
+      if (tokenInfo) {
         this.messageDisplay.empty().append(
           "Hold at least ",
-          el("b", ethers.formatEther((tokenData as any).view_token_required)),
+          el("b", ethers.formatEther(tokenInfo.view_token_required)),
           ` ${symbol} to read messages and at least `,
-          el("b", ethers.formatEther((tokenData as any).write_token_required)),
+          el("b", ethers.formatEther(tokenInfo.write_token_required)),
           ` ${symbol} to send messages. This was set by ${tokenOwner.display_name}.`,
         );
 
-        this.lastMessageSentAtDisplay.text =
-          !(tokenData as any).last_message_sent_at
-            ? ""
-            : "Last message sent " + dayjs(
-              (tokenData as any).last_message_sent_at,
-            ).fromNow();
+        this.lastMessageSentAtDisplay.text = !tokenInfo.last_message_sent_at
+          ? ""
+          : "Last message sent " + dayjs(
+            tokenInfo.last_message_sent_at,
+          ).fromNow();
       }
     }
   }

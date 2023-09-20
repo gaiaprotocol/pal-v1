@@ -36,8 +36,14 @@ export default class TokenItem extends DomNode {
           ".info",
           this.memberCountDisplay = el("span.member-count"),
           " members, ",
-          el("span.price", ethers.formatEther(tokenInfo.last_fetched_price)),
-          " ETH",
+          el(
+            "span.price" +
+              (tokenInfo.is_price_up === undefined ||
+                  tokenInfo.is_price_up === null
+                ? ""
+                : (tokenInfo.is_price_up ? ".up" : ".down")),
+            ethers.formatEther(tokenInfo.last_fetched_price) + " ETH",
+          ),
         ),
       ),
     );

@@ -22,6 +22,7 @@ import UserManager from "../../user/UserManager.js";
 import BuyTokenPopup from "./BuyTokenPopup.js";
 import EditTokenInfoPopup from "./EditTokenInfoPopup.js";
 import SellTokenPopup from "./SellTokenPopup.js";
+import WalletManager from "../../user/WalletManager.js";
 
 export default class TokenInfoPopup extends Popup {
   public content: DomNode;
@@ -88,11 +89,21 @@ export default class TokenInfoPopup extends Popup {
             ),
             new Button({
               title: "Buy",
-              click: () => new BuyTokenPopup(tokenAddress),
+              click: async () => {
+                if (!WalletManager.connected) {
+                  await WalletManager.connect();
+                }
+                new BuyTokenPopup(tokenAddress);
+              },
             }),
             new Button({
               title: "Sell",
-              click: () => new SellTokenPopup(tokenAddress),
+              click: async () => {
+                if (!WalletManager.connected) {
+                  await WalletManager.connect();
+                }
+                new SellTokenPopup(tokenAddress);
+              },
             }),
           ),
         ),
