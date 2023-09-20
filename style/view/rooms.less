@@ -1,17 +1,25 @@
 .rooms-view {
     height: 100%;
 
+    @media @phone {
+        overflow-y    : auto;
+        padding-bottom: 60px;
+    }
+
     >.rooms {
         width           : 360px;
         height          : 100%;
         border-right    : 1px solid #2d2d2d;
         background-color: #1e1e1e;
         overflow-y      : auto;
+        padding-bottom  : 60px;
 
         @media @phone {
-            width : 100%;
-            height: auto;
-            border: none;
+            width         : 100%;
+            height        : auto;
+            border        : none;
+            overflow-y    : auto;
+            padding-bottom: 0;
         }
     }
 }

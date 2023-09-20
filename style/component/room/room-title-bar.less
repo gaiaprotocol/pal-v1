@@ -15,22 +15,40 @@
         background-color: #530087;
     }
 
-    >.info-container {
-        flex-grow      : 1;
-        display        : flex;
-        align-items    : center;
-        justify-content: space-between;
+    >h1 {
+        font-size: 20px;
+        cursor   : pointer;
 
-        >h1 {
-            font-size: 20px;
-
-            @media @phone {
-                display: none;
-            }
+        @media @phone {
+            display: none;
         }
     }
 
-    >a {
+    >.pc-favorite-button {
+        @media @phone {
+            display: none;
+        }
+    }
+
+    >.mobile-favorite-button {
+        display: none;
+        color  : #999;
+
+        @media @phone {
+            display     : block;
+            margin-right: auto;
+        }
+    }
+
+    >.token-summary-container {
+        margin-left: auto;
+
+        @media @phone {
+            margin-left: 0;
+        }
+    }
+
+    >.close-button {
         display: none;
         cursor : pointer;
         color  : #999;

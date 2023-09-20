@@ -30,10 +30,6 @@
         gap           : 4px;
 
         >.info {
-            >.name {
-                font-weight: bold;
-            }
-
             >.price {
                 &.up {
                     color: rgba(var(--rising-color));
@@ -41,6 +37,15 @@
 
                 &.down {
                     color: rgba(var(--falling-color));
+                }
+            }
+
+            >a {
+                color : rgba(var(--primary-color));
+                cursor: pointer;
+
+                &:hover {
+                    text-decoration: underline;
                 }
             }
         }
