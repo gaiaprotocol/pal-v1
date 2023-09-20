@@ -738,6 +738,17 @@ body {
   border-radius: 50%;
   background-color: #00ff00;
 }
+.favorite-button {
+  display: block;
+  cursor: pointer;
+  color: #e1e1e1;
+}
+.favorite-button:hover {
+  color: #ff8a00;
+}
+.favorite-button > .icon {
+  display: block;
+}
 .room-list {
   border-bottom: 1px solid #2d2d2d;
 }
@@ -885,7 +896,6 @@ body {
   height: 60px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 24px;
   gap: 24px;
 }
@@ -896,12 +906,34 @@ body {
   }
 }
 .room-title-bar > h1 {
-  flex-grow: 1;
   font-size: 20px;
 }
 @media only screen and (max-width: 859px) {
   .room-title-bar > h1 {
     display: none;
+  }
+}
+@media only screen and (max-width: 859px) {
+  .room-title-bar > .pc-favorite-button {
+    display: none;
+  }
+}
+.room-title-bar > .mobile-favorite-button {
+  display: none;
+  color: #999;
+}
+@media only screen and (max-width: 859px) {
+  .room-title-bar > .mobile-favorite-button {
+    display: block;
+    margin-right: auto;
+  }
+}
+.room-title-bar > .token-summary-container {
+  margin-left: auto;
+}
+@media only screen and (max-width: 859px) {
+  .room-title-bar > .token-summary-container {
+    margin-left: 0;
   }
 }
 .room-title-bar > .close-button {

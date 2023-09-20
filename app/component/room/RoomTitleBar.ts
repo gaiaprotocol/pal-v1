@@ -1,19 +1,29 @@
 import { DomNode, el } from "common-dapp-module";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
+import FavoriteButton from "../FavoriteButton.js";
 import Icon from "../Icon.js";
 import TokenSummary from "../TokenSummary.js";
 
 export default class RoomTitleBar extends DomNode {
   private title: DomNode;
   private tokenSummaryContainer: DomNode;
+  private pcFavoriteButton: FavoriteButton;
+  private mobileFavoriteButton: FavoriteButton;
+
   private currentTokenAddress: string | undefined;
 
   constructor() {
     super(".room-title-bar");
     this.append(
       this.title = el("h1"),
+      this.pcFavoriteButton = new FavoriteButton({
+        tag: ".pc-favorite-button",
+      }),
       this.tokenSummaryContainer = el(".token-summary-container"),
+      this.mobileFavoriteButton = new FavoriteButton({
+        tag: ".mobile-favorite-button",
+      }),
       el("a.close-button", new Icon("close"), {
         click: () => history.back(),
       }),
@@ -34,6 +44,10 @@ export default class RoomTitleBar extends DomNode {
     this.tokenSummaryContainer.empty().append(new TokenSummary(tokenAddress));
 
     this.currentTokenAddress = tokenAddress;
+
+    this.pcFavoriteButton.check(tokenAddress);
+    this.mobileFavoriteButton.check(tokenAddress);
+
     this.title.empty();
     const tokenInfo = await TokenInfoCacher.get(tokenAddress);
     if (tokenInfo) {

@@ -9,7 +9,7 @@ export default class RoomItem extends DomNode {
   private tokenOwnerProfileImage: ProfileImageDisplay;
   private tokenOwnerName: DomNode;
 
-  constructor(private tokenInfo: TokenInfo) {
+  constructor(public tokenInfo: TokenInfo) {
     super("li.room-item");
     this.append(
       this.tokenOwnerProfileImage = new ProfileImageDisplay({ noClick: true }),

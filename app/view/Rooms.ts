@@ -1,7 +1,9 @@
 import { DomNode, el, View } from "common-dapp-module";
+import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
 import RoomList from "../component/rooms/RoomList.js";
 import Constants from "../Constants.js";
 import TokenHoldingsAggregatorContract from "../contract/TokenHoldingsAggregatorContract.js";
+import FavoriteManager from "../FavoriteManager.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
@@ -32,10 +34,30 @@ export default class Rooms extends View {
     );
 
     this.loadRooms();
+
+    this.container.onDelegate(
+      FavoriteManager,
+      "add",
+      async (tokenAddress: string) => {
+        const tokenInfo = await TokenInfoCacher.get(tokenAddress);
+        if (tokenInfo) {
+          this.favoriteRooms.add(tokenInfo);
+        }
+      },
+    );
+
+    this.container.onDelegate(
+      FavoriteManager,
+      "remove",
+      (tokenAddress: string) => {
+        this.favoriteRooms.findItem(tokenAddress)?.delete();
+      },
+    );
   }
 
   private loadRooms() {
     this.loadMyTokenRooms();
+    this.loadFavoriteRooms();
     this.loadHoldingTokenRooms();
     this.loadFriendsTokenRooms();
     this.loadTopRooms();
@@ -50,6 +72,19 @@ export default class Rooms extends View {
       .neq("hiding", true);
     if (data) {
       this.myRooms.rooms = data as any;
+    }
+  }
+
+  private async loadFavoriteRooms(): Promise<void> {
+    if (UserManager.user) {
+      const { data } = await SupabaseManager.supabase.from("pal_tokens")
+        .select(
+          Constants.PAL_TOKENS_SELECT_QUERY,
+        )
+        .in("token_address", FavoriteManager.favoriteTokenAddresses);
+      if (data) {
+        this.favoriteRooms.rooms = data as any;
+      }
     }
   }
 

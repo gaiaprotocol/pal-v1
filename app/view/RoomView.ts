@@ -1,5 +1,6 @@
 import {
   BodyNode,
+  BrowserInfo,
   Confirm,
   DomNode,
   el,
@@ -49,10 +50,12 @@ export default class RoomView extends View {
   }
 
   private setViewportHeight = () => {
-    this.container.style({
-      top: `${window.visualViewport!.offsetTop}px`,
-      height: `${window.visualViewport!.height}px`,
-    });
+    if (BrowserInfo.isPhoneSize) {
+      this.container.style({
+        top: `${window.visualViewport!.offsetTop}px`,
+        height: `${window.visualViewport!.height}px`,
+      });
+    }
   };
 
   public changeParams(params: ViewParams): void {

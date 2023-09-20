@@ -1,4 +1,4 @@
-import { DomNode, el } from "common-dapp-module";
+import { ArrayUtil, DomNode, el } from "common-dapp-module";
 import TokenInfo from "../../data/TokenInfo.js";
 import ListLoading from "../ListLoading.js";
 import RoomItem from "./RoomItem.js";
@@ -6,6 +6,7 @@ import RoomItem from "./RoomItem.js";
 export default class RoomList extends DomNode {
   private list: DomNode;
   private loadingComponent: ListLoading | undefined;
+  private items: RoomItem[] = [];
 
   constructor(title: string) {
     super(".room-list");
@@ -22,6 +23,9 @@ export default class RoomList extends DomNode {
 
   public add(room: TokenInfo): RoomItem {
     const item = new RoomItem(room).appendTo(this.list);
+    this.items.push(item);
+    item.on("delete", () => ArrayUtil.pull(this.items, item));
+
     this.loaded();
     return item;
   }
@@ -31,5 +35,11 @@ export default class RoomList extends DomNode {
     for (const room of rooms) {
       this.add(room);
     }
+  }
+
+  public findItem(tokenAddress: string) {
+    return this.items.find((item) =>
+      item.tokenInfo.token_address === tokenAddress
+    );
   }
 }

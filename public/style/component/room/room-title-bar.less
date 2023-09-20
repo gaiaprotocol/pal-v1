@@ -7,7 +7,6 @@
     height          : 60px;
     display         : flex;
     align-items     : center;
-    justify-content : space-between;
     padding         : 0 24px;
     gap             : 24px;
 
@@ -17,11 +16,34 @@
     }
 
     >h1 {
-        flex-grow: 1;
         font-size: 20px;
 
         @media @phone {
             display: none;
+        }
+    }
+
+    >.pc-favorite-button {
+        @media @phone {
+            display: none;
+        }
+    }
+
+    >.mobile-favorite-button {
+        display: none;
+        color  : #999;
+
+        @media @phone {
+            display     : block;
+            margin-right: auto;
+        }
+    }
+
+    >.token-summary-container {
+        margin-left: auto;
+
+        @media @phone {
+            margin-left: 0;
         }
     }
 

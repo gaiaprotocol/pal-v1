@@ -4,6 +4,7 @@ import { EventContainer } from "common-dapp-module";
 import { BrowserProvider, JsonRpcSigner } from "ethers";
 import Config from "../Config.js";
 import Constants from "../Constants.js";
+import FavoriteManager from "../FavoriteManager.js";
 import OnlineUserManager from "../OnlineUserManager.js";
 import SupabaseManager from "../SupabaseManager.js";
 import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
@@ -59,6 +60,7 @@ class UserManager extends EventContainer {
     this.user = undefined;
     this.userWalletAddress = undefined;
     this.userTokenAddress = undefined;
+    FavoriteManager.clear();
   }
 
   public async loadUser() {
@@ -67,7 +69,11 @@ class UserManager extends EventContainer {
     const { data } = await SupabaseManager.supabase.auth.getSession();
     this.user = data?.session?.user;
     if (this.user) {
-      this.userWalletAddress = await this.getUserWalletAddress(this.user.id);
+      const [userWalletAddress] = await Promise.all([
+        this.getUserWalletAddress(this.user.id),
+        FavoriteManager.loadSignedUserFavoriteTokens(),
+      ]);
+      this.userWalletAddress = userWalletAddress;
       if (this.userWalletAddress) {
         this.userTokenAddress = await this.getUserTokenAddress(
           this.userWalletAddress,
