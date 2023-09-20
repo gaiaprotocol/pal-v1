@@ -90,6 +90,16 @@ export default class SellTokenPopup extends Popup {
                     this.tokenAddress,
                     ethers.parseEther(this.amountInput.value),
                   );
+
+                  SupabaseManager.supabase.functions.invoke(
+                    "refresh-token-prices-and-balances",
+                    {
+                      body: {
+                        tokenAddresses: [this.tokenAddress],
+                      },
+                    },
+                  );
+
                   this.delete();
                 } catch (e) {
                   console.error(e);

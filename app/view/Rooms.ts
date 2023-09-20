@@ -3,6 +3,7 @@ import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
 import RoomList from "../component/rooms/RoomList.js";
 import Constants from "../Constants.js";
 import TokenHoldingsAggregatorContract from "../contract/TokenHoldingsAggregatorContract.js";
+import TokenInfo from "../data/TokenInfo.js";
 import FavoriteManager from "../FavoriteManager.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
@@ -55,15 +56,35 @@ export default class Rooms extends View {
     );
   }
 
-  private loadRooms() {
-    this.loadMyTokenRooms();
-    this.loadFavoriteRooms();
-    this.loadHoldingTokenRooms();
-    this.loadFriendsTokenRooms();
-    this.loadTopRooms();
+  private async loadRooms() {
+    const results = await Promise.all([
+      this.loadMyTokenRooms(),
+      this.loadFavoriteRooms(),
+      this.loadHoldingTokenRooms(),
+      this.loadFriendsTokenRooms(),
+      this.loadTopRooms(),
+    ]);
+
+    const array = results.flat();
+    const tokens = array.filter((obj, idx) => {
+      const isFirstFindIdx = array.findIndex((obj2) =>
+        obj2.token_address === obj.token_address
+      );
+      return isFirstFindIdx === idx;
+    });
+
+    TokenInfoCacher.cache(tokens);
+    SupabaseManager.supabase.functions.invoke(
+      "refresh-token-prices-and-balances",
+      {
+        body: {
+          tokenAddresses: tokens.map((token: any) => token.token_address),
+        },
+      },
+    );
   }
 
-  private async loadMyTokenRooms(): Promise<void> {
+  private async loadMyTokenRooms(): Promise<TokenInfo[]> {
     const { data } = await SupabaseManager.supabase.from("pal_tokens")
       .select(
         Constants.PAL_TOKENS_SELECT_QUERY,
@@ -72,10 +93,12 @@ export default class Rooms extends View {
       .neq("hiding", true);
     if (data) {
       this.myRooms.rooms = data as any;
+      return data as any;
     }
+    return [];
   }
 
-  private async loadFavoriteRooms(): Promise<void> {
+  private async loadFavoriteRooms(): Promise<TokenInfo[]> {
     if (UserManager.user) {
       const { data } = await SupabaseManager.supabase.from("pal_tokens")
         .select(
@@ -84,11 +107,13 @@ export default class Rooms extends View {
         .in("token_address", FavoriteManager.favoriteTokenAddresses);
       if (data) {
         this.favoriteRooms.rooms = data as any;
+        return data as any;
       }
     }
+    return [];
   }
 
-  private async loadHoldingTokenRooms(): Promise<void> {
+  private async loadHoldingTokenRooms(): Promise<TokenInfo[]> {
     if (UserManager.userWalletAddress) {
       const { data } = await SupabaseManager.supabase.from("pal_tokens")
         .select(
@@ -111,20 +136,26 @@ export default class Rooms extends View {
             this.holdingRooms.add(d);
           }
         }
+
+        this.holdingRooms.loaded();
+        return data as any;
       }
     }
+
     this.holdingRooms.loaded();
+    return [];
   }
 
-  private async loadFriendsTokenRooms(): Promise<void> {
+  private async loadFriendsTokenRooms(): Promise<TokenInfo[]> {
     //TODO: Implement after profit is generated
     /*const { data, error } = await SupabaseManager.supabase.functions.invoke(
       "get-friends",
     );
     console.log(data, error);*/
+    return [];
   }
 
-  private async loadTopRooms(): Promise<void> {
+  private async loadTopRooms(): Promise<TokenInfo[]> {
     const { data } = await SupabaseManager.supabase.from("pal_tokens")
       .select(
         Constants.PAL_TOKENS_SELECT_QUERY,
@@ -134,7 +165,9 @@ export default class Rooms extends View {
       .limit(50);
     if (data) {
       this.topRooms.rooms = data as any;
+      return data as any;
     }
+    return [];
   }
 
   public close(): void {

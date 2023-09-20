@@ -14,13 +14,13 @@ serveWithOptions(async (req) => {
     return responseError("Unauthorized");
   }
 
-  const { data: userWallets } = await supabase
+  const { data: userWallet } = await supabase
     .from("user_details")
     .select("wallet_address")
     .eq("id", user.id)
     .single();
 
-  if (!userWallets) {
+  if (!userWallet) {
     return responseError("No wallet address");
   }
 
@@ -29,10 +29,10 @@ serveWithOptions(async (req) => {
     if (tokenAddress) {
       const tokenInfo = await getTokenInfo(
         tokenAddress,
-        userWallets.wallet_address,
+        userWallet.wallet_address,
       );
 
-      if (userWallets.wallet_address !== tokenInfo.owner) {
+      if (userWallet.wallet_address !== tokenInfo.owner) {
         throw new Error("Invalid owner");
       }
 

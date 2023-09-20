@@ -86,6 +86,16 @@ export default class BuyTokenPopup extends Popup {
                     ethers.parseEther(this.amountInput.value),
                     this.totalPrice,
                   );
+
+                  SupabaseManager.supabase.functions.invoke(
+                    "refresh-token-prices-and-balances",
+                    {
+                      body: {
+                        tokenAddresses: [this.tokenAddress],
+                      },
+                    },
+                  );
+
                   this.fireEvent("buyToken");
                   this.delete();
                 } catch (e) {

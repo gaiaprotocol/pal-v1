@@ -75,12 +75,15 @@ class TokenInfoCacher extends EventContainer {
       throw error;
     }
     if (data) {
-      for (const tokenInfo of data as any) {
-        tokenInfoArray.push(tokenInfo);
-        this.set(tokenInfo);
-      }
+      this.cache(data as any);
     }
     return tokenInfoArray;
+  }
+
+  public cache(tokenInfoSet: TokenInfo[]) {
+    for (const tokenInfo of tokenInfoSet) {
+      this.set(tokenInfo);
+    }
   }
 }
 
