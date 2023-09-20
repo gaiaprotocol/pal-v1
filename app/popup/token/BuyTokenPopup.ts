@@ -36,7 +36,7 @@ export default class BuyTokenPopup extends Popup {
         this.title = el("h1", "Buy Token"),
         el(
           "main",
-          this.profileImage = new ProfileImageDisplay(true),
+          this.profileImage = new ProfileImageDisplay({ isLarge: true }),
           this.amountInput = new Input({
             label: "Amount",
             placeholder: "Amount",

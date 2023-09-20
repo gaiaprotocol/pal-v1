@@ -10,7 +10,7 @@ export default class RoomItem extends DomNode {
   constructor(private tokenInfo: TokenInfo) {
     super("li.room-item");
     this.append(
-      this.tokenOwnerProfileImage = new ProfileImageDisplay(),
+      this.tokenOwnerProfileImage = new ProfileImageDisplay({ noClick: true }),
       el("span.room-name", tokenInfo.metadata.roomName ?? tokenInfo.name),
       this.tokenOwnerName = el("span.token-owner"),
     );

@@ -335,7 +335,7 @@ body {
 }
 @keyframes profile-image-loading {
   0% {
-    background-position-x: -240px;
+    background-position-x: -24px;
   }
   100% {
     background-position-x: 24px;
@@ -363,6 +363,11 @@ body {
   display: flex;
   align-items: center;
   padding: 0 24px;
+}
+@media only screen and (max-width: 859px) {
+  .layout > header {
+    padding: 0 12px 0 18px;
+  }
 }
 .layout > header > .logo {
   cursor: pointer;
@@ -897,14 +902,30 @@ body {
 .message-item > .message {
   color: #dcdcdc;
 }
-.message-item > .upload-image {
-  background-color: #fff;
-  height: 100px;
-  border-radius: 5px;
-  margin-top: -2px;
+.message-item > .files > .file > a {
+  color: var(--link-blue);
+  text-decoration: underline;
+}
+.message-item > .files > .file > a:focus {
+  outline: 1px dotted var(--link-blue);
+}
+.message-item > .files > .file > a > img {
+  height: 32px;
+}
+.message-item > .emojis > .emoji {
+  width: 32px;
+  height: 32px;
 }
 .message-item.wait > .message {
   color: #999;
+}
+@keyframes upload-loading {
+  0% {
+    background-position-x: -12px;
+  }
+  100% {
+    background-position-x: 12px;
+  }
 }
 .message-form {
   display: flex;
@@ -917,10 +938,34 @@ body {
 .message-form > input.upload-input {
   display: none;
 }
-.message-form > input {
+.message-form > .emoji-button,
+.message-form > .upload-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #999;
+  width: 24px;
+  height: 24px;
+}
+.message-form > .emoji-button:hover,
+.message-form > .upload-button:hover {
+  color: #fff;
+}
+.message-form > .emoji-button.loading,
+.message-form > .upload-button.loading {
+  background: linear-gradient(0.25turn, #1e1e1e, #2e2e2e 45% 55%, #1e1e1e);
+  animation: upload-loading 2s infinite linear;
+}
+.message-form > form {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.message-form > form > input {
   flex-grow: 1;
   height: 100%;
-  padding: 8px;
+  padding: 8px 0;
   background-color: #252526;
   color: #dcdcdc;
   font-family: NotoSansKR;

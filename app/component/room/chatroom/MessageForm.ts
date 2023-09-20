@@ -25,6 +25,11 @@ export default class MessageForm extends DomNode {
           }
         },
       }),
+      el("a.emoji-button", new Icon("mood"), {
+        click: () => {
+          //TODO:
+        },
+      }),
       this.uploadButton = el(
         "a.upload-button",
         new Icon("upload"),
@@ -67,7 +72,7 @@ export default class MessageForm extends DomNode {
           .supabase
           .storage
           .from("upload_files")
-          .createSignedUrl(uploadData.path, 60 * 60 * 24 * 7); // 7 days
+          .createSignedUrl(uploadData.path, 60 * 60 * 24 * 30); // 30 days
 
         if (getURLError) {
           console.error(getURLError);
@@ -84,7 +89,7 @@ export default class MessageForm extends DomNode {
             await SupabaseManager.supabase
               .storage
               .from("upload_files")
-              .createSignedUrl(uploadData.path, 60 * 60 * 24 * 7, {
+              .createSignedUrl(uploadData.path, 60 * 60 * 24 * 30, {
                 transform: {
                   width: 32,
                   height: 32,

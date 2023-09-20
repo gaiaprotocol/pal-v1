@@ -1,3 +1,13 @@
+@keyframes upload-loading {
+    0% {
+        background-position-x: -12px;
+    }
+
+    100% {
+        background-position-x: 12px;
+    }
+}
+
 .message-form {
     display         : flex;
     align-items     : center;
@@ -10,13 +20,42 @@
         display: none;
     }
 
-    >input {
-        flex-grow       : 1;
-        height          : 100%;
-        padding         : 8px;
-        background-color: #252526;
-        color           : #dcdcdc;
-        font-family     : NotoSansKR;
-        font-size       : 15px;
+    >.emoji-button,
+    >.upload-button {
+        display    : flex;
+        align-items: center;
+        cursor     : pointer;
+        color      : #999;
+        width      : 24px;
+        height     : 24px;
+
+        &:hover {
+            color: #fff;
+        }
+
+        &.loading {
+            background: linear-gradient(0.25turn,
+                    #1e1e1e,
+                    #2e2e2e 45% 55%,
+                    #1e1e1e);
+            animation: upload-loading 2s infinite linear;
+        }
+    }
+
+    >form {
+        flex-grow  : 1;
+        display    : flex;
+        align-items: center;
+        gap        : 6px;
+
+        >input {
+            flex-grow       : 1;
+            height          : 100%;
+            padding         : 8px 0;
+            background-color: #252526;
+            color           : #dcdcdc;
+            font-family     : NotoSansKR;
+            font-size       : 15px;
+        }
     }
 }

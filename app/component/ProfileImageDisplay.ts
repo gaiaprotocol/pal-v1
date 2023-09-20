@@ -1,26 +1,28 @@
-import { DomNode, ErrorAlert, el } from "common-dapp-module";
+import { DomNode, el, ErrorAlert } from "common-dapp-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
-import OnlineUserManager from "../OnlineUserManager.js";
 import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
 import UserDetails from "../data/UserDetails.js";
+import OnlineUserManager from "../OnlineUserManager.js";
 import UserInfoPopup from "../popup/user/UserInfoPopup.js";
 
 export default class ProfileImageDisplay extends DomNode {
   private currentWalletAddress: string | undefined;
   private currentUserDetails: UserDetails | undefined;
 
-  constructor(private isLarge = false) {
+  constructor(private options: { isLarge?: boolean; noClick?: boolean } = {}) {
     super("a.profile-image-display.loading");
-    this.onDom("click", () => {
-      if (this.currentUserDetails) {
-        new UserInfoPopup(this.currentUserDetails);
-      } else {
-        new ErrorAlert({
-          title: "User not found",
-          message: "User not found",
-        });
-      }
-    });
+    if (!options.noClick) {
+      this.onDom("click", () => {
+        if (this.currentUserDetails) {
+          new UserInfoPopup(this.currentUserDetails);
+        } else {
+          new ErrorAlert({
+            title: "User not found",
+            message: "User not found",
+          });
+        }
+      });
+    }
     this.onDelegate(
       OnlineUserManager,
       "onlineUsersChanged",
@@ -47,7 +49,7 @@ export default class ProfileImageDisplay extends DomNode {
     this.currentUserDetails = userDetails;
 
     if (userDetails) {
-      this.src = this.isLarge
+      this.src = this.options.isLarge
         ? userDetails.profile_image.replace("_normal", "")
         : userDetails.profile_image;
     } else {
