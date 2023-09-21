@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
 import PalContract from "../../contract/PalContract.js";
-import PalTokenContract from "../../contract/PalTokenContract.js";
+import PalUserTokenContract from "../../contract/PalUserTokenContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserManager from "../../user/UserManager.js";
 
@@ -69,7 +69,7 @@ export default class SellTokenPopup extends Popup {
             type: ButtonType.Text,
             tag: ".sell-token-button",
             click: async () => {
-              const balance = await new PalTokenContract(
+              const balance = await new PalUserTokenContract(
                 this.tokenAddress,
               )
                 .balanceOf(UserManager.userWalletAddress!);
@@ -124,7 +124,7 @@ export default class SellTokenPopup extends Popup {
       this.symbol = tokenInfo.symbol;
       this.title.text = `Sell ${this.symbol}`;
 
-      const totalSupply = await new PalTokenContract(
+      const totalSupply = await new PalUserTokenContract(
         this.tokenAddress,
       ).totalSupply();
 

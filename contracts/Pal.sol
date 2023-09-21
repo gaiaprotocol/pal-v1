@@ -21,7 +21,13 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
 
     mapping(address => bool) public isPalUserToken;
 
-    event UserTokenCreated(address indexed owner, address tokenAddress, string name, string symbol);
+    event SetProtocolFeeDestination(address indexed destination);
+    event SetProtocolFeePercent(uint256 percent);
+    event SetTokenOwnerFeePercent(uint256 percent);
+    event SetMembershipToken(address indexed token);
+    event SetMembershipWeight(uint256 weight);
+
+    event UserTokenCreated(address indexed owner, address indexed tokenAddress, string name, string symbol);
     event Trade(
         address indexed trader,
         address indexed tokenAddress,
@@ -44,27 +50,36 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         protocolFeeDestination = _protocolFeeDestination;
         protocolFeePercent = _protocolFeePercent;
         tokenOwnerFeePercent = _tokenOwnerFeePercent;
+
+        emit SetProtocolFeeDestination(_protocolFeeDestination);
+        emit SetProtocolFeePercent(_protocolFeePercent);
+        emit SetTokenOwnerFeePercent(_tokenOwnerFeePercent);
     }
 
     function setProtocolFeeDestination(address payable _feeDestination) public onlyOwner {
         protocolFeeDestination = _feeDestination;
+        emit SetProtocolFeeDestination(_feeDestination);
     }
 
     function setProtocolFeePercent(uint256 _feePercent) public onlyOwner {
         protocolFeePercent = _feePercent;
+        emit SetProtocolFeePercent(_feePercent);
     }
 
     function setTokenOwnerFeePercent(uint256 _feePercent) public onlyOwner {
         tokenOwnerFeePercent = _feePercent;
+        emit SetTokenOwnerFeePercent(_feePercent);
     }
 
     function setMembershipToken(address _token) public onlyOwner {
         membershipToken = IERC20(_token);
+        emit SetMembershipToken(_token);
     }
 
     function setMembershipWeight(uint256 _weight) public onlyOwner {
         require(_weight <= protocolFeePercent, "Weight cannot exceed protocol fee percent");
         membershipWeight = _weight;
+        emit SetMembershipWeight(_weight);
     }
 
     function calculateAdditionalTokenOwnerFee(uint256 price, address tokenOwner) public view returns (uint256) {

@@ -16,7 +16,7 @@ import MemberList from "../../component/list/MemberList.js";
 import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";
 import Tabs from "../../component/tab/Tabs.js";
 import PalContract from "../../contract/PalContract.js";
-import PalTokenContract from "../../contract/PalTokenContract.js";
+import PalUserTokenContract from "../../contract/PalUserTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import UserManager from "../../user/UserManager.js";
 import BuyTokenPopup from "./BuyTokenPopup.js";
@@ -205,7 +205,7 @@ export default class TokenInfoPopup extends Popup {
 
   private async loadBalance() {
     if (UserManager.userWalletAddress) {
-      const balance = await new PalTokenContract(this.tokenAddress)
+      const balance = await new PalUserTokenContract(this.tokenAddress)
         .balanceOf(UserManager.userWalletAddress);
       this.balanceDisplay.text = ethers.formatEther(balance);
     }

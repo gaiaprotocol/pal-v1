@@ -1,13 +1,13 @@
-import PalTokenContract from "../contract/PalTokenContract.js";
+import PalUserTokenContract from "../contract/PalUserTokenContract.js";
 
 class PalTokenOwnerManager {
-  private ownedTokenContract: PalTokenContract | undefined;
+  private ownedTokenContract: PalUserTokenContract | undefined;
 
   public tokenName: string | undefined;
   public tokenSymbol: string | undefined;
 
   public async init(address: string) {
-    this.ownedTokenContract = new PalTokenContract(address);
+    this.ownedTokenContract = new PalUserTokenContract(address);
     const promises: Promise<void>[] = [];
     promises.push((async () => {
       this.tokenName = await this.ownedTokenContract?.name();

@@ -1,11 +1,13 @@
 import { ethers } from "https://esm.sh/ethers@6.7.0";
 import Contract from "./Contract.ts";
-import PalTokenArtifact from "./abi/pal/PalToken.json" assert { type: "json" };
-import { PalToken } from "./abi/pal/PalToken.ts";
+import PalUserTokenArtifact from "./abi/pal/PalUserToken.json" assert {
+  type: "json",
+};
+import { PalUserToken } from "./abi/pal/PalUserToken.ts";
 
-export default class PalTokenContract extends Contract<PalToken> {
+export default class PalUserTokenContract extends Contract<PalUserToken> {
   constructor(tokenAddress: string, signer: ethers.Signer) {
-    super(tokenAddress, PalTokenArtifact.abi, signer);
+    super(tokenAddress, PalUserTokenArtifact.abi, signer);
   }
 
   public async name() {

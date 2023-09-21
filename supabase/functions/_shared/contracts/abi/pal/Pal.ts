@@ -27,6 +27,7 @@ export interface PalInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "buyToken"
+      | "calculateAdditionalTokenOwnerFee"
       | "createToken"
       | "getBuyPrice"
       | "getBuyPriceAfterFee"
@@ -34,12 +35,16 @@ export interface PalInterface extends Interface {
       | "getSellPrice"
       | "getSellPriceAfterFee"
       | "initialize"
-      | "isPalToken"
+      | "isPalUserToken"
+      | "membershipToken"
+      | "membershipWeight"
       | "owner"
       | "protocolFeeDestination"
       | "protocolFeePercent"
       | "renounceOwnership"
       | "sellToken"
+      | "setMembershipToken"
+      | "setMembershipWeight"
       | "setProtocolFeeDestination"
       | "setProtocolFeePercent"
       | "setTokenOwnerFeePercent"
@@ -51,13 +56,17 @@ export interface PalInterface extends Interface {
     nameOrSignatureOrTopic:
       | "Initialized"
       | "OwnershipTransferred"
-      | "TokenCreated"
       | "Trade"
+      | "UserTokenCreated"
   ): EventFragment;
 
   encodeFunctionData(
     functionFragment: "buyToken",
     values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "calculateAdditionalTokenOwnerFee",
+    values: [BigNumberish, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "createToken",
@@ -88,8 +97,16 @@ export interface PalInterface extends Interface {
     values: [AddressLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "isPalToken",
+    functionFragment: "isPalUserToken",
     values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "membershipToken",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "membershipWeight",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -107,6 +124,14 @@ export interface PalInterface extends Interface {
   encodeFunctionData(
     functionFragment: "sellToken",
     values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMembershipToken",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMembershipWeight",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setProtocolFeeDestination",
@@ -131,6 +156,10 @@ export interface PalInterface extends Interface {
 
   decodeFunctionResult(functionFragment: "buyToken", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "calculateAdditionalTokenOwnerFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "createToken",
     data: BytesLike
   ): Result;
@@ -152,7 +181,18 @@ export interface PalInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isPalToken", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isPalUserToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "membershipToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "membershipWeight",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "protocolFeeDestination",
@@ -167,6 +207,14 @@ export interface PalInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "sellToken", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setMembershipToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMembershipWeight",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "setProtocolFeeDestination",
     data: BytesLike
@@ -214,31 +262,6 @@ export namespace OwnershipTransferredEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace TokenCreatedEvent {
-  export type InputTuple = [
-    owner: AddressLike,
-    tokenAddress: AddressLike,
-    name: string,
-    symbol: string
-  ];
-  export type OutputTuple = [
-    owner: string,
-    tokenAddress: string,
-    name: string,
-    symbol: string
-  ];
-  export interface OutputObject {
-    owner: string;
-    tokenAddress: string;
-    name: string;
-    symbol: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
 export namespace TradeEvent {
   export type InputTuple = [
     trader: AddressLike,
@@ -269,6 +292,31 @@ export namespace TradeEvent {
     protocolFee: bigint;
     tokenOwnerFee: bigint;
     supply: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UserTokenCreatedEvent {
+  export type InputTuple = [
+    owner: AddressLike,
+    tokenAddress: AddressLike,
+    name: string,
+    symbol: string
+  ];
+  export type OutputTuple = [
+    owner: string,
+    tokenAddress: string,
+    name: string,
+    symbol: string
+  ];
+  export interface OutputObject {
+    owner: string;
+    tokenAddress: string;
+    name: string;
+    symbol: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -325,6 +373,12 @@ export interface Pal extends BaseContract {
     "payable"
   >;
 
+  calculateAdditionalTokenOwnerFee: TypedContractMethod<
+    [price: BigNumberish, tokenOwner: AddressLike],
+    [bigint],
+    "view"
+  >;
+
   createToken: TypedContractMethod<
     [name: string, symbol: string],
     [string],
@@ -371,7 +425,11 @@ export interface Pal extends BaseContract {
     "nonpayable"
   >;
 
-  isPalToken: TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
+  isPalUserToken: TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
+
+  membershipToken: TypedContractMethod<[], [string], "view">;
+
+  membershipWeight: TypedContractMethod<[], [bigint], "view">;
 
   owner: TypedContractMethod<[], [string], "view">;
 
@@ -383,6 +441,18 @@ export interface Pal extends BaseContract {
 
   sellToken: TypedContractMethod<
     [tokenAddress: AddressLike, amount: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  setMembershipToken: TypedContractMethod<
+    [_token: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  setMembershipWeight: TypedContractMethod<
+    [_weight: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -423,6 +493,13 @@ export interface Pal extends BaseContract {
     [tokenAddress: AddressLike, amount: BigNumberish],
     [void],
     "payable"
+  >;
+  getFunction(
+    nameOrSignature: "calculateAdditionalTokenOwnerFee"
+  ): TypedContractMethod<
+    [price: BigNumberish, tokenOwner: AddressLike],
+    [bigint],
+    "view"
   >;
   getFunction(
     nameOrSignature: "createToken"
@@ -478,8 +555,14 @@ export interface Pal extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "isPalToken"
+    nameOrSignature: "isPalUserToken"
   ): TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "membershipToken"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "membershipWeight"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
@@ -499,6 +582,12 @@ export interface Pal extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "setMembershipToken"
+  ): TypedContractMethod<[_token: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "setMembershipWeight"
+  ): TypedContractMethod<[_weight: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setProtocolFeeDestination"
   ): TypedContractMethod<[_feeDestination: AddressLike], [void], "nonpayable">;
@@ -530,18 +619,18 @@ export interface Pal extends BaseContract {
     OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
-    key: "TokenCreated"
-  ): TypedContractEvent<
-    TokenCreatedEvent.InputTuple,
-    TokenCreatedEvent.OutputTuple,
-    TokenCreatedEvent.OutputObject
-  >;
-  getEvent(
     key: "Trade"
   ): TypedContractEvent<
     TradeEvent.InputTuple,
     TradeEvent.OutputTuple,
     TradeEvent.OutputObject
+  >;
+  getEvent(
+    key: "UserTokenCreated"
+  ): TypedContractEvent<
+    UserTokenCreatedEvent.InputTuple,
+    UserTokenCreatedEvent.OutputTuple,
+    UserTokenCreatedEvent.OutputObject
   >;
 
   filters: {
@@ -567,17 +656,6 @@ export interface Pal extends BaseContract {
       OwnershipTransferredEvent.OutputObject
     >;
 
-    "TokenCreated(address,address,string,string)": TypedContractEvent<
-      TokenCreatedEvent.InputTuple,
-      TokenCreatedEvent.OutputTuple,
-      TokenCreatedEvent.OutputObject
-    >;
-    TokenCreated: TypedContractEvent<
-      TokenCreatedEvent.InputTuple,
-      TokenCreatedEvent.OutputTuple,
-      TokenCreatedEvent.OutputObject
-    >;
-
     "Trade(address,address,bool,uint256,uint256,uint256,uint256,uint256)": TypedContractEvent<
       TradeEvent.InputTuple,
       TradeEvent.OutputTuple,
@@ -587,6 +665,17 @@ export interface Pal extends BaseContract {
       TradeEvent.InputTuple,
       TradeEvent.OutputTuple,
       TradeEvent.OutputObject
+    >;
+
+    "UserTokenCreated(address,address,string,string)": TypedContractEvent<
+      UserTokenCreatedEvent.InputTuple,
+      UserTokenCreatedEvent.OutputTuple,
+      UserTokenCreatedEvent.OutputObject
+    >;
+    UserTokenCreated: TypedContractEvent<
+      UserTokenCreatedEvent.InputTuple,
+      UserTokenCreatedEvent.OutputTuple,
+      UserTokenCreatedEvent.OutputObject
     >;
   };
 }

@@ -7,7 +7,7 @@ import {
   Input,
   Popup,
 } from "common-dapp-module";
-import PalTokenContract from "../../contract/PalTokenContract.js";
+import PalUserTokenContract from "../../contract/PalUserTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import SupabaseManager from "../../SupabaseManager.js";
@@ -45,7 +45,7 @@ export default class EditTokenInfoPopup extends Popup {
                   button.text = "Saving...";
 
                   try {
-                    await new PalTokenContract(tokenAddress).setName(
+                    await new PalUserTokenContract(tokenAddress).setName(
                       this.tokenNameInput.value,
                     );
                     SupabaseManager.supabase.functions.invoke("get-room", {
@@ -80,7 +80,7 @@ export default class EditTokenInfoPopup extends Popup {
                   button.text = "Saving...";
 
                   try {
-                    await new PalTokenContract(tokenAddress).setSymbol(
+                    await new PalUserTokenContract(tokenAddress).setSymbol(
                       this.tokenSymbolInput.value,
                     );
                     SupabaseManager.supabase.functions.invoke("get-room", {

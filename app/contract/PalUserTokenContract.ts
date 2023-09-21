@@ -1,10 +1,12 @@
 import Contract from "./Contract.js";
-import { PalToken } from "./abi/pal/PalToken.js";
-import PalTokenArtifact from "./abi/pal/PalToken.json" assert { type: "json" };
+import { PalUserToken } from "./abi/pal/PalUserToken.js";
+import PalUserTokenArtifact from "./abi/pal/PalUserToken.json" assert {
+  type: "json",
+};
 
-export default class PalTokenContract extends Contract<PalToken> {
+export default class PalUserTokenContract extends Contract<PalUserToken> {
   constructor(address: string) {
-    super(PalTokenArtifact.abi);
+    super(PalUserTokenArtifact.abi);
     this.init(address);
   }
 

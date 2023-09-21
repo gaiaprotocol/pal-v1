@@ -16,11 +16,14 @@ contract PalUserToken is ERC20Permit, Ownable2Step {
         address owner_,
         string memory name_,
         string memory symbol_
-    ) ERC20Permit("Pal User Token") ERC20(name_, symbol_) {
+    ) ERC20Permit("Pal User Token") ERC20("", "") {
         _pal = msg.sender;
         _name = name_;
         _symbol = symbol_;
         _transferOwnership(owner_);
+
+        emit SetName(name_);
+        emit SetSymbol(symbol_);
     }
 
     function name() public view virtual override returns (string memory) {

@@ -13,7 +13,7 @@ import type {
   ContractRunner,
   ContractMethod,
   Listener,
-} from "ethers";
+} from "https://esm.sh/ethers@6.7.0";
 import type {
   TypedContractEvent,
   TypedDeferredTopicFilter,
@@ -21,13 +21,13 @@ import type {
   TypedLogDescription,
   TypedListener,
   TypedContractMethod,
-} from "../common.js";
+} from "../common.ts";
 
-export interface PalTokenInterface extends Interface {
+export interface PalUserTokenInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "DOMAIN_SEPARATOR"
       | "_pal"
-      | "_pendingOwner"
       | "acceptOwnership"
       | "allowance"
       | "approve"
@@ -35,10 +35,14 @@ export interface PalTokenInterface extends Interface {
       | "burn"
       | "decimals"
       | "decreaseAllowance"
+      | "eip712Domain"
       | "increaseAllowance"
       | "mint"
       | "name"
+      | "nonces"
       | "owner"
+      | "pendingOwner"
+      | "permit"
       | "renounceOwnership"
       | "setName"
       | "setSymbol"
@@ -52,18 +56,19 @@ export interface PalTokenInterface extends Interface {
   getEvent(
     nameOrSignatureOrTopic:
       | "Approval"
-      | "OwnershipTransferProposed"
+      | "EIP712DomainChanged"
+      | "OwnershipTransferStarted"
       | "OwnershipTransferred"
       | "SetName"
       | "SetSymbol"
       | "Transfer"
   ): EventFragment;
 
-  encodeFunctionData(functionFragment: "_pal", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "_pendingOwner",
+    functionFragment: "DOMAIN_SEPARATOR",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "_pal", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "acceptOwnership",
     values?: undefined
@@ -90,6 +95,10 @@ export interface PalTokenInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "eip712Domain",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [AddressLike, BigNumberish]
   ): string;
@@ -98,7 +107,24 @@ export interface PalTokenInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "nonces", values: [AddressLike]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pendingOwner",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "permit",
+    values: [
+      AddressLike,
+      AddressLike,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -123,11 +149,11 @@ export interface PalTokenInterface extends Interface {
     values: [AddressLike]
   ): string;
 
-  decodeFunctionResult(functionFragment: "_pal", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "_pendingOwner",
+    functionFragment: "DOMAIN_SEPARATOR",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "_pal", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "acceptOwnership",
     data: BytesLike
@@ -142,12 +168,22 @@ export interface PalTokenInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "eip712Domain",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pendingOwner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -188,7 +224,17 @@ export namespace ApprovalEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace OwnershipTransferProposedEvent {
+export namespace EIP712DomainChangedEvent {
+  export type InputTuple = [];
+  export type OutputTuple = [];
+  export interface OutputObject {}
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferStartedEvent {
   export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
   export type OutputTuple = [previousOwner: string, newOwner: string];
   export interface OutputObject {
@@ -256,11 +302,11 @@ export namespace TransferEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export interface PalToken extends BaseContract {
-  connect(runner?: ContractRunner | null): PalToken;
+export interface PalUserToken extends BaseContract {
+  connect(runner?: ContractRunner | null): PalUserToken;
   waitForDeployment(): Promise<this>;
 
-  interface: PalTokenInterface;
+  interface: PalUserTokenInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -299,9 +345,9 @@ export interface PalToken extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  _pal: TypedContractMethod<[], [string], "view">;
+  DOMAIN_SEPARATOR: TypedContractMethod<[], [string], "view">;
 
-  _pendingOwner: TypedContractMethod<[], [string], "view">;
+  _pal: TypedContractMethod<[], [string], "view">;
 
   acceptOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -333,6 +379,22 @@ export interface PalToken extends BaseContract {
     "nonpayable"
   >;
 
+  eip712Domain: TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        version: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
+
   increaseAllowance: TypedContractMethod<
     [spender: AddressLike, addedValue: BigNumberish],
     [boolean],
@@ -347,7 +409,25 @@ export interface PalToken extends BaseContract {
 
   name: TypedContractMethod<[], [string], "view">;
 
+  nonces: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+
   owner: TypedContractMethod<[], [string], "view">;
+
+  pendingOwner: TypedContractMethod<[], [string], "view">;
+
+  permit: TypedContractMethod<
+    [
+      owner: AddressLike,
+      spender: AddressLike,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -382,10 +462,10 @@ export interface PalToken extends BaseContract {
   ): T;
 
   getFunction(
-    nameOrSignature: "_pal"
+    nameOrSignature: "DOMAIN_SEPARATOR"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "_pendingOwner"
+    nameOrSignature: "_pal"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "acceptOwnership"
@@ -425,6 +505,23 @@ export interface PalToken extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "eip712Domain"
+  ): TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        version: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "increaseAllowance"
   ): TypedContractMethod<
     [spender: AddressLike, addedValue: BigNumberish],
@@ -442,8 +539,29 @@ export interface PalToken extends BaseContract {
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "nonces"
+  ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+  getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "pendingOwner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "permit"
+  ): TypedContractMethod<
+    [
+      owner: AddressLike,
+      spender: AddressLike,
+      value: BigNumberish,
+      deadline: BigNumberish,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
@@ -485,11 +603,18 @@ export interface PalToken extends BaseContract {
     ApprovalEvent.OutputObject
   >;
   getEvent(
-    key: "OwnershipTransferProposed"
+    key: "EIP712DomainChanged"
   ): TypedContractEvent<
-    OwnershipTransferProposedEvent.InputTuple,
-    OwnershipTransferProposedEvent.OutputTuple,
-    OwnershipTransferProposedEvent.OutputObject
+    EIP712DomainChangedEvent.InputTuple,
+    EIP712DomainChangedEvent.OutputTuple,
+    EIP712DomainChangedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferStarted"
+  ): TypedContractEvent<
+    OwnershipTransferStartedEvent.InputTuple,
+    OwnershipTransferStartedEvent.OutputTuple,
+    OwnershipTransferStartedEvent.OutputObject
   >;
   getEvent(
     key: "OwnershipTransferred"
@@ -532,15 +657,26 @@ export interface PalToken extends BaseContract {
       ApprovalEvent.OutputObject
     >;
 
-    "OwnershipTransferProposed(address,address)": TypedContractEvent<
-      OwnershipTransferProposedEvent.InputTuple,
-      OwnershipTransferProposedEvent.OutputTuple,
-      OwnershipTransferProposedEvent.OutputObject
+    "EIP712DomainChanged()": TypedContractEvent<
+      EIP712DomainChangedEvent.InputTuple,
+      EIP712DomainChangedEvent.OutputTuple,
+      EIP712DomainChangedEvent.OutputObject
     >;
-    OwnershipTransferProposed: TypedContractEvent<
-      OwnershipTransferProposedEvent.InputTuple,
-      OwnershipTransferProposedEvent.OutputTuple,
-      OwnershipTransferProposedEvent.OutputObject
+    EIP712DomainChanged: TypedContractEvent<
+      EIP712DomainChangedEvent.InputTuple,
+      EIP712DomainChangedEvent.OutputTuple,
+      EIP712DomainChangedEvent.OutputObject
+    >;
+
+    "OwnershipTransferStarted(address,address)": TypedContractEvent<
+      OwnershipTransferStartedEvent.InputTuple,
+      OwnershipTransferStartedEvent.OutputTuple,
+      OwnershipTransferStartedEvent.OutputObject
+    >;
+    OwnershipTransferStarted: TypedContractEvent<
+      OwnershipTransferStartedEvent.InputTuple,
+      OwnershipTransferStartedEvent.OutputTuple,
+      OwnershipTransferStartedEvent.OutputObject
     >;
 
     "OwnershipTransferred(address,address)": TypedContractEvent<

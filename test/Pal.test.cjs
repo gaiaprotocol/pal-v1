@@ -89,7 +89,7 @@ describe("Pal Contract", () => {
         "UserToken",
         "UTK",
       )).wait();
-      const userTokenAddress = tx.logs[2].args[1];
+      const userTokenAddress = tx.logs[4].args[1];
       expect(await pal.isPalUserToken(userTokenAddress)).to.equal(true);
     });
   });
@@ -100,7 +100,7 @@ describe("Pal Contract", () => {
         "UserToken",
         "UTK",
       )).wait();
-      const userTokenAddress = tx.logs[2].args[1];
+      const userTokenAddress = tx.logs[4].args[1];
 
       const tx2 = await (await pal.connect(addr1).buyToken(
         userTokenAddress,
@@ -124,7 +124,7 @@ describe("Pal Contract", () => {
         "UserToken",
         "UTK",
       )).wait();
-      const userTokenAddress = tx.logs[2].args[1];
+      const userTokenAddress = tx.logs[4].args[1];
       await pal.connect(addr1).buyToken(
         userTokenAddress,
         ethers.parseEther("100"),
@@ -152,7 +152,7 @@ describe("Pal Contract", () => {
         "UserToken",
         "UTK",
       )).wait();
-      const userTokenAddress = tx.logs[2].args[1];
+      const userTokenAddress = tx.logs[4].args[1];
 
       const tx2 = await (await pal.connect(addr1).buyToken(
         userTokenAddress,
