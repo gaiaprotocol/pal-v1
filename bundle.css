@@ -132,8 +132,8 @@ p {
   --error-color: 147, 0, 10;
   --on-error-color: 255, 218, 214;
   --overlay-hover-color: 0, 0, 0, 0.2;
-  --box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
-  --backdrop-color: 0, 0, 0, 0.2;
+  --box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 3px -1px, rgba(0, 0, 0, 0.2) 0px 2px 2px 0px, rgba(0, 0, 0, 0.18) 0px 2px 4px 0px;
+  --backdrop-color: 128, 128, 128, 0.2;
   --backdrop-filter: blur(2px);
 }
 button.component {
@@ -345,7 +345,7 @@ body {
 @media only screen and (max-width: 859px) {
   .layout {
     padding-left: 0;
-    padding-bottom: 80px;
+    padding-bottom: 72px;
   }
 }
 .layout > header {
@@ -400,7 +400,7 @@ body {
     bottom: 0;
     flex-direction: row;
     width: 100%;
-    height: 80px;
+    height: 72px;
     padding: 0;
     justify-content: center;
   }
@@ -424,6 +424,16 @@ body {
 }
 .layout > nav > a.active {
   color: #fff;
+}
+@media only screen and (max-width: 859px) {
+  .layout > nav > a {
+    width: 72px;
+    height: 72px;
+    font-size: 12px;
+  }
+  .layout > nav > a > .icon {
+    font-size: 24px;
+  }
 }
 .rooms-view {
   height: 100%;
@@ -490,13 +500,20 @@ body {
 @media only screen and (max-width: 859px) {
   .activity-view > .activity-list-container {
     overflow-y: visible;
-    padding-bottom: 0;
+    padding-bottom: 12px;
+    border-right: none;
+    border-bottom: 1px solid #2d2d2d;
   }
 }
 .activity-view > .activity-list-container > h2 {
   font-size: 28px;
   color: #666;
   padding: 16px;
+}
+@media only screen and (max-width: 859px) {
+  .activity-view > .activity-list-container > h2 {
+    font-size: 20px;
+  }
 }
 .explorer-view {
   background-color: #1e1e1e;
@@ -519,13 +536,20 @@ body {
 @media only screen and (max-width: 859px) {
   .explorer-view > .token-list-container {
     overflow-y: visible;
-    padding-bottom: 0;
+    padding-bottom: 12px;
+    border-right: none;
+    border-bottom: 1px solid #2d2d2d;
   }
 }
 .explorer-view > .token-list-container > h2 {
   font-size: 28px;
   color: #666;
   padding: 16px;
+}
+@media only screen and (max-width: 859px) {
+  .explorer-view > .token-list-container > h2 {
+    font-size: 20px;
+  }
 }
 .settings-view {
   background-color: #1e1e1e;
@@ -535,6 +559,11 @@ body {
 }
 .settings-view > h1 {
   font-size: 32px;
+}
+@media only screen and (max-width: 859px) {
+  .settings-view > h1 {
+    font-size: 24px;
+  }
 }
 .settings-view > section {
   margin-top: 20px;
@@ -546,6 +575,11 @@ body {
   font-size: 24px;
   color: #999;
   margin-bottom: 10px;
+}
+@media only screen and (max-width: 859px) {
+  .settings-view > section > h2 {
+    font-size: 20px;
+  }
 }
 .settings-view > section > p {
   color: #999;
@@ -1041,12 +1075,23 @@ body {
 .message-item > .files > .file > a {
   color: var(--link-blue);
   text-decoration: underline;
+  font-size: 12px;
 }
 .message-item > .files > .file > a:focus {
   outline: 1px dotted var(--link-blue);
 }
-.message-item > .files > .file > a > img {
-  height: 32px;
+.message-item > .files > .file .file-size {
+  font-size: 12px;
+  color: #999;
+}
+.message-item > .files > .file > .image-container {
+  margin-top: 5px;
+}
+.message-item > .files > .file > .image-container > a > img {
+  max-width: 200px;
+  max-height: 200px;
+  border: 1px solid #333;
+  border-radius: 22px;
 }
 .message-item > .emojis {
   flex-grow: 1;
@@ -1071,6 +1116,7 @@ body {
   }
 }
 .message-form {
+  position: relative;
   display: flex;
   align-items: center;
   background-color: #252526;
@@ -1113,6 +1159,34 @@ body {
   color: #dcdcdc;
   font-family: NotoSansKR;
   font-size: 15px;
+}
+.message-form > .hiding-message {
+  display: none;
+}
+.message-form.hide > .hiding-message {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #252526;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.message-form.hide > .hiding-message > p {
+  color: #999;
+  padding: 6px;
+}
+@media only screen and (max-width: 859px) {
+  .message-form.hide > .hiding-message > p {
+    font-size: 12px;
+  }
+}
+.message-form.hide > .hiding-message > p > b {
+  color: rgba(var(--primary-color));
+  font-weight: bold;
 }
 .trade-activity-item {
   display: flex;
@@ -1587,10 +1661,21 @@ body {
   gap: 20px;
   align-items: flex-start;
 }
+@media only screen and (max-width: 859px) {
+  .token-info-popup > main {
+    padding: 12px 16px 12px;
+    gap: 12px;
+  }
+}
 .token-info-popup > main > .price-and-fees {
   width: 100%;
   display: flex;
   gap: 20px;
+}
+@media only screen and (max-width: 859px) {
+  .token-info-popup > main > .price-and-fees {
+    gap: 12px;
+  }
 }
 .token-info-popup > main > .price-and-fees > .price-container,
 .token-info-popup > main > .price-and-fees > .fees-container {
@@ -1619,6 +1704,12 @@ body {
   gap: 12px;
   align-items: center;
 }
+@media only screen and (max-width: 859px) {
+  .token-info-popup > main > .trade-info {
+    display: block;
+    width: 100%;
+  }
+}
 .token-info-popup > main > .trade-info > .balance {
   height: 36px;
   border-radius: 18px;
@@ -1630,6 +1721,11 @@ body {
   font-size: 16px;
   color: #e1e1e1;
   gap: 8px;
+}
+@media only screen and (max-width: 859px) {
+  .token-info-popup > main > .trade-info > .balance {
+    width: 100%;
+  }
 }
 .token-info-popup > main > .trade-info > .balance > .profile-image {
   width: 24px;
@@ -1643,6 +1739,19 @@ body {
 }
 .token-info-popup > main > .trade-info > .balance > .balance {
   color: #999;
+}
+.token-info-popup > main > .trade-info > .buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+@media only screen and (max-width: 859px) {
+  .token-info-popup > main > .trade-info > .buttons {
+    margin-top: 12px;
+  }
+  .token-info-popup > main > .trade-info > .buttons > button {
+    flex-grow: 1;
+  }
 }
 .token-info-popup > .tabs {
   border-bottom: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
@@ -1826,6 +1935,9 @@ body {
 }
 .edit-token-info-popup > main > form {
   margin-bottom: 4px;
+}
+.edit-token-info-popup > main > form > .input {
+  margin-bottom: 8px;
 }
 .edit-token-info-popup > main > form > footer {
   padding: 8px 0;
