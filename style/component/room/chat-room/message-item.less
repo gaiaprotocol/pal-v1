@@ -1,22 +1,20 @@
 .message-item {
-    display    : flex;
-    gap        : 5px;
     margin     : 8px;
     font-size  : 15px;
     line-height: 1.6;
     align-items: flex-start;
 
     >.author {
-        display: flex;
-        gap    : 5px;
-        cursor : pointer;
+        cursor      : pointer;
+        margin-right: 5px;
 
         >.profile-image {
             background-color: #fff;
             width           : 20px;
             height          : 20px;
             border-radius   : 5px;
-            margin-top      : 2px;
+            margin-bottom   : -5px;
+            margin-right    : 5px;
         }
 
         >.name {
@@ -26,12 +24,12 @@
     }
 
     >.message {
-        flex-grow: 1;
-        color    : #dcdcdc;
+        color       : #dcdcdc;
+        margin-right: 5px;
     }
 
     >.files {
-        flex-grow: 1;
+        display: inline-block;
 
         >.file {
             >a {
@@ -65,7 +63,8 @@
     }
 
     >.emojis {
-        flex-grow: 1;
+        display     : inline-block;
+        margin-right: 5px;
 
         >.emoji {
             width : 32px;
