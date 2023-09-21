@@ -20,7 +20,13 @@ class TokenInfoCacher extends EventContainer {
           if (
             payload.eventType === "INSERT" || payload.eventType === "UPDATE"
           ) {
-            this.set(payload.new as TokenInfo);
+            this.set({
+              ...payload.new,
+              view_token_required: payload.new.view_token_required?.toString(),
+              write_token_required: payload.new.write_token_required?.toString(),
+              last_fetched_price: payload.new.last_fetched_price?.toString(),
+              trading_fees_earned: payload.new.trading_fees_earned?.toString(),
+            });
           }
         },
       )
@@ -41,12 +47,14 @@ class TokenInfoCacher extends EventContainer {
       return this.tokenInfoMap.get(tokenAddress);
     }
     const { data, error } = await SupabaseManager.supabase.from("pal_tokens")
-      .select().eq("token_address", tokenAddress);
+      .select(
+        Constants.PAL_TOKENS_SELECT_QUERY,
+      ).eq("token_address", tokenAddress);
     if (error) {
       console.error(error);
       return;
     }
-    const tokenInfo = data?.[0];
+    const tokenInfo: TokenInfo | undefined = data?.[0] as any;
     if (!tokenInfo) {
       return;
     }

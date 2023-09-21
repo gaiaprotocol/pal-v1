@@ -68,6 +68,46 @@ end;$$;
 
 ALTER FUNCTION "public"."check_view_granted"("parameter_token_address" "text") OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."check_write_granted"("parameter_token_address" "text") RETURNS boolean
+    LANGUAGE "plpgsql"
+    AS $$begin return auth.role() = 'authenticated'::text
+and (
+   (
+      (
+         SELECT pal_tokens.owner
+         FROM pal_tokens
+         WHERE (pal_tokens.token_address = parameter_token_address)
+      ) = (
+         SELECT user_details.wallet_address
+         FROM user_details
+         WHERE (user_details.id = auth.uid())
+      )
+   )
+   or (
+      (
+         SELECT pal_tokens.write_token_required
+         FROM pal_tokens
+         WHERE (pal_tokens.token_address = parameter_token_address)
+      ) <= (
+         SELECT pal_token_balances.last_fetched_balance
+         FROM pal_token_balances
+         WHERE (
+               (pal_token_balances.token_address = parameter_token_address)
+               AND (
+                  pal_token_balances.wallet_address = (
+                     SELECT user_details.wallet_address
+                     FROM user_details
+                     WHERE (user_details.id = auth.uid())
+                  )
+               )
+            )
+      )
+   )
+);
+end;$$;
+
+ALTER FUNCTION "public"."check_write_granted"("parameter_token_address" "text") OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."decrement_token_favorite_count"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
@@ -103,6 +143,11 @@ CREATE OR REPLACE FUNCTION "public"."increment_trading_fees_earned"() RETURNS "t
       trading_fees_earned = trading_fees_earned + new.args[7]::numeric
     where
       token_address = new.args[2];
+    update user_details
+    set
+      trading_fees_earned = trading_fees_earned + new.args[7]::numeric
+    where
+      wallet_address = new.args[1];
   END IF;
   return null;
 end;$$;
@@ -235,7 +280,7 @@ CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "view_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
-    "last_fetched_price" numeric DEFAULT '0'::numeric NOT NULL,
+    "last_fetched_price" numeric DEFAULT '68750000000000'::numeric NOT NULL,
     "last_message_sent_at" timestamp with time zone,
     "hiding" boolean DEFAULT false NOT NULL,
     "trading_fees_earned" numeric DEFAULT '0'::numeric NOT NULL,
@@ -270,7 +315,8 @@ CREATE TABLE IF NOT EXISTS "public"."user_details" (
     "wallet_address" "text",
     "metadata" "jsonb" DEFAULT '{}'::"jsonb" NOT NULL,
     "profile_image" "text",
-    "display_name" "text"
+    "display_name" "text",
+    "trading_fees_earned" numeric DEFAULT '0'::numeric NOT NULL
 );
 
 ALTER TABLE "public"."user_details" OWNER TO "postgres";
@@ -385,6 +431,10 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "anon";
 GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."check_write_granted"("parameter_token_address" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."check_write_granted"("parameter_token_address" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."check_write_granted"("parameter_token_address" "text") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."decrement_token_favorite_count"() TO "anon";
 GRANT ALL ON FUNCTION "public"."decrement_token_favorite_count"() TO "authenticated";

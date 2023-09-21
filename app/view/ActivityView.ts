@@ -48,34 +48,41 @@ export default class ActivityView extends View {
         walletAddresses: [UserManager.userWalletAddress],
       });
       this.loadTokens();
+    } else {
+      this.yoursActivityList.loaded();
+      this.yourTokensActivityList.loaded();
     }
   }
 
   private async loadTokens(): Promise<void> {
-    const { data, error } = await SupabaseManager.supabase.from(
-      "pal_tokens",
-    ).select(Constants.PAL_TOKENS_SELECT_QUERY).eq(
-      "owner",
-      UserManager.userWalletAddress,
-    );
-    if (data) {
-      const tokenAddresses = [];
-      for (const token of data as any) {
-        tokenAddresses.push(token.token_address);
-      }
-      this.yourTokensActivityList.load({
-        tokenAddresses,
-      });
-
-      TokenInfoCacher.cache(data as any);
-      SupabaseManager.supabase.functions.invoke(
-        "refresh-token-prices-and-balances",
-        {
-          body: {
-            tokenAddresses: data.map((token: any) => token.token_address),
-          },
-        },
+    if (UserManager.userWalletAddress) {
+      const { data, error } = await SupabaseManager.supabase.from(
+        "pal_tokens",
+      ).select(Constants.PAL_TOKENS_SELECT_QUERY).eq(
+        "owner",
+        UserManager.userWalletAddress,
       );
+      if (data) {
+        const tokenAddresses = [];
+        for (const token of data as any) {
+          tokenAddresses.push(token.token_address);
+        }
+        this.yourTokensActivityList.load({
+          tokenAddresses,
+        });
+
+        TokenInfoCacher.cache(data as any);
+        SupabaseManager.supabase.functions.invoke(
+          "refresh-token-prices-and-balances",
+          {
+            body: {
+              tokenAddresses: data.map((token: any) => token.token_address),
+            },
+          },
+        );
+      }
+    } else {
+      this.yourTokensActivityList.loaded();
     }
   }
 

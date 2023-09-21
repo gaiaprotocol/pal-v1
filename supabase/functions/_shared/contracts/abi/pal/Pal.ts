@@ -56,6 +56,11 @@ export interface PalInterface extends Interface {
     nameOrSignatureOrTopic:
       | "Initialized"
       | "OwnershipTransferred"
+      | "SetMembershipToken"
+      | "SetMembershipWeight"
+      | "SetProtocolFeeDestination"
+      | "SetProtocolFeePercent"
+      | "SetTokenOwnerFeePercent"
       | "Trade"
       | "UserTokenCreated"
   ): EventFragment;
@@ -255,6 +260,66 @@ export namespace OwnershipTransferredEvent {
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace SetMembershipTokenEvent {
+  export type InputTuple = [token: AddressLike];
+  export type OutputTuple = [token: string];
+  export interface OutputObject {
+    token: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace SetMembershipWeightEvent {
+  export type InputTuple = [weight: BigNumberish];
+  export type OutputTuple = [weight: bigint];
+  export interface OutputObject {
+    weight: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace SetProtocolFeeDestinationEvent {
+  export type InputTuple = [destination: AddressLike];
+  export type OutputTuple = [destination: string];
+  export interface OutputObject {
+    destination: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace SetProtocolFeePercentEvent {
+  export type InputTuple = [percent: BigNumberish];
+  export type OutputTuple = [percent: bigint];
+  export interface OutputObject {
+    percent: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace SetTokenOwnerFeePercentEvent {
+  export type InputTuple = [percent: BigNumberish];
+  export type OutputTuple = [percent: bigint];
+  export interface OutputObject {
+    percent: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -619,6 +684,41 @@ export interface Pal extends BaseContract {
     OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
+    key: "SetMembershipToken"
+  ): TypedContractEvent<
+    SetMembershipTokenEvent.InputTuple,
+    SetMembershipTokenEvent.OutputTuple,
+    SetMembershipTokenEvent.OutputObject
+  >;
+  getEvent(
+    key: "SetMembershipWeight"
+  ): TypedContractEvent<
+    SetMembershipWeightEvent.InputTuple,
+    SetMembershipWeightEvent.OutputTuple,
+    SetMembershipWeightEvent.OutputObject
+  >;
+  getEvent(
+    key: "SetProtocolFeeDestination"
+  ): TypedContractEvent<
+    SetProtocolFeeDestinationEvent.InputTuple,
+    SetProtocolFeeDestinationEvent.OutputTuple,
+    SetProtocolFeeDestinationEvent.OutputObject
+  >;
+  getEvent(
+    key: "SetProtocolFeePercent"
+  ): TypedContractEvent<
+    SetProtocolFeePercentEvent.InputTuple,
+    SetProtocolFeePercentEvent.OutputTuple,
+    SetProtocolFeePercentEvent.OutputObject
+  >;
+  getEvent(
+    key: "SetTokenOwnerFeePercent"
+  ): TypedContractEvent<
+    SetTokenOwnerFeePercentEvent.InputTuple,
+    SetTokenOwnerFeePercentEvent.OutputTuple,
+    SetTokenOwnerFeePercentEvent.OutputObject
+  >;
+  getEvent(
     key: "Trade"
   ): TypedContractEvent<
     TradeEvent.InputTuple,
@@ -654,6 +754,61 @@ export interface Pal extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "SetMembershipToken(address)": TypedContractEvent<
+      SetMembershipTokenEvent.InputTuple,
+      SetMembershipTokenEvent.OutputTuple,
+      SetMembershipTokenEvent.OutputObject
+    >;
+    SetMembershipToken: TypedContractEvent<
+      SetMembershipTokenEvent.InputTuple,
+      SetMembershipTokenEvent.OutputTuple,
+      SetMembershipTokenEvent.OutputObject
+    >;
+
+    "SetMembershipWeight(uint256)": TypedContractEvent<
+      SetMembershipWeightEvent.InputTuple,
+      SetMembershipWeightEvent.OutputTuple,
+      SetMembershipWeightEvent.OutputObject
+    >;
+    SetMembershipWeight: TypedContractEvent<
+      SetMembershipWeightEvent.InputTuple,
+      SetMembershipWeightEvent.OutputTuple,
+      SetMembershipWeightEvent.OutputObject
+    >;
+
+    "SetProtocolFeeDestination(address)": TypedContractEvent<
+      SetProtocolFeeDestinationEvent.InputTuple,
+      SetProtocolFeeDestinationEvent.OutputTuple,
+      SetProtocolFeeDestinationEvent.OutputObject
+    >;
+    SetProtocolFeeDestination: TypedContractEvent<
+      SetProtocolFeeDestinationEvent.InputTuple,
+      SetProtocolFeeDestinationEvent.OutputTuple,
+      SetProtocolFeeDestinationEvent.OutputObject
+    >;
+
+    "SetProtocolFeePercent(uint256)": TypedContractEvent<
+      SetProtocolFeePercentEvent.InputTuple,
+      SetProtocolFeePercentEvent.OutputTuple,
+      SetProtocolFeePercentEvent.OutputObject
+    >;
+    SetProtocolFeePercent: TypedContractEvent<
+      SetProtocolFeePercentEvent.InputTuple,
+      SetProtocolFeePercentEvent.OutputTuple,
+      SetProtocolFeePercentEvent.OutputObject
+    >;
+
+    "SetTokenOwnerFeePercent(uint256)": TypedContractEvent<
+      SetTokenOwnerFeePercentEvent.InputTuple,
+      SetTokenOwnerFeePercentEvent.OutputTuple,
+      SetTokenOwnerFeePercentEvent.OutputObject
+    >;
+    SetTokenOwnerFeePercent: TypedContractEvent<
+      SetTokenOwnerFeePercentEvent.InputTuple,
+      SetTokenOwnerFeePercentEvent.OutputTuple,
+      SetTokenOwnerFeePercentEvent.OutputObject
     >;
 
     "Trade(address,address,bool,uint256,uint256,uint256,uint256,uint256)": TypedContractEvent<

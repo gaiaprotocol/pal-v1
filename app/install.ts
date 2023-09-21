@@ -1,4 +1,4 @@
-import { msg, Router } from "common-dapp-module";
+import { ErrorAlert, msg, Router } from "common-dapp-module";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
 import BlockTimeCacher from "./cacher/BlockTimeCacher.js";
@@ -59,4 +59,18 @@ export default async function install() {
     "settings",
     "0x{tokenAddress}",
   ]);
+
+  const params = new URLSearchParams(location.search);
+  let errorDiscription = params.get("error_description")!;
+  if (errorDiscription) {
+    if (
+      errorDiscription === "Error getting user email from external provider"
+    ) {
+      errorDiscription += ".\nPlease add an email in your X account settings and allow email access.";
+    }
+    new ErrorAlert({
+      title: "Error",
+      message: errorDiscription,
+    });
+  }
 }

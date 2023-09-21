@@ -91,6 +91,7 @@ export default class SellTokenPopup extends Popup {
                     ethers.parseEther(this.amountInput.value),
                   );
 
+                  SupabaseManager.supabase.functions.invoke("track-events");
                   SupabaseManager.supabase.functions.invoke(
                     "refresh-token-prices-and-balances",
                     {

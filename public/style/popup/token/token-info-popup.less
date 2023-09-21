@@ -83,10 +83,19 @@
         gap           : 20px;
         align-items   : flex-start;
 
+        @media @phone {
+            padding: 12px 16px 12px;
+            gap    : 12px;
+        }
+
         >.price-and-fees {
             width  : 100%;
             display: flex;
             gap    : 20px;
+
+            @media @phone {
+                gap: 12px;
+            }
 
             >.price-container,
             >.fees-container {
@@ -116,6 +125,11 @@
             gap        : 12px;
             align-items: center;
 
+            @media @phone {
+                display: block;
+                width  : 100%;
+            }
+
             >.balance {
                 height          : 36px;
                 border-radius   : 18px;
@@ -127,6 +141,10 @@
                 font-size       : 16px;
                 color           : #e1e1e1;
                 gap             : 8px;
+
+                @media @phone {
+                    width: 100%;
+                }
 
                 >.profile-image {
                     width        : 24px;
@@ -142,6 +160,20 @@
 
                 >.balance {
                     color: #999;
+                }
+            }
+
+            >.buttons {
+                display    : flex;
+                gap        : 12px;
+                align-items: center;
+
+                @media @phone {
+                    margin-top: 12px;
+
+                    >button {
+                        flex-grow: 1;
+                    }
                 }
             }
         }

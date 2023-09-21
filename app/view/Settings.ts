@@ -71,16 +71,8 @@ export default class Settings extends View {
           "p",
           "Linked to: ",
           el("a", UserManager.user?.user_metadata.full_name, {
-            click: async () => {
-              if (UserManager.userWalletAddress) {
-                const tokenOwner = await UserDetailsCacher.get(
-                  UserManager.userWalletAddress,
-                );
-                if (tokenOwner) {
-                  new UserInfoPopup(tokenOwner);
-                }
-              }
-            },
+            href: `https://x.com/${xUsername}`,
+            target: "_blank",
           }),
         ),
         new Button({

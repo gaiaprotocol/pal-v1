@@ -87,6 +87,7 @@ export default class BuyTokenPopup extends Popup {
                     this.totalPrice,
                   );
 
+                  SupabaseManager.supabase.functions.invoke("track-events");
                   SupabaseManager.supabase.functions.invoke(
                     "refresh-token-prices-and-balances",
                     {

@@ -89,6 +89,10 @@ export default class ActivityList extends DomNode {
     }
   }
 
+  public loaded() {
+    this.loadingComponent?.delete();
+  }
+
   public active(): void {
     this.addClass("active");
   }

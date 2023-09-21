@@ -6,6 +6,9 @@ import MessageList from "./chatroom/MessageList.js";
 export default class ChatRoom extends DomNode {
   private messageForm: MessageForm | undefined;
 
+  private toFocusForm: boolean = false;
+  private toHideForm: boolean = false;
+
   constructor() {
     super(".chat-room");
   }
@@ -29,6 +32,16 @@ export default class ChatRoom extends DomNode {
       list = new MessageList(tokenAddress),
       this.messageForm = new MessageForm(list),
     );
+
+    if (this.toFocusForm) {
+      this.messageForm.focus();
+      this.toFocusForm = false;
+    }
+
+    if (this.toHideForm) {
+      this.messageForm.hide();
+      this.toHideForm = false;
+    }
   }
 
   public active(): void {
@@ -40,6 +53,26 @@ export default class ChatRoom extends DomNode {
   }
 
   public focusMessageForm(): void {
-    this.messageForm?.focus();
+    if (this.messageForm) {
+      this.messageForm.focus();
+    } else {
+      this.toFocusForm = true;
+    }
+  }
+
+  public hideMessageForm(): void {
+    if (this.messageForm) {
+      this.messageForm.hide();
+    } else {
+      this.toHideForm = true;
+    }
+  }
+
+  public showMessageForm(): void {
+    if (this.messageForm) {
+      this.messageForm.show();
+    } else {
+      this.toHideForm = false;
+    }
   }
 }

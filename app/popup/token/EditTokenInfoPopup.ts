@@ -7,9 +7,10 @@ import {
   Input,
   Popup,
 } from "common-dapp-module";
+import { ethers } from "ethers";
+import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import PalUserTokenContract from "../../contract/PalUserTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
-import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserManager from "../../user/UserManager.js";
 
@@ -19,6 +20,8 @@ export default class EditTokenInfoPopup extends Popup {
   private tokenNameInput: Input;
   private tokenSymbolInput: Input;
   private tokenDescriptionInput: Input;
+  private viewTokenRequiredInput: Input;
+  private writeTokenRequiredInput: Input;
 
   private currentTokenMetadata: any;
 
@@ -108,6 +111,16 @@ export default class EditTokenInfoPopup extends Popup {
               placeholder: "Description",
               multiline: true,
             }),
+            this.viewTokenRequiredInput = new Input({
+              label: "View Token Required",
+              placeholder: "View Token Required",
+              required: true,
+            }),
+            this.writeTokenRequiredInput = new Input({
+              label: "Write Token Required",
+              placeholder: "Write Token Required",
+              required: true,
+            }),
             el(
               "footer",
               new Button({
@@ -121,6 +134,12 @@ export default class EditTokenInfoPopup extends Popup {
 
                     await SupabaseManager.supabase.from("pal_tokens").update({
                       metadata,
+                      view_token_required: ethers.parseEther(
+                        this.viewTokenRequiredInput.value,
+                      ).toString(),
+                      write_token_required: ethers.parseEther(
+                        this.writeTokenRequiredInput.value,
+                      ).toString(),
                     }).eq("token_address", tokenAddress);
                   } catch (error) {
                     console.error(error);
@@ -159,6 +178,13 @@ export default class EditTokenInfoPopup extends Popup {
     this.tokenNameInput.value = tokenInfo.name;
     this.tokenSymbolInput.value = tokenInfo.symbol;
     this.tokenDescriptionInput.value = tokenInfo.metadata.description ?? "";
+    this.viewTokenRequiredInput.value = ethers.formatEther(
+      tokenInfo.view_token_required,
+    );
+    this.writeTokenRequiredInput.value = ethers.formatEther(
+      tokenInfo.write_token_required,
+    );
+
     this.currentTokenMetadata = tokenInfo.metadata;
   }
 }

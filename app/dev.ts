@@ -3,6 +3,8 @@ import Config from "./Config.js";
 import SupabaseManager from "./SupabaseManager.js";
 import install from "./install.js";
 
+Config.devMode = true;
+
 /*Config.devMode = true;
 Config.supabaseURL = "http://localhost:54321";
 Config.supabaseAnonKey =

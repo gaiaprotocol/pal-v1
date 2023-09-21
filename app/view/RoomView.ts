@@ -74,7 +74,7 @@ export default class RoomView extends View {
       }, async () => {
         await UserManager.signIn();
         this.loadRoomInfo(tokenAddress);
-      });
+      }, async () => history.back());
     } else if (!UserManager.userWalletAddress) {
       new Confirm({
         title: "Connect Wallet",
@@ -82,7 +82,7 @@ export default class RoomView extends View {
       }, async () => {
         await UserManager.connectWallet();
         this.loadRoomInfo(tokenAddress);
-      });
+      }, async () => history.back());
     } else {
       const loading = new RoomLoading().appendTo(this.container);
 
@@ -112,6 +112,7 @@ export default class RoomView extends View {
 
       const [formShowing] = await Promise.all([
         this.tokenPurchaseForm.check(tokenAddress),
+        this.checkWritePermission(tokenAddress),
         this.chatRoom.loadMessages(tokenAddress),
       ]);
 
@@ -120,6 +121,20 @@ export default class RoomView extends View {
       }
 
       if (!this.closed) loading.delete();
+    }
+  }
+
+  private async checkWritePermission(tokenAddress: string) {
+    const { data, error } = await SupabaseManager.supabase.rpc(
+      "check_write_granted",
+      {
+        parameter_token_address: tokenAddress,
+      },
+    );
+    if (!error && data !== true) {
+      this.chatRoom.hideMessageForm();
+    } else {
+      this.chatRoom.showMessageForm();
     }
   }
 

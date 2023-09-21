@@ -87,24 +87,27 @@ export default class TokenInfoPopup extends Popup {
               el("label", "Your Balance"),
               this.balanceDisplay = el("span.balance.loading"),
             ),
-            new Button({
-              title: "Buy",
-              click: async () => {
-                if (!WalletManager.connected) {
-                  await WalletManager.connect();
-                }
-                new BuyTokenPopup(tokenAddress);
-              },
-            }),
-            new Button({
-              title: "Sell",
-              click: async () => {
-                if (!WalletManager.connected) {
-                  await WalletManager.connect();
-                }
-                new SellTokenPopup(tokenAddress);
-              },
-            }),
+            el(
+              ".buttons",
+              new Button({
+                title: "Buy",
+                click: async () => {
+                  if (!WalletManager.connected) {
+                    await WalletManager.connect();
+                  }
+                  new BuyTokenPopup(tokenAddress);
+                },
+              }),
+              new Button({
+                title: "Sell",
+                click: async () => {
+                  if (!WalletManager.connected) {
+                    await WalletManager.connect();
+                  }
+                  new SellTokenPopup(tokenAddress);
+                },
+              }),
+            ),
           ),
         ),
         tabs = new Tabs([

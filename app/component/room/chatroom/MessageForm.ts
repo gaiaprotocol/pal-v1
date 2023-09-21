@@ -1,9 +1,14 @@
 import { Button, DomNode, el } from "common-dapp-module";
+import { ethers } from "ethers";
 import { v4 as uuidv4 } from "uuid";
 import SupabaseManager from "../../../SupabaseManager.js";
+import TokenInfoCacher from "../../../cacher/TokenInfoCacher.js";
+import UserDetailsCacher from "../../../cacher/UserDetailsCacher.js";
 import { MessageType, UploadedFile } from "../../../data/ChatMessage.js";
 import SelectEmojiPopup from "../../../popup/SelectEmojiPopup.js";
+import BuyTokenPopup from "../../../popup/token/BuyTokenPopup.js";
 import UserManager from "../../../user/UserManager.js";
+import WalletManager from "../../../user/WalletManager.js";
 import Icon from "../../Icon.js";
 import MessageList from "./MessageList.js";
 
@@ -12,6 +17,7 @@ export default class MessageForm extends DomNode {
   private uploadInput: DomNode<HTMLInputElement>;
   private uploadButton: DomNode<HTMLButtonElement>;
   private messageInput: DomNode<HTMLInputElement>;
+  private hidingMessage: DomNode;
 
   constructor(private list: MessageList) {
     super(".message-form");
@@ -50,6 +56,9 @@ export default class MessageForm extends DomNode {
             this.sendMessage();
           },
         },
+      ),
+      this.hidingMessage = el(
+        "p.hiding-message",
       ),
     );
   }
@@ -253,5 +262,35 @@ export default class MessageForm extends DomNode {
 
   public focus(): void {
     this.messageInput.domElement.focus();
+  }
+
+  public async hide() {
+    this.addClass("hide");
+
+    const tokenInfo = await TokenInfoCacher.get(this.list.tokenAddress);
+    if (tokenInfo) {
+      const tokenOwner = await UserDetailsCacher.get(tokenInfo.owner);
+      this.hidingMessage.empty().append(
+        el(
+          "p",
+          "Hold at least ",
+          el("b", ethers.formatEther(tokenInfo.write_token_required)),
+          ` ${tokenInfo.symbol} to send messages. This was set by ${tokenOwner?.display_name}.`,
+        ),
+        new Button({
+          title: "Buy",
+          click: async () => {
+            if (!WalletManager.connected) {
+              await WalletManager.connect();
+            }
+            new BuyTokenPopup(this.list.tokenAddress);
+          },
+        }),
+      );
+    }
+  }
+
+  public show(): void {
+    this.deleteClass("hide");
   }
 }

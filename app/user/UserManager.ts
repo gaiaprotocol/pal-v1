@@ -93,6 +93,9 @@ class UserManager extends EventContainer {
   public async signIn() {
     await SupabaseManager.supabase.auth.signInWithOAuth({
       provider: "twitter",
+      options: Config.devMode === true ? {
+        redirectTo: "http://localhost:8413/",
+      } : undefined,
     });
   }
 
@@ -105,11 +108,43 @@ class UserManager extends EventContainer {
     });
   }
 
-  public createToken() {
+  private async checkChain() {
+    if (!this.user) {
+      this.signIn();
+      return { checked: false };
+    }
+
+    if (WalletManager.connected !== true) {
+      WalletManager.connect();
+      return { checked: false };
+    }
+
+    const walletClient = await getWalletClient();
+    if (!walletClient) return { checked: false };
+    const { account, transport } = walletClient;
+    if (account.address !== this.userWalletAddress) {
+      if (!this.userWalletAddress) {
+        this.connectWallet();
+      } else {
+        new ChangeWalletAddressPopup(this.userWalletAddress);
+      }
+      return { checked: false };
+    }
+
     const { chain } = getNetwork();
-    if (chain?.id !== Config.palChainId) {
+    if (!chain) return { checked: false };
+
+    if (chain.id !== Config.palChainId) {
       new ChangeChainPopup();
-    } else {
+      return { checked: false };
+    }
+
+    return { checked: true, chain, account, transport };
+  }
+
+  public async createToken() {
+    const { checked } = await this.checkChain();
+    if (checked) {
       new CreateTokenPopup();
     }
   }
@@ -125,40 +160,16 @@ class UserManager extends EventContainer {
   }
 
   public async getSigner() {
-    if (!this.user) this.signIn();
-
-    if (WalletManager.connected !== true) {
-      WalletManager.connect();
-      return;
+    const { checked, chain, account, transport } = await this.checkChain();
+    if (checked && chain && account && transport) {
+      const network = {
+        chainId: chain.id,
+        name: chain.name,
+        ensAddress: chain.contracts?.ensRegistry?.address,
+      };
+      const provider = new BrowserProvider(transport, network);
+      return new JsonRpcSigner(provider, account.address);
     }
-
-    const walletClient = await getWalletClient();
-    if (!walletClient) return;
-    const { account, transport } = walletClient;
-    if (account.address !== this.userWalletAddress) {
-      if (!this.userWalletAddress) {
-        this.connectWallet();
-      } else {
-        new ChangeWalletAddressPopup(this.userWalletAddress);
-      }
-      return;
-    }
-
-    const { chain } = getNetwork();
-    if (!chain) return;
-
-    if (chain.id !== Config.palChainId) {
-      new ChangeChainPopup();
-      return;
-    }
-
-    const network = {
-      chainId: chain.id,
-      name: chain.name,
-      ensAddress: chain.contracts?.ensRegistry?.address,
-    };
-    const provider = new BrowserProvider(transport, network);
-    return new JsonRpcSigner(provider, account.address);
   }
 }
 

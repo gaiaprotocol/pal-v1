@@ -9,6 +9,7 @@ import {
   Router,
   WarningMessageBox,
 } from "common-dapp-module";
+import { ethers } from "ethers";
 import PalContract from "../../contract/PalContract.js";
 import SupabaseManager from "../../SupabaseManager.js";
 import UserManager from "../../user/UserManager.js";
@@ -19,6 +20,8 @@ export default class CreateTokenPopup extends Popup {
   private tokenNameInput: Input;
   private tokenSymbolInput: Input;
   private tokenDescriptionInput: Input;
+  private viewTokenRequiredInput: Input;
+  private writeTokenRequiredInput: Input;
 
   constructor() {
     super({ barrierDismissible: true });
@@ -49,6 +52,18 @@ export default class CreateTokenPopup extends Popup {
               placeholder: "Description",
               multiline: true,
             }),
+            this.viewTokenRequiredInput = new Input({
+              label: "View Token Required",
+              placeholder: "View Token Required",
+              required: true,
+              value: "1",
+            }),
+            this.writeTokenRequiredInput = new Input({
+              label: "Write Token Required",
+              placeholder: "Write Token Required",
+              required: true,
+              value: "1",
+            }),
           ),
         ),
         el(
@@ -73,6 +88,8 @@ export default class CreateTokenPopup extends Popup {
                   this.tokenSymbolInput.value,
                 );
 
+                SupabaseManager.supabase.functions.invoke("track-events");
+
                 if (tokenAddress) {
                   const { data, error } = await SupabaseManager.supabase
                     .functions
@@ -84,6 +101,12 @@ export default class CreateTokenPopup extends Popup {
                           metadata: {
                             description: this.tokenDescriptionInput.value,
                           },
+                          viewTokenRequired: ethers.parseEther(
+                            this.viewTokenRequiredInput.value,
+                          ).toString(),
+                          writeTokenRequired: ethers.parseEther(
+                            this.writeTokenRequiredInput.value,
+                          ).toString(),
                         },
                       },
                     );
@@ -95,8 +118,6 @@ export default class CreateTokenPopup extends Popup {
                   }
 
                   UserManager.setSignedUserTokenAddress(tokenAddress);
-
-                  SupabaseManager.supabase.functions.invoke("track-events");
 
                   this.delete();
                   Router.go("/" + tokenAddress);

@@ -54,6 +54,12 @@ export default class Rooms extends View {
         this.favoriteRooms.findItem(tokenAddress)?.delete();
       },
     );
+
+    this.container.onDelegate(
+      UserManager,
+      "userTokenChanged",
+      () => this.loadMyTokenRooms(),
+    );
   }
 
   private async loadRooms() {
@@ -110,6 +116,7 @@ export default class Rooms extends View {
         return data as any;
       }
     }
+    this.favoriteRooms.loaded();
     return [];
   }
 

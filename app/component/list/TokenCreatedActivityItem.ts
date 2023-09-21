@@ -31,14 +31,7 @@ export default class TokenCreatedActivityItem extends DomNode {
           this.ownerNameDisplay = el("a.name"),
           " created a token ",
           this.nameDisplay = el("a.name", {
-            click: async () => {
-              const userInfo = await UserDetailsCacher.get(activity.owner);
-              if (userInfo) {
-                new UserInfoPopup(userInfo);
-              } else {
-                new ErrorAlert({ title: "Error", message: "User not found" });
-              }
-            },
+            click: () => new TokenInfoPopup(activity.address),
           }),
           " (",
           this.symbolDisplay = el("a.symbol", {

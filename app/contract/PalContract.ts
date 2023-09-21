@@ -22,11 +22,11 @@ class PalContract extends Contract<Pal> {
       throw new Error("Transaction failed");
     }
     for (const log of tx.logs) {
-      if (log instanceof EventLog && log.fragment.name === "TokenCreated") {
+      if (log instanceof EventLog && log.fragment.name === "UserTokenCreated") {
         return log.args[1];
       }
     }
-    throw new Error("TokenCreated event not found");
+    throw new Error("UserTokenCreated event not found");
   }
 
   public async getBuyPrice(tokenAddress: string, amount: bigint) {

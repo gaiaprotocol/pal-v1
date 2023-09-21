@@ -31,10 +31,11 @@ export default class Layout extends View {
           "header",
           el(
             "a.logo",
-            el("img", { src: "/images/logo.png" }, {
-              click: () => Router.go("/"),
-            }),
+            el("img", { src: "/images/logo.png" }),
             el("span.beta", "beta"),
+            {
+              click: () => Router.go("/"),
+            },
           ),
           new UserSummary(),
         ),

@@ -42,6 +42,7 @@ serveWithOptions(async (req) => {
         symbol: tokenInfo.symbol,
         owner: tokenInfo.owner,
         last_fetched_price: tokenInfo.price.toString(),
+        metadata,
       }).select();
 
       if (error) {

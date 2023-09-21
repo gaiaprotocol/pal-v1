@@ -50,11 +50,13 @@ export default class MessageItem extends DomNode {
             " ",
             el("span.file-size", `(${file.fileSize} bytes)`),
             ...(!file.thumbnailURL ? [] : [
-              "\n",
-              el("a", el("img", { src: file.thumbnailURL }), {
-                href: file.url,
-                target: "_blank",
-              }),
+              el(
+                ".image-container",
+                el("a", el("img", { src: file.thumbnailURL }), {
+                  href: file.url,
+                  target: "_blank",
+                }),
+              ),
             ]),
           )
         ),
