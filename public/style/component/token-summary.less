@@ -36,6 +36,13 @@
         font-weight  : bold;
         border-right : 1px solid #6e6e6e;
         padding-right: 8px;
+
+        @media @phone {
+            max-width    : 100px;
+            white-space  : nowrap;
+            text-overflow: ellipsis;
+            overflow     : hidden;
+        }
     }
 
     >.price {

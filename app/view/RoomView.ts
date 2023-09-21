@@ -55,6 +55,7 @@ export default class RoomView extends View {
         top: `${window.visualViewport!.offsetTop}px`,
         height: `${window.visualViewport!.height}px`,
       });
+      this.chatRoom.scrollToBottom();
     }
   };
 

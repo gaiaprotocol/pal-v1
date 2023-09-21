@@ -42,20 +42,27 @@ export default class MessageItem extends DomNode {
   }) {
     if (rich.files) {
       return el(
-        "div.files",
+        ".files",
         ...rich.files.map((file) =>
           el(
-            "div.file",
+            ".file",
             el("a", { href: file.url, target: "_blank" }, file.fileName),
             " ",
             el("span.file-size", `(${file.fileSize} bytes)`),
             ...(!file.thumbnailURL ? [] : [
               el(
                 ".image-container",
-                el("a", el("img", { src: file.thumbnailURL }), {
-                  href: file.url,
-                  target: "_blank",
-                }),
+                el(
+                  "a",
+                  el("img", {
+                    src: file.thumbnailURL,
+                    load: () => this.fireEvent("uploadImageLoaded"),
+                  }),
+                  {
+                    href: file.url,
+                    target: "_blank",
+                  },
+                ),
               ),
             ]),
           )
@@ -64,7 +71,7 @@ export default class MessageItem extends DomNode {
     }
     if (rich.emojis) {
       return el(
-        "div.emojis",
+        ".emojis",
         ...rich.emojis.map((emoji) =>
           el("img.emoji", {
             src: OpenMoji.getEmojiURL(emoji.substring(emoji.indexOf(":") + 1)),

@@ -35,7 +35,9 @@ export default class MessageList extends DomNode {
   private async loadMessages() {
     this.items = [];
 
-    const { data, error } = await SupabaseManager.supabase.from("token_chat_messages")
+    const { data, error } = await SupabaseManager.supabase.from(
+      "token_chat_messages",
+    )
       .select()
       .eq("token_address", this.tokenAddress)
       .order("created_at", { ascending: false })
@@ -53,12 +55,10 @@ export default class MessageList extends DomNode {
   public add(message: ChatMessage): MessageItem {
     const item = new MessageItem(message).appendTo(this.list);
     this.items.push(item);
+    item.on("uploadImageLoaded", () => this.scrollToBottom());
     item.on("delete", () => ArrayUtil.pull(this.items, item));
 
-    this.domElement.scrollTo(
-      0,
-      this.domElement.scrollHeight,
-    );
+    this.scrollToBottom();
 
     return item;
   }
@@ -68,6 +68,13 @@ export default class MessageList extends DomNode {
     for (const message of messages) {
       this.add(message);
     }
+  }
+
+  public scrollToBottom() {
+    this.domElement.scrollTo(
+      0,
+      this.domElement.scrollHeight,
+    );
   }
 
   public delete() {

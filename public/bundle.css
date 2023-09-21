@@ -1,3 +1,6 @@
+/*!***********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../common-style/lib/reset.css ***!
+  \***********************************************************************************************************/
 /***
     The new CSS reset - version 1.8.4 (last updated 14.2.2023)
     GitHub page: https://github.com/elad2412/the-new-css-reset
@@ -97,6 +100,9 @@ meter {
 :where(dialog:modal) {
     all: revert;
 }
+/*!*********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/less-loader/dist/cjs.js!./public/style/main.less ***!
+  \*********************************************************************************************************************************************/
 @font-face {
   font-family: 'Noto Sans';
   font-style: normal;
@@ -709,6 +715,14 @@ body {
   border-right: 1px solid #6e6e6e;
   padding-right: 8px;
 }
+@media only screen and (max-width: 859px) {
+  .token-summary > .symbol {
+    max-width: 100px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
 .token-summary > .price {
   color: #999;
 }
@@ -930,6 +944,7 @@ body {
 @media only screen and (max-width: 859px) {
   .room-title-bar {
     padding: 0 12px;
+    gap: 12px;
     background-color: #530087;
   }
 }
@@ -1042,35 +1057,34 @@ body {
   overflow-y: scroll;
 }
 .message-item {
-  display: flex;
-  gap: 5px;
   margin: 8px;
   font-size: 15px;
   line-height: 1.6;
   align-items: flex-start;
 }
 .message-item > .author {
-  display: flex;
-  gap: 5px;
   cursor: pointer;
+  margin-right: 5px;
 }
 .message-item > .author > .profile-image {
   background-color: #fff;
   width: 20px;
   height: 20px;
   border-radius: 5px;
-  margin-top: 2px;
+  margin-bottom: -5px;
+  margin-right: 5px;
 }
 .message-item > .author > .name {
   font-weight: bold;
   color: #6699cc;
 }
 .message-item > .message {
-  flex-grow: 1;
   color: #dcdcdc;
+  margin-right: 5px;
 }
 .message-item > .files {
-  flex-grow: 1;
+  display: inline-block;
+  margin-right: 5px;
 }
 .message-item > .files > .file > a {
   color: var(--link-blue);
@@ -1094,7 +1108,8 @@ body {
   border-radius: 22px;
 }
 .message-item > .emojis {
-  flex-grow: 1;
+  display: inline-block;
+  margin-right: 5px;
 }
 .message-item > .emojis > .emoji {
   width: 32px;
