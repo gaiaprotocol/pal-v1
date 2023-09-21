@@ -1078,6 +1078,7 @@ body {
 }
 .message-item > .files {
   display: inline-block;
+  margin-right: 5px;
 }
 .message-item > .files > .file > a {
   color: var(--link-blue);
