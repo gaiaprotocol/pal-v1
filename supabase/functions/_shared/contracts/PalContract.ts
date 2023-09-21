@@ -14,7 +14,7 @@ export default class PalContract extends Contract<Pal> {
   public async getEvents(startBlock: number, endBlock: number) {
     if (!this.tokenCreatedEventFilter || !this.tradeEventFilter) {
       this.tokenCreatedEventFilter = await this.ethersContract.filters
-        .TokenCreated()
+        .UserTokenCreated()
         .getTopicFilter();
       this.tradeEventFilter = await this.ethersContract.filters.Trade()
         .getTopicFilter();
