@@ -13,7 +13,7 @@ contract PalTokenPriceAggregator {
     function getBulkTokenPrices(address[] memory _tokens) external view returns (uint256[] memory) {
         uint256[] memory prices = new uint256[](_tokens.length);
         for (uint256 i = 0; i < _tokens.length; i++) {
-            prices[i] = pal.getBuyPriceAfterFee(_tokens[i], 1 ether);
+            prices[i] = pal.getBuyPrice(_tokens[i], 1 ether);
         }
         return prices;
     }

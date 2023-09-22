@@ -41,6 +41,7 @@ export default class BuyTokenPopup extends Popup {
             label: "Amount",
             placeholder: "Amount",
             required: true,
+            value: "1",
           }),
           el(
             "table",
@@ -122,7 +123,7 @@ export default class BuyTokenPopup extends Popup {
       this.title.text = `Buy ${tokenInfo.symbol}`;
       this.priceTitle.text = `Price per ${tokenInfo.symbol}`;
 
-      const currentPrice = await PalContract.getBuyPriceAfterFee(
+      const currentPrice = await PalContract.getBuyPrice(
         this.tokenAddress,
         ethers.parseEther("1"),
       );

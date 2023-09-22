@@ -24,7 +24,8 @@ serveWithOptions(async (req) => {
     return responseError("No wallet address");
   }
 
-  const { tokenAddress, metadata } = await req.json();
+  const { tokenAddress, metadata, viewTokenRequired, writeTokenRequired } =
+    await req.json();
   try {
     if (tokenAddress && metadata) {
       const tokenInfo = await getTokenInfo(
@@ -43,6 +44,8 @@ serveWithOptions(async (req) => {
         owner: tokenInfo.owner,
         last_fetched_price: tokenInfo.price.toString(),
         metadata,
+        view_token_required: viewTokenRequired,
+        write_token_required: writeTokenRequired,
       }).select();
 
       if (error) {

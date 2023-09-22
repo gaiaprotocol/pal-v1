@@ -16,7 +16,7 @@ export async function getTokenInfo(
     tokenContract.symbol(),
     tokenContract.owner(),
     tokenContract.balanceOf(walletAddress),
-    palContract.getBuyPriceAfterFee(
+    palContract.getBuyPrice(
       tokenAddress,
       ethers.parseEther("1"),
     ),

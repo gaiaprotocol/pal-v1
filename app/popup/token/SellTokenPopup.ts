@@ -133,14 +133,14 @@ export default class SellTokenPopup extends Popup {
         this.priceTitle.text = `${
           ethers.formatEther(totalSupply)
         } ${this.symbol} Price`;
-        const currentPrice = await PalContract.getSellPriceAfterFee(
+        const currentPrice = await PalContract.getSellPrice(
           this.tokenAddress,
           totalSupply,
         );
         this.priceDisplay.text = `${ethers.formatEther(currentPrice)} ETH`;
       } else {
         this.priceTitle.text = `Price per ${this.symbol}`;
-        const currentPrice = await PalContract.getSellPriceAfterFee(
+        const currentPrice = await PalContract.getSellPrice(
           this.tokenAddress,
           ethers.parseEther("1"),
         );

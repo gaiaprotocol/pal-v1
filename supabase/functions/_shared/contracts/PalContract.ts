@@ -27,7 +27,7 @@ export default class PalContract extends Contract<Pal> {
     );
   }
 
-  public async getBuyPriceAfterFee(tokenAddress: string, amount: bigint) {
-    return await this.ethersContract.getBuyPriceAfterFee(tokenAddress, amount);
+  public async getBuyPrice(tokenAddress: string, amount: bigint) {
+    return await this.ethersContract.getBuyPrice(tokenAddress, amount);
   }
 }
