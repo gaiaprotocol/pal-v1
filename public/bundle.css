@@ -111,7 +111,8 @@ meter {
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/notosans/v30/o-0NIpQlx3QUlC5A4PNjXhFVZNyE.ttf) format('truetype');
 }
-:root {
+:root,
+input {
   font-family: 'Noto Sans', sans-serif;
 }
 p {

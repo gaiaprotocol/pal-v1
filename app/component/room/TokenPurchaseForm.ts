@@ -11,6 +11,7 @@ import ProfileImageDisplay from "../ProfileImageDisplay.js";
 
 export default class TokenPurchaseForm extends DomNode {
   private currentTokenAddress: string | undefined;
+  private currentViewTokenRequired: string | undefined;
 
   private profileImage: ProfileImageDisplay;
   private messageDisplay: DomNode;
@@ -30,7 +31,7 @@ export default class TokenPurchaseForm extends DomNode {
             if (!WalletManager.connected) {
               await WalletManager.connect();
             }
-            const popup = new BuyTokenPopup(this.currentTokenAddress);
+            const popup = new BuyTokenPopup(this.currentTokenAddress, this.currentViewTokenRequired);
             popup.on("buyToken", () => this.fireEvent("buyToken"));
           }
         },
@@ -62,12 +63,14 @@ export default class TokenPurchaseForm extends DomNode {
   }
 
   public async loadProfileImage(owner: string, symbol: string) {
+    this.currentViewTokenRequired = undefined;
     this.profileImage.load(owner);
 
     const tokenOwner = await UserDetailsCacher.get(owner);
     if (tokenOwner && this.currentTokenAddress) {
       const tokenInfo = await TokenInfoCacher.get(this.currentTokenAddress);
       if (tokenInfo) {
+        this.currentViewTokenRequired = tokenInfo.view_token_required;
         this.messageDisplay.empty().append(
           "Hold at least ",
           el("b", ethers.formatEther(tokenInfo.view_token_required)),

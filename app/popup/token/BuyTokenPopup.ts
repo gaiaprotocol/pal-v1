@@ -28,7 +28,10 @@ export default class BuyTokenPopup extends Popup {
 
   private totalPrice: bigint = 0n;
 
-  constructor(private tokenAddress: string) {
+  constructor(
+    private tokenAddress: string,
+    private viewTokenRequired?: string,
+  ) {
     super({ barrierDismissible: true });
     this.append(
       this.content = new Component(
@@ -41,7 +44,9 @@ export default class BuyTokenPopup extends Popup {
             label: "Amount",
             placeholder: "Amount",
             required: true,
-            value: "1",
+            value: viewTokenRequired
+              ? ethers.formatEther(viewTokenRequired)
+              : "1",
           }),
           el(
             "table",

@@ -1,4 +1,5 @@
 import { EventContainer } from "common-dapp-module";
+import Constants from "../Constants.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserDetails from "../data/UserDetails.js";
 
@@ -18,11 +19,11 @@ class UserDetailsCacher extends EventContainer {
           schema: "public",
           table: "user_details",
         },
-        (payload: any) => {
+        async (payload: any) => {
           if (
             payload.eventType === "INSERT" || payload.eventType === "UPDATE"
           ) {
-            this.set(payload.new as UserDetails);
+            await this.getFromDB(payload.new.wallet_address);
           }
         },
       )
@@ -38,22 +39,31 @@ class UserDetailsCacher extends EventContainer {
     return this.userDataMap.get(walletAddress);
   }
 
-  public async get(walletAddress: string): Promise<UserDetails | undefined> {
-    if (this.userDataMap.get(walletAddress)) {
-      return this.userDataMap.get(walletAddress);
-    }
+  private async getFromDB(
+    walletAddress: string,
+  ): Promise<UserDetails | undefined> {
     const { data, error } = await SupabaseManager.supabase.from("user_details")
-      .select().eq("wallet_address", walletAddress);
+      .select(Constants.USER_DETAILS_SELECT_QUERY).eq(
+        "wallet_address",
+        walletAddress,
+      );
     if (error) {
       console.error(error);
       return;
     }
-    const userDetails = data?.[0];
+    const userDetails = data?.[0] as any;
     if (!userDetails) {
       return;
     }
     this.set(userDetails);
     return userDetails;
+  }
+
+  public async get(walletAddress: string): Promise<UserDetails | undefined> {
+    if (this.userDataMap.get(walletAddress)) {
+      return this.userDataMap.get(walletAddress);
+    }
+    return await this.getFromDB(walletAddress);
   }
 
   public async load(walletAddresses: string[]) {
@@ -72,14 +82,17 @@ class UserDetailsCacher extends EventContainer {
     }
     const { data, error } = await SupabaseManager.supabase.from(
       "user_details",
-    ).select("*").in("wallet_address", walletAddresses);
+    ).select(Constants.USER_DETAILS_SELECT_QUERY).in(
+      "wallet_address",
+      walletAddresses,
+    );
     if (error) {
       throw error;
     }
     if (data) {
       for (const userData of data) {
-        userDataArray.push(userData);
-        this.set(userData);
+        userDataArray.push(userData as any);
+        this.set(userData as any);
       }
     }
     return userDataArray;

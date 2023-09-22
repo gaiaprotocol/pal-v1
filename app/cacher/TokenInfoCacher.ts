@@ -16,17 +16,11 @@ class TokenInfoCacher extends EventContainer {
           schema: "public",
           table: "pal_tokens",
         },
-        (payload: any) => {
+        async (payload: any) => {
           if (
             payload.eventType === "INSERT" || payload.eventType === "UPDATE"
           ) {
-            this.set({
-              ...payload.new,
-              view_token_required: payload.new.view_token_required?.toString(),
-              write_token_required: payload.new.write_token_required?.toString(),
-              last_fetched_price: payload.new.last_fetched_price?.toString(),
-              trading_fees_earned: payload.new.trading_fees_earned?.toString(),
-            });
+            await this.getFromDB(payload.new.token_address);
           }
         },
       )
@@ -42,10 +36,9 @@ class TokenInfoCacher extends EventContainer {
     return this.tokenInfoMap.get(tokenAddress);
   }
 
-  public async get(tokenAddress: string): Promise<TokenInfo | undefined> {
-    if (this.tokenInfoMap.get(tokenAddress)) {
-      return this.tokenInfoMap.get(tokenAddress);
-    }
+  private async getFromDB(
+    tokenAddress: string,
+  ): Promise<TokenInfo | undefined> {
     const { data, error } = await SupabaseManager.supabase.from("pal_tokens")
       .select(
         Constants.PAL_TOKENS_SELECT_QUERY,
@@ -60,6 +53,13 @@ class TokenInfoCacher extends EventContainer {
     }
     this.set(tokenInfo);
     return tokenInfo;
+  }
+
+  public async get(tokenAddress: string): Promise<TokenInfo | undefined> {
+    if (this.tokenInfoMap.get(tokenAddress)) {
+      return this.tokenInfoMap.get(tokenAddress);
+    }
+    return await this.getFromDB(tokenAddress);
   }
 
   public async load(tokenAddresses: string[]) {
