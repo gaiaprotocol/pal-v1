@@ -42,6 +42,8 @@ export default class ChatRoom extends DomNode {
       this.messageForm.hide();
       this.toHideForm = false;
     }
+
+    this.messageForm.on("buyToken", () => this.fireEvent("buyToken"));
   }
 
   public active(): void {

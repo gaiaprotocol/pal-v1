@@ -101,6 +101,7 @@ export default class SellTokenPopup extends Popup {
                     },
                   );
 
+                  this.fireEvent("sellToken");
                   this.delete();
                 } catch (e) {
                   console.error(e);

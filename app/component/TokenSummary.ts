@@ -10,7 +10,11 @@ import UserInfoPopup from "../popup/user/UserInfoPopup.js";
 export default class TokenSummary extends DomNode {
   constructor(private tokenAddress: string) {
     super(".token-summary.loading");
-    this.onDom("click", () => new TokenInfoPopup(tokenAddress));
+    this.onDom("click", () => {
+      const popup = new TokenInfoPopup(tokenAddress);
+      popup.on("buyToken", () => this.fireEvent("buyToken"));
+      popup.on("sellToken", () => this.fireEvent("sellToken"));
+    });
     this.loadPrice();
   }
 

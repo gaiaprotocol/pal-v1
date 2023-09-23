@@ -34,7 +34,22 @@ export default class RoomView extends View {
       ),
     );
 
+    this.titleBar.on(["buyToken", "sellToken"], () => {
+      console.log(this.currentTokenAddress);
+      if (this.currentTokenAddress) {
+        this.loadRoomInfo(this.currentTokenAddress);
+      }
+    });
+
+    this.chatRoom.on(["buyToken", "sellToken"], () => {
+      console.log(this.currentTokenAddress);
+      if (this.currentTokenAddress) {
+        this.loadRoomInfo(this.currentTokenAddress);
+      }
+    });
+
     this.tokenPurchaseForm.on("buyToken", () => {
+      console.log(this.currentTokenAddress);
       if (this.currentTokenAddress) {
         this.loadRoomInfo(this.currentTokenAddress);
       }
@@ -132,6 +147,7 @@ export default class RoomView extends View {
         parameter_token_address: tokenAddress,
       },
     );
+    console.log(data);
     if (!error && data !== true) {
       this.chatRoom.hideMessageForm();
     } else {

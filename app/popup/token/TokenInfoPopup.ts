@@ -19,10 +19,10 @@ import PalContract from "../../contract/PalContract.js";
 import PalUserTokenContract from "../../contract/PalUserTokenContract.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import UserManager from "../../user/UserManager.js";
+import WalletManager from "../../user/WalletManager.js";
 import BuyTokenPopup from "./BuyTokenPopup.js";
 import EditTokenInfoPopup from "./EditTokenInfoPopup.js";
 import SellTokenPopup from "./SellTokenPopup.js";
-import WalletManager from "../../user/WalletManager.js";
 
 export default class TokenInfoPopup extends Popup {
   public content: DomNode;
@@ -95,7 +95,8 @@ export default class TokenInfoPopup extends Popup {
                   if (!WalletManager.connected) {
                     await WalletManager.connect();
                   }
-                  new BuyTokenPopup(tokenAddress);
+                  const popup = new BuyTokenPopup(tokenAddress);
+                  popup.on("buyToken", () => this.fireEvent("buyToken"));
                 },
               }),
               new Button({
@@ -104,7 +105,8 @@ export default class TokenInfoPopup extends Popup {
                   if (!WalletManager.connected) {
                     await WalletManager.connect();
                   }
-                  new SellTokenPopup(tokenAddress);
+                  const popup = new SellTokenPopup(tokenAddress);
+                  popup.on("sellToken", () => this.fireEvent("sellToken"));
                 },
               }),
             ),

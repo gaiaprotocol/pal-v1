@@ -30,7 +30,7 @@ export default class BuyTokenPopup extends Popup {
 
   constructor(
     private tokenAddress: string,
-    private viewTokenRequired?: string,
+    viewTokenRequired?: string,
   ) {
     super({ barrierDismissible: true });
     this.append(

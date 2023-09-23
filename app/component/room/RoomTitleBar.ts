@@ -20,7 +20,9 @@ export default class RoomTitleBar extends DomNode {
       this.title = el("h1", {
         click: () => {
           if (this.currentTokenAddress) {
-            new TokenInfoPopup(this.currentTokenAddress);
+            const popup = new TokenInfoPopup(this.currentTokenAddress);
+            popup.on("buyToken", () => this.fireEvent("buyToken"));
+            popup.on("sellToken", () => this.fireEvent("sellToken"));
           }
         },
       }),
@@ -48,7 +50,13 @@ export default class RoomTitleBar extends DomNode {
   }
 
   public async loadTokenInfo(tokenAddress: string) {
-    this.tokenSummaryContainer.empty().append(new TokenSummary(tokenAddress));
+    this.tokenSummaryContainer.empty();
+
+    const summary = new TokenSummary(tokenAddress).appendTo(
+      this.tokenSummaryContainer,
+    );
+    summary.on("buyToken", () => this.fireEvent("buyToken"));
+    summary.on("sellToken", () => this.fireEvent("sellToken"));
 
     this.currentTokenAddress = tokenAddress;
 

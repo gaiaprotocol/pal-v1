@@ -283,7 +283,8 @@ export default class MessageForm extends DomNode {
             if (!WalletManager.connected) {
               await WalletManager.connect();
             }
-            new BuyTokenPopup(this.list.tokenAddress);
+            const popup = new BuyTokenPopup(this.list.tokenAddress);
+            popup.on("buyToken", () => this.fireEvent("buyToken"));
           },
         }),
       );
@@ -291,6 +292,7 @@ export default class MessageForm extends DomNode {
   }
 
   public show(): void {
+    console.log("show");
     this.deleteClass("hide");
   }
 }
