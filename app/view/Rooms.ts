@@ -17,6 +17,7 @@ export default class Rooms extends View {
   private holdingRooms: RoomList;
   //private friendsRooms: RoomList;
   private topRooms: RoomList;
+  private newRooms: RoomList;
 
   constructor() {
     super();
@@ -30,6 +31,7 @@ export default class Rooms extends View {
           this.holdingRooms = new RoomList("Holding Token's Rooms"),
           //this.friendsRooms = new RoomList("Friends Rooms"),
           this.topRooms = new RoomList("Top Rooms"),
+          this.newRooms = new RoomList("New Rooms"),
         ),
       ),
     );
@@ -69,6 +71,7 @@ export default class Rooms extends View {
       this.loadHoldingTokenRooms(),
       this.loadFriendsTokenRooms(),
       this.loadTopRooms(),
+      this.loadNewRooms(),
     ]);
 
     const array = results.flat();
@@ -169,9 +172,24 @@ export default class Rooms extends View {
       )
       .neq("hiding", true)
       .order("last_fetched_price", { ascending: false })
-      .limit(50);
+      .limit(10);
     if (data) {
       this.topRooms.rooms = data as any;
+      return data as any;
+    }
+    return [];
+  }
+
+  private async loadNewRooms(): Promise<TokenInfo[]> {
+    const { data } = await SupabaseManager.supabase.from("pal_tokens")
+      .select(
+        Constants.PAL_TOKENS_SELECT_QUERY,
+      )
+      .neq("hiding", true)
+      .order("created_at", { ascending: false })
+      .limit(50);
+    if (data) {
+      this.newRooms.rooms = data as any;
       return data as any;
     }
     return [];

@@ -37,7 +37,9 @@ export default class ActivityList extends DomNode {
   }) {
     const select = SupabaseManager.supabase.from(
       "pal_contract_events",
-    ).select("*");
+    ).select("*")
+      .limit(50);
+
     if (filter.walletAddresses) {
       select.in("wallet_address", filter.walletAddresses);
     }
