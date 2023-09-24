@@ -1,6 +1,8 @@
 import { ErrorAlert, msg, Router } from "common-dapp-module";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
+import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
 import BlockTimeCacher from "./cacher/BlockTimeCacher.js";
 import TokenInfoCacher from "./cacher/TokenInfoCacher.js";
 import UserDetailsCacher from "./cacher/UserDetailsCacher.js";
@@ -18,6 +20,20 @@ import Rooms from "./view/Rooms.js";
 import RoomView from "./view/RoomView.js";
 import Settings from "./view/Settings.js";
 import UserInfoView from "./view/UserInfoView.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCHj4X6ZIufSm-Hga1dBCo95ZYdoxaeoOU",
+  authDomain: "pal-74fe1.firebaseapp.com",
+  projectId: "pal-74fe1",
+  storageBucket: "pal-74fe1.appspot.com",
+  messagingSenderId: "929231849192",
+  appId: "1:929231849192:web:4633eb375dcdce3bb1ab5d",
+  measurementId: "G-NJPN5K4TYJ",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 dayjs.extend(relativeTime);
 
@@ -66,7 +82,8 @@ export default async function install() {
     if (
       errorDiscription === "Error getting user email from external provider"
     ) {
-      errorDiscription += ".\nPlease add an email in your X account settings and allow email access.";
+      errorDiscription +=
+        ".\nPlease add an email in your X account settings and allow email access.";
     }
     new ErrorAlert({
       title: "Error",

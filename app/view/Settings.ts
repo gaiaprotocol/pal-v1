@@ -1,9 +1,8 @@
 import { Button, DomNode, el, Router, View } from "common-dapp-module";
-import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
-import UserInfoPopup from "../popup/user/UserInfoPopup.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
+import Icon from "../component/Icon.js";
 
 export default class Settings extends View {
   private container: DomNode;
@@ -17,6 +16,38 @@ export default class Settings extends View {
       this.container = el(
         ".settings-view",
         el("h1", "Settings"),
+        /*
+        //TODO: ios, android app
+        el(
+          "section.install",
+          el("h2", "Install Pal"),
+          el("p", "Install Pal to your home screen for a better experience."),
+          new Button({
+            tag: ".install-button",
+            title: "Install",
+          }),
+        ),*/
+        el(
+          "section.push-notification",
+          el("h2", new Icon("notifications"), "Push Notification"),
+          el("p", "Get notified when you receive a message."),
+          new Button({
+            tag: ".push-notification-button",
+            title: Notification.permission === "granted" ? "Enabled" : "Enable",
+            disabled: Notification.permission === "granted",
+            click: () => {
+              Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                  console.log("알림 권한이 허용됨");
+
+                  // FCM 메세지 처리
+                } else {
+                  console.log("알림 권한 허용 안됨");
+                }
+              });
+            },
+          }),
+        ),
         this.myProfilePageContainer = el(
           "section.my-profile-page",
           el("h2", "My Profile Page"),
