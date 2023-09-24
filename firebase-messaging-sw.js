@@ -5,14 +5,13 @@ import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
 // your app's Firebase config object.
 // https://firebase.google.com/docs/web/setup#config-object
 const firebaseApp = initializeApp({
-  apiKey: "api-key",
-  authDomain: "project-id.firebaseapp.com",
-  databaseURL: "https://project-id.firebaseio.com",
-  projectId: "project-id",
-  storageBucket: "project-id.appspot.com",
-  messagingSenderId: "sender-id",
-  appId: "app-id",
-  measurementId: "G-measurement-id",
+  apiKey: "AIzaSyCHj4X6ZIufSm-Hga1dBCo95ZYdoxaeoOU",
+  authDomain: "pal-74fe1.firebaseapp.com",
+  projectId: "pal-74fe1",
+  storageBucket: "pal-74fe1.appspot.com",
+  messagingSenderId: "929231849192",
+  appId: "1:929231849192:web:4633eb375dcdce3bb1ab5d",
+  measurementId: "G-NJPN5K4TYJ",
 });
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
@@ -27,7 +26,7 @@ onBackgroundMessage(messaging, (payload) => {
   const notificationTitle = "Background Message Title";
   const notificationOptions = {
     body: "Background Message body.",
-    icon: "/firebase-logo.png",
+    icon: "/images/icon-192x192.png",
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
