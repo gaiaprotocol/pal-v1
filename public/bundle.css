@@ -1,3 +1,6 @@
+/*!***********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../common-style/lib/reset.css ***!
+  \***********************************************************************************************************/
 /***
     The new CSS reset - version 1.8.4 (last updated 14.2.2023)
     GitHub page: https://github.com/elad2412/the-new-css-reset
@@ -97,6 +100,9 @@ meter {
 :where(dialog:modal) {
     all: revert;
 }
+/*!*********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/less-loader/dist/cjs.js!./public/style/main.less ***!
+  \*********************************************************************************************************************************************/
 @font-face {
   font-family: 'Noto Sans';
   font-style: normal;
@@ -111,8 +117,7 @@ meter {
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/notosans/v30/o-0NIpQlx3QUlC5A4PNjXhFVZNyE.ttf) format('truetype');
 }
-:root,
-input {
+:root {
   font-family: 'Noto Sans', sans-serif;
 }
 p {
@@ -463,7 +468,7 @@ body {
     padding-bottom: 0;
   }
 }
-.room-view {
+.token-room-view {
   position: fixed;
   left: 440px;
   top: 60px;
@@ -474,11 +479,12 @@ body {
   box-shadow: var(--box-shadow);
 }
 @media only screen and (max-width: 859px) {
-  .room-view {
+  .token-room-view {
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 .activity-view {
@@ -1173,7 +1179,6 @@ body {
   padding: 8px 0;
   background-color: #252526;
   color: #dcdcdc;
-  font-family: NotoSansKR;
   font-size: 15px;
 }
 .message-form > .hiding-message {

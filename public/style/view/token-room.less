@@ -1,4 +1,4 @@
-.room-view {
+.token-room-view {
     position        : fixed;
     left            : 440px;
     top             : 60px;
@@ -9,9 +9,10 @@
     box-shadow      : var(--box-shadow);
 
     @media @phone {
-        left  : 0;
-        top   : 0;
-        width : 100%;
-        height: 100%;
+        left          : 0;
+        top           : 0;
+        width         : 100%;
+        height        : 100%;
+        padding-bottom: env(safe-area-inset-bottom);
     }
 }

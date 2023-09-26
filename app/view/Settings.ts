@@ -47,8 +47,8 @@ export default class Settings extends View {
                 ? "Enabled"
                 : "Enable",
               disabled: Notification.permission === "granted",
-              click: async () => {
-                const permission = await Notification.requestPermission();
+              click: async (event, button) => {
+                const permission = await FCMManager.requestPermission();
                 if (permission === "granted") {
                   const fcmToken = await FCMManager.saveToken();
                   if (fcmToken) {
@@ -65,6 +65,8 @@ export default class Settings extends View {
                       },
                     );
                   }
+                  button.disable();
+                  button.title = "Enabled";
                 } else {
                   new ErrorAlert({
                     title: "Failed to enable push notifications",

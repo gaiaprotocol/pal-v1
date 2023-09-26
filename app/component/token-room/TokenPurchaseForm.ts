@@ -31,7 +31,10 @@ export default class TokenPurchaseForm extends DomNode {
             if (!WalletManager.connected) {
               await WalletManager.connect();
             }
-            const popup = new BuyTokenPopup(this.currentTokenAddress, this.currentViewTokenRequired);
+            const popup = new BuyTokenPopup(
+              this.currentTokenAddress,
+              this.currentViewTokenRequired,
+            );
             popup.on("buyToken", () => this.fireEvent("buyToken"));
           }
         },
@@ -79,11 +82,12 @@ export default class TokenPurchaseForm extends DomNode {
           ` ${symbol} to send messages. This was set by ${tokenOwner.display_name}.`,
         );
 
-        this.lastMessageSentAtDisplay.text = !tokenInfo.last_message_sent_at
-          ? ""
-          : "Last message sent " + dayjs(
-            tokenInfo.last_message_sent_at,
-          ).fromNow();
+        this.lastMessageSentAtDisplay.text =
+          tokenInfo.last_message_sent_at === "-infinity"
+            ? ""
+            : "Last message sent " + dayjs(
+              tokenInfo.last_message_sent_at,
+            ).fromNow();
       }
     }
   }

@@ -60,9 +60,10 @@ export default class RoomItem extends DomNode {
     this.priceDisplay.text = ethers.formatEther(tokenInfo.last_fetched_price) +
       " ETH";
     this.lastMessageDisplay.text = tokenInfo.last_message ?? "";
-    this.lastMessageSentAtDisplay.text = !tokenInfo.last_message_sent_at
-      ? ""
-      : dayjs(tokenInfo.last_message_sent_at).fromNow();
+    this.lastMessageSentAtDisplay.text =
+      tokenInfo.last_message_sent_at === "-infinity"
+        ? ""
+        : dayjs(tokenInfo.last_message_sent_at).fromNow();
 
     this.tokenOwnerProfileImage.load(tokenInfo.owner);
 

@@ -7,14 +7,14 @@ import {
   View,
   ViewParams,
 } from "common-dapp-module";
-import ChatRoom from "../component/room/ChatRoom.js";
-import RoomLoading from "../component/room/RoomLoading.js";
-import RoomTitleBar from "../component/room/RoomTitleBar.js";
-import TokenPurchaseForm from "../component/room/TokenPurchaseForm.js";
+import ChatRoom from "../component/token-room/ChatRoom.js";
+import RoomLoading from "../component/token-room/RoomLoading.js";
+import RoomTitleBar from "../component/token-room/RoomTitleBar.js";
+import TokenPurchaseForm from "../component/token-room/TokenPurchaseForm.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 
-export default class RoomView extends View {
+export default class TokenRoomView extends View {
   private container: DomNode;
   private titleBar: RoomTitleBar;
   private tokenPurchaseForm: TokenPurchaseForm;
@@ -27,7 +27,7 @@ export default class RoomView extends View {
 
     BodyNode.append(
       this.container = el(
-        ".room-view",
+        ".token-room-view",
         this.titleBar = new RoomTitleBar(),
         this.chatRoom = new ChatRoom(),
         this.tokenPurchaseForm = new TokenPurchaseForm(),

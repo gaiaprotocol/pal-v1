@@ -20,16 +20,28 @@ const app = initializeApp(firebaseConfig);
 class FCMManager extends EventContainer {
   public messaging = getMessaging(app);
 
-  public async saveToken() {
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      const token = await getToken(this.messaging, {
-        vapidKey: Config.fcmVapidKey,
+  public async requestPermission() {
+    return await (() => {
+      return new Promise<NotificationPermission>((resolve) => {
+        Notification.requestPermission((permission) => resolve(permission));
       });
-      await SupabaseManager.supabase.from("user_fcm_tokens").upsert(
-        { token },
-      );
-      return token;
+    })();
+  }
+
+  public async saveToken() {
+    const token = await getToken(this.messaging, {
+      vapidKey: Config.fcmVapidKey,
+    });
+    await SupabaseManager.supabase.from("user_fcm_tokens").upsert(
+      { token },
+    );
+    return token;
+  }
+
+  public async requestPermissionAndSaveToken() {
+    const permission = await this.requestPermission();
+    if (permission === "granted") {
+      return await this.saveToken();
     }
   }
 }

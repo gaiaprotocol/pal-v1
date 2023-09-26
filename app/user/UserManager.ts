@@ -86,9 +86,9 @@ class UserManager extends EventContainer {
         );
       }
       OnlineUserManager.track();
-      FCMManager.saveToken();
 
       (async () => {
+        await FCMManager.requestPermissionAndSaveToken();
         const session = await SupabaseManager.supabase.auth.getSession();
         fetch(`${Config.alwaysOnServerURL}/pal/check-fcm-subscription`, {
           method: "POST",

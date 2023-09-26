@@ -15,7 +15,7 @@ import ActivityView from "./view/ActivityView.js";
 import Explorer from "./view/Explorer.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
-import RoomView from "./view/RoomView.js";
+import TokenRoomView from "./view/TokenRoomView.js";
 import Settings from "./view/Settings.js";
 import UserInfoView from "./view/UserInfoView.js";
 
@@ -52,7 +52,7 @@ export default async function install() {
   Router.route("explorer", Explorer);
   Router.route("settings", Settings);
   Router.route(["", "0x{tokenAddress}"], Rooms);
-  Router.route("0x{tokenAddress}", RoomView);
+  Router.route("0x{tokenAddress}", TokenRoomView);
   Router.route("{xUsername}", UserInfoView, [
     "activity",
     "explorer",
