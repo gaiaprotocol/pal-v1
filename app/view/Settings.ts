@@ -1,8 +1,17 @@
-import { Button, DomNode, el, Router, View } from "common-dapp-module";
+import {
+  Button,
+  DomNode,
+  el,
+  ErrorAlert,
+  Router,
+  View,
+} from "common-dapp-module";
+import Icon from "../component/Icon.js";
+import Config from "../Config.js";
+import FCMManager from "../FCMManager.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
-import Icon from "../component/Icon.js";
 
 export default class Settings extends View {
   private container: DomNode;
@@ -27,27 +36,46 @@ export default class Settings extends View {
             title: "Install",
           }),
         ),*/
-        el(
-          "section.push-notification",
-          el("h2", new Icon("notifications"), "Push Notification"),
-          el("p", "Get notified when you receive a message."),
-          new Button({
-            tag: ".push-notification-button",
-            title: Notification.permission === "granted" ? "Enabled" : "Enable",
-            disabled: Notification.permission === "granted",
-            click: () => {
-              Notification.requestPermission().then((permission) => {
+        "Notification" in window
+          ? el(
+            "section.push-notification",
+            el("h2", new Icon("notifications"), "Push Notification"),
+            el("p", "Get notified when you receive a message."),
+            new Button({
+              tag: ".push-notification-button",
+              title: Notification.permission === "granted"
+                ? "Enabled"
+                : "Enable",
+              disabled: Notification.permission === "granted",
+              click: async () => {
+                const permission = await Notification.requestPermission();
                 if (permission === "granted") {
-                  console.log("알림 권한이 허용됨");
-
-                  // FCM 메세지 처리
+                  const fcmToken = await FCMManager.saveToken();
+                  if (fcmToken) {
+                    const session = await SupabaseManager.supabase.auth
+                      .getSession();
+                    fetch(
+                      `${Config.alwaysOnServerURL}/pal/check-fcm-subscription`,
+                      {
+                        method: "POST",
+                        body: JSON.stringify({
+                          access_token: session.data.session?.access_token,
+                          fcm_token: fcmToken,
+                        }),
+                      },
+                    );
+                  }
                 } else {
-                  console.log("알림 권한 허용 안됨");
+                  new ErrorAlert({
+                    title: "Failed to enable push notifications",
+                    message:
+                      "Please enable push notifications in your web browser settings. You may need to go to Settings > Site Settings > Notifications, and then allow notifications for this website. Try enabling the notifications again after adjusting your settings.",
+                  });
                 }
-              });
-            },
-          }),
-        ),
+              },
+            }),
+          )
+          : undefined,
         this.myProfilePageContainer = el(
           "section.my-profile-page",
           el("h2", "My Profile Page"),
