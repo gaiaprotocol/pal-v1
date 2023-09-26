@@ -111,8 +111,7 @@ meter {
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/notosans/v30/o-0NIpQlx3QUlC5A4PNjXhFVZNyE.ttf) format('truetype');
 }
-:root,
-input {
+:root {
   font-family: 'Noto Sans', sans-serif;
 }
 p {
@@ -1174,7 +1173,6 @@ body {
   padding: 8px 0;
   background-color: #252526;
   color: #dcdcdc;
-  font-family: NotoSansKR;
   font-size: 15px;
 }
 .message-form > .hiding-message {
