@@ -1,8 +1,8 @@
 import { EventContainer } from "common-dapp-module";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
-import Config from "./Config.js";
-import SupabaseManager from "./SupabaseManager.js";
+import Config from "../Config.js";
+import SupabaseManager from "../SupabaseManager.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCHj4X6ZIufSm-Hga1dBCo95ZYdoxaeoOU",
@@ -17,10 +17,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-class FCMManager extends EventContainer {
+class FCM extends EventContainer {
   public messaging = getMessaging(app);
 
-  public async requestPermission() {
+  public async requestNotificationPermission() {
     return await (() => {
       return new Promise<NotificationPermission>((resolve) => {
         Notification.requestPermission((permission) => resolve(permission));
@@ -39,11 +39,11 @@ class FCMManager extends EventContainer {
   }
 
   public async requestPermissionAndSaveToken() {
-    const permission = await this.requestPermission();
+    const permission = await this.requestNotificationPermission();
     if (permission === "granted") {
       return await this.saveToken();
     }
   }
 }
 
-export default new FCMManager();
+export default new FCM();

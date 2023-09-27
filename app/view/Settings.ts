@@ -8,7 +8,7 @@ import {
 } from "common-dapp-module";
 import Icon from "../component/Icon.js";
 import Config from "../Config.js";
-import FCMManager from "../FCMManager.js";
+import FCM from "../fcm/FCM.js";
 import SupabaseManager from "../SupabaseManager.js";
 import UserManager from "../user/UserManager.js";
 import Layout from "./Layout.js";
@@ -48,9 +48,9 @@ export default class Settings extends View {
                 : "Enable",
               disabled: Notification.permission === "granted",
               click: async (event, button) => {
-                const permission = await FCMManager.requestPermission();
+                const permission = await FCM.requestNotificationPermission();
                 if (permission === "granted") {
-                  const fcmToken = await FCMManager.saveToken();
+                  const fcmToken = await FCM.saveToken();
                   if (fcmToken) {
                     const session = await SupabaseManager.supabase.auth
                       .getSession();

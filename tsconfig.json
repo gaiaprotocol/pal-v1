@@ -75,5 +75,6 @@
     "test",
     "typechain-types",
     "scripts",
+    "app-next"
   ]
 }

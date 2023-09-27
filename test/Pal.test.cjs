@@ -43,9 +43,11 @@ describe("Pal Contract", () => {
       supply * ethers.parseEther("1"),
       amount * ethers.parseEther("1"),
     );
-    /*console.log(
-      `supply: ${supply}, amount: ${amount}, price: ${price}, palPrice: ${palPrice}`,
-    );*/
+    console.log(
+      `supply: ${supply}, amount: ${amount}, price: ${
+        ethers.formatEther(price)
+      }, palPrice: ${ethers.formatEther(palPrice)}`,
+    );
     expect(palPrice).to.equal(price);
 
     for (let i = 0; i < 100; i++) {
@@ -102,6 +104,12 @@ describe("Pal Contract", () => {
       )).wait();
       const userTokenAddress = tx.logs[4].args[1];
 
+      const palPrice3 = await pal.getBuyPrice(
+        userTokenAddress,
+        ethers.parseEther("100"),
+      );
+      console.log(ethers.formatEther(palPrice3));
+
       const tx2 = await (await pal.connect(addr1).buyToken(
         userTokenAddress,
         ethers.parseEther("100"),
@@ -117,6 +125,12 @@ describe("Pal Contract", () => {
       expect(await userToken.balanceOf(addr1)).to.equal(
         ethers.parseEther("100"),
       );
+
+      const palPrice4 = await pal.getSellPrice(
+        userTokenAddress,
+        ethers.parseEther("100"),
+      );
+      console.log(ethers.formatEther(palPrice4));
     });
 
     it("Should sell a token", async function () {
@@ -164,7 +178,10 @@ describe("Pal Contract", () => {
           ),
         },
       )).wait();
-      console.log(tx2.logs[1].args[6], tx2.logs[1].args[6] + tx2.logs[1].args[6] / 10n);
+      console.log(
+        tx2.logs[1].args[6],
+        tx2.logs[1].args[6] + tx2.logs[1].args[6] / 10n,
+      );
 
       const userToken = PalUserToken.attach(userTokenAddress);
       expect(await userToken.balanceOf(addr1)).to.equal(

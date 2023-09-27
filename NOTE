@@ -1,0 +1,1 @@
+- Because of Row Level Security, chat databases must be separate from each other.

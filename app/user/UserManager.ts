@@ -4,7 +4,7 @@ import { EventContainer } from "common-dapp-module";
 import { BrowserProvider, JsonRpcSigner } from "ethers";
 import Config from "../Config.js";
 import Constants from "../Constants.js";
-import FCMManager from "../FCMManager.js";
+import FCM from "../fcm/FCM.js";
 import FavoriteManager from "../FavoriteManager.js";
 import OnlineUserManager from "../OnlineUserManager.js";
 import SupabaseManager from "../SupabaseManager.js";
@@ -88,7 +88,7 @@ class UserManager extends EventContainer {
       OnlineUserManager.track();
 
       (async () => {
-        await FCMManager.requestPermissionAndSaveToken();
+        await FCM.requestPermissionAndSaveToken();
         const session = await SupabaseManager.supabase.auth.getSession();
         fetch(`${Config.alwaysOnServerURL}/pal/check-fcm-subscription`, {
           method: "POST",
