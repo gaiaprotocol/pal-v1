@@ -45,7 +45,7 @@ contract PalUserToken is ERC20Permit, Ownable2Step {
     }
 
     modifier onlyPal() {
-        require(msg.sender == _pal, "PalToken: caller is not the pal");
+        require(msg.sender == _pal, "PalUserToken: caller is not the pal");
         _;
     }
 

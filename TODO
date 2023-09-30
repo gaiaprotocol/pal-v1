@@ -1,2 +1,1 @@
-- load twitter friends
-- load trading records
+- author_name not to be null

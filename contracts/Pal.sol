@@ -122,21 +122,21 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         return getPrice(token.totalSupply() - amount, amount);
     }
 
-    function getBuyPriceAfterFee(address tokenAddress, uint256 amount) public view returns (uint256) {
+    function getBuyPriceAfterFee(address tokenAddress, uint256 amount) external view returns (uint256) {
         uint256 price = getBuyPrice(tokenAddress, amount);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether;
         return price + protocolFee + tokenOwnerFee;
     }
 
-    function getSellPriceAfterFee(address tokenAddress, uint256 amount) public view returns (uint256) {
+    function getSellPriceAfterFee(address tokenAddress, uint256 amount) external view returns (uint256) {
         uint256 price = getSellPrice(tokenAddress, amount);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether;
         return price - protocolFee - tokenOwnerFee;
     }
 
-    function executeTrade(address tokenAddress, uint256 amount, uint256 price, bool isBuy) internal nonReentrant {
+    function executeTrade(address tokenAddress, uint256 amount, uint256 price, bool isBuy) private nonReentrant {
         require(isPalUserToken[tokenAddress], "Invalid token address");
 
         PalUserToken token = PalUserToken(tokenAddress);
@@ -174,12 +174,12 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         );
     }
 
-    function buyToken(address tokenAddress, uint256 amount) public payable {
+    function buyToken(address tokenAddress, uint256 amount) external payable {
         uint256 price = getBuyPrice(tokenAddress, amount);
         executeTrade(tokenAddress, amount, price, true);
     }
 
-    function sellToken(address tokenAddress, uint256 amount) public {
+    function sellToken(address tokenAddress, uint256 amount) external {
         uint256 price = getSellPrice(tokenAddress, amount);
         executeTrade(tokenAddress, amount, price, false);
     }

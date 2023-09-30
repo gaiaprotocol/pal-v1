@@ -8,7 +8,7 @@ async function main() {
   );
   console.log("Upgrading Pal...");
 
-  await upgrades.upgradeProxy(deployedProxyAddress, PalUpgrade, { nonce: 11 });
+  await upgrades.upgradeProxy(deployedProxyAddress, PalUpgrade);
   console.log("Pal upgraded");
 }
 

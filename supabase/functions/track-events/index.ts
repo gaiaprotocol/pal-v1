@@ -49,6 +49,7 @@ serveWithOptions(async () => {
       const { error } = await supabase
         .from("pal_contract_events")
         .upsert({
+          chain: "base",
           block_number: event.blockNumber,
           log_index: event.index,
           event_type,

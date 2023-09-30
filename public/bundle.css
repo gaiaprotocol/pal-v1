@@ -119,28 +119,22 @@ meter {
 }
 :root {
   font-family: 'Noto Sans', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 p {
   line-height: 1.6;
 }
 :root {
-  --primary-color: 246, 189, 72;
-  --on-primary-color: 65, 45, 0;
-  --secondary-color: 178, 207, 167;
-  --on-secondary-color: 31, 54, 26;
-  --secondary-container-color: 53, 77, 47;
-  --on-secondary-container-color: 206, 235, 194;
-  --surface-color: 30, 27, 22;
-  --on-surface-color: 233, 225, 217;
-  --surface-conatiner-color: 24, 24, 24;
-  --on-surface-conatiner-color: 255, 255, 255;
-  --outline-color: 154, 143, 128;
-  --error-color: 147, 0, 10;
-  --on-error-color: 255, 218, 214;
-  --overlay-hover-color: 0, 0, 0, 0.2;
-  --box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 3px -1px, rgba(0, 0, 0, 0.2) 0px 2px 2px 0px, rgba(0, 0, 0, 0.18) 0px 2px 4px 0px;
-  --backdrop-color: 128, 128, 128, 0.2;
-  --backdrop-filter: blur(2px);
+  --main-color: #2d2d2d;
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --surface-level-1-bg-color: #2d2d2d;
+  --surface-level-1-text-color: #ffffff;
+  --surface-level-2-bg-color: #3d3d3d;
+  --surface-level-2-text-color: #ffffff;
+  --surface-level-3-bg-color: #4d4d4d;
+  --surface-level-3-text-color: #ffffff;
 }
 button.component {
   display: flex;
@@ -311,6 +305,52 @@ button.component.text.disabled {
   display: flex;
   justify-content: flex-end;
 }
+.splash-screen.component {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(var(--main-color));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.splash-screen.component > img {
+  width: 120px;
+  height: 120px;
+}
+@media only screen and (max-width: 859px) {
+  .splash-screen.component > img {
+    width: 48px;
+    height: 48px;
+  }
+}
+.nav-bar.component {
+  position: fixed;
+  display: flex;
+  left: 0;
+  top: 60px;
+  flex-direction: column;
+  width: 80px;
+  height: calc(100% - 60px);
+  padding: 12px 0;
+  background-color: var(--surface-level-3-bg-color);
+  color: var(--surface-level-3-text-color);
+}
+@media only screen and (max-width: 859px) {
+  .nav-bar.component {
+    top: auto;
+    bottom: 0;
+    flex-direction: row;
+    width: 100%;
+    height: calc(72px + env(safe-area-inset-bottom));
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    justify-content: center;
+  }
+}
 .warning-message-box.component {
   display: flex;
   background-color: rgba(var(--secondary-container-color));
@@ -327,6 +367,21 @@ button.component.text.disabled {
   --on-primary-color: 56, 30, 114;
   --rising-color: 0, 166, 126;
   --falling-color: 251, 101, 101;
+  --secondary-color: 178, 207, 167;
+  --on-secondary-color: 31, 54, 26;
+  --secondary-container-color: 53, 77, 47;
+  --on-secondary-container-color: 206, 235, 194;
+  --surface-color: 30, 27, 22;
+  --on-surface-color: 233, 225, 217;
+  --surface-conatiner-color: 24, 24, 24;
+  --on-surface-conatiner-color: 255, 255, 255;
+  --outline-color: 154, 143, 128;
+  --error-color: 147, 0, 10;
+  --on-error-color: 255, 218, 214;
+  --overlay-hover-color: 0, 0, 0, 0.2;
+  --box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 3px -1px, rgba(0, 0, 0, 0.2) 0px 2px 2px 0px, rgba(0, 0, 0, 0.18) 0px 2px 4px 0px;
+  --backdrop-color: 128, 128, 128, 0.2;
+  --backdrop-filter: blur(2px);
 }
 html,
 body {
