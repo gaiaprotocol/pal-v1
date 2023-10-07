@@ -47,12 +47,6 @@ module.exports = {
       accounts,
       chainId: 137,
     },
-    klaytn: {
-      url: "https://public-node-api.klaytnapi.com/v1/cypress",
-      accounts,
-      chainId: 8217,
-      gasPrice: 250000000000,
-    },
     bnb: {
       url: `https://bsc-dataseed.binance.org/`,
       accounts,
@@ -72,16 +66,6 @@ module.exports = {
       url: "https://public-node-api.klaytnapi.com/v1/baobab",
       accounts,
       chainId: 1001,
-    },
-    popcateum: {
-      url: "https://dataseed.popcateum.org",
-      accounts,
-      chainId: 1213,
-    },
-    bifrost: {
-      url: "https://public-01.mainnet.thebifrost.io/rpc",
-      accounts,
-      chainId: 3068,
     },
     base: {
       url: "https://mainnet.base.org",

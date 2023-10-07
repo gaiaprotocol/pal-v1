@@ -90,12 +90,19 @@ class UserManager extends EventContainer {
       (async () => {
         await FCM.requestPermissionAndSaveToken();
         const session = await SupabaseManager.supabase.auth.getSession();
-        fetch(`${Config.alwaysOnServerURL}/pal/check-fcm-subscription`, {
-          method: "POST",
-          body: JSON.stringify({
-            access_token: session.data.session?.access_token,
-          }),
-        });
+        try {
+          await fetch(
+            `${Config.alwaysOnServerURL}/pal/check-fcm-subscription`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                access_token: session.data.session?.access_token,
+              }),
+            },
+          );
+        } catch (error) {
+          console.error(error);
+        }
       })();
     }
 

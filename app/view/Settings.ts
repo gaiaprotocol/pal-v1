@@ -54,16 +54,20 @@ export default class Settings extends View {
                   if (fcmToken) {
                     const session = await SupabaseManager.supabase.auth
                       .getSession();
-                    fetch(
-                      `${Config.alwaysOnServerURL}/pal/check-fcm-subscription`,
-                      {
-                        method: "POST",
-                        body: JSON.stringify({
-                          access_token: session.data.session?.access_token,
-                          fcm_token: fcmToken,
-                        }),
-                      },
-                    );
+                    try {
+                      await fetch(
+                        `${Config.alwaysOnServerURL}/pal/check-fcm-subscription`,
+                        {
+                          method: "POST",
+                          body: JSON.stringify({
+                            access_token: session.data.session?.access_token,
+                            fcm_token: fcmToken,
+                          }),
+                        },
+                      );
+                    } catch (error) {
+                      console.error(error);
+                    }
                   }
                   button.disable();
                   button.title = "Enabled";
