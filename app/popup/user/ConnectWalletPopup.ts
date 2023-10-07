@@ -6,7 +6,6 @@ import {
   el,
   Popup,
 } from "common-dapp-module";
-import UserManager from "../../user/UserManager.js";
 import WalletConnectionManager from "../../user/WalletConnectionManager.js";
 import WalletManager from "../../user/WalletManager.js";
 
@@ -52,18 +51,13 @@ export default class ConnectWalletPopup extends Popup {
             tag: ".connect-wallet-button",
             click: async () => {
               try {
-                this.connectWalletButton.disable();
-                this.connectWalletButton.title = "Connecting...";
-
+                this.connectWalletButton.disable().title = "Connecting...";
                 await WalletConnectionManager.connect();
-
                 callback();
                 this.delete();
               } catch (error) {
                 console.error(error);
-
-                this.connectWalletButton.enable();
-                this.connectWalletButton.title = "Connect Wallet";
+                this.connectWalletButton.enable().title = "Connect Wallet";
               }
             },
             title: "Connect Wallet",
