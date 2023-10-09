@@ -10,13 +10,14 @@ import PalContract from "./contract/PalContract.js";
 import TokenHoldingsAggregatorContract from "./contract/TokenHoldingsAggregatorContract.js";
 import OnlineUserManager from "./OnlineUserManager.js";
 import SupabaseManager from "./SupabaseManager.js";
+import TestView from "./TestView.js";
 import WalletManager from "./user/WalletManager.js";
 import ActivityView from "./view/ActivityView.js";
 import Explorer from "./view/Explorer.js";
 import Layout from "./view/Layout.js";
 import Rooms from "./view/Rooms.js";
-import TokenRoomView from "./view/TokenRoomView.js";
 import Settings from "./view/Settings.js";
+import TokenRoomView from "./view/TokenRoomView.js";
 import UserInfoView from "./view/UserInfoView.js";
 
 dayjs.extend(relativeTime);
@@ -26,6 +27,11 @@ export default async function install() {
     Router.goNoHistory(sessionStorage.__spa_path);
     sessionStorage.removeItem("__spa_path");
   }
+
+
+  Router.route("test", TestView);
+  // test
+  return;
 
   const splash = new SplashScreen();
 

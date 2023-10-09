@@ -10,7 +10,7 @@
     Remove all the styles of the "User-Agent-Stylesheet", except for the 'display' property
     - The "symbol *" part is to solve Firefox SVG sprite bug
  */
- *:where(:not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)) {
+ *:where(:not(html, iframe, canvas, img, svg, video, audio, summary):not(svg *, symbol *)) {
     all: unset;
     display: revert;
 }
@@ -108,19 +108,20 @@ meter {
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(https://fonts.gstatic.com/s/notosans/v30/o-0IIpQlx3QUlC5A4PNr5TRF.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/notosans/v32/o-0IIpQlx3QUlC5A4PNr5TRF.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Noto Sans';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(https://fonts.gstatic.com/s/notosans/v30/o-0NIpQlx3QUlC5A4PNjXhFVZNyE.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/notosans/v32/o-0NIpQlx3QUlC5A4PNjXhFVZNyE.ttf) format('truetype');
 }
 :root {
   font-family: 'Noto Sans', sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
+  font-size: 14px;
 }
 p {
   line-height: 1.6;
@@ -135,175 +136,13 @@ p {
   --surface-level-2-text-color: #ffffff;
   --surface-level-3-bg-color: #4d4d4d;
   --surface-level-3-text-color: #ffffff;
-}
-button.component {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 6px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-button.component.disabled {
-  cursor: default;
-}
-button.component:hover:not(.disabled) {
-  background-image: linear-gradient(to bottom, rgba(var(--overlay-hover-color)), rgba(var(--overlay-hover-color)));
-  box-shadow: var(--box-shadow);
-}
-button.component.contained {
-  background-color: rgba(var(--primary-color));
-  color: rgba(var(--on-primary-color));
-  box-shadow: var(--box-shadow);
-}
-button.component.contained.disabled {
-  background-color: rgba(var(--primary-color), 0.3);
-  filter: grayscale(1);
-}
-button.component.outlined {
-  color: rgba(var(--primary-color));
-  border: 1px solid rgba(var(--primary-color));
-  border-radius: 4px;
-}
-button.component.text {
-  color: rgba(var(--primary-color));
-}
-button.component.text.disabled {
-  color: rgba(var(--primary-color), 0.3);
-}
-.input.component {
-  width: 100%;
-  border: 1px solid rgba(var(--outline-color));
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  padding-left: 6px;
-  padding-bottom: 6px;
-}
-.input.component.disabled {
-  border: 1px solid rgba(var(--on-surface-color), 0.3);
-  color: rgba(var(--on-surface-color), 0.3);
-  cursor: not-allowed;
-  user-select: none;
-}
-.input.component > legend {
-  padding: 0 6px;
-  font-size: 12px;
-}
-.input.component.active {
-  border: 1px solid rgba(var(--primary-color));
-}
-.input.component.active > legend {
-  color: rgba(var(--primary-color));
-}
-.input.component.required > legend::after {
-  content: "*";
-  margin: 0 0 0 4px;
-  color: rgba(var(--error-color));
-}
-.input.component > input,
-.input.component > textarea {
-  padding: 2px 12px 6px 6px;
-  width: 100%;
-}
-.input.component > input::placeholder,
-.input.component > textarea::placeholder {
-  color: rgba(var(--on-surface-color), 0.3);
-}
-.input.component > textarea {
-  height: 100px;
-}
-.popup-background {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 999998;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(var(--backdrop-color));
-  backdrop-filter: var(--backdrop-filter);
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  padding: 20px 0;
-}
-.alert.component {
-  max-width: 600px;
-  width: 90%;
-  margin: auto;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  box-shadow: var(--box-shadow);
-  background-color: rgba(var(--surface-conatiner-color));
-  color: rgba(var(--on-surface-conatiner-color));
-}
-.alert.component > h1 {
-  padding: 16px 24px;
-  font-size: 20px;
-  font-weight: bold;
-}
-.alert.component > p {
-  padding: 0 24px 20px;
-}
-.alert.component > footer {
-  padding: 8px;
-  display: flex;
-  justify-content: flex-end;
-}
-.error-alert.component {
-  max-width: 600px;
-  width: 90%;
-  margin: auto;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  box-shadow: var(--box-shadow);
-  background-color: rgba(var(--surface-conatiner-color));
-  color: rgba(var(--on-surface-conatiner-color));
-}
-.error-alert.component > h1 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 24px;
-  font-size: 20px;
-  font-weight: bold;
-}
-.error-alert.component > p {
-  padding: 0 24px 20px;
-}
-.error-alert.component > footer {
-  padding: 8px;
-  display: flex;
-  justify-content: flex-end;
-}
-.confirm.component {
-  max-width: 600px;
-  width: 90%;
-  margin: auto;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  box-shadow: var(--box-shadow);
-  background-color: rgba(var(--surface-conatiner-color));
-  color: rgba(var(--on-surface-conatiner-color));
-}
-.confirm.component > h1 {
-  padding: 16px 24px;
-  font-size: 20px;
-  font-weight: bold;
-}
-.confirm.component > p {
-  padding: 0 24px 20px;
-}
-.confirm.component > footer {
-  padding: 8px;
-  display: flex;
-  justify-content: flex-end;
+  --box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 3px -1px, rgba(0, 0, 0, 0.2) 0px 2px 2px 0px, rgba(0, 0, 0, 0.18) 0px 2px 4px 0px;
+  --backdrop-color: rgba(128, 128, 128, 0.2);
+  --backdrop-filter: blur(2px);
+  --button-color: #5a65ea;
+  --button-hover-color: #4f5ae9;
+  --button-text-color: #ffffff;
+  --text-button-hover-color: rgba(79, 90, 233, 0.1);
 }
 .splash-screen.component {
   position: fixed;
@@ -312,7 +151,7 @@ button.component.text.disabled {
   width: 100%;
   height: 100%;
   z-index: 9999;
-  background-color: rgba(var(--main-color));
+  background-color: var(--main-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -327,40 +166,46 @@ button.component.text.disabled {
     height: 48px;
   }
 }
-.nav-bar.component {
+.popup-background {
   position: fixed;
-  display: flex;
   left: 0;
-  top: 60px;
-  flex-direction: column;
-  width: 80px;
-  height: calc(100% - 60px);
-  padding: 12px 0;
-  background-color: var(--surface-level-3-bg-color);
-  color: var(--surface-level-3-text-color);
-}
-@media only screen and (max-width: 859px) {
-  .nav-bar.component {
-    top: auto;
-    bottom: 0;
-    flex-direction: row;
-    width: 100%;
-    height: calc(72px + env(safe-area-inset-bottom));
-    padding: 0;
-    padding-bottom: env(safe-area-inset-bottom);
-    justify-content: center;
-  }
-}
-.warning-message-box.component {
+  top: 0;
+  z-index: 999998;
+  width: 100%;
+  height: 100%;
+  background-color: var(--backdrop-color);
+  backdrop-filter: var(--backdrop-filter);
   display: flex;
-  background-color: rgba(var(--secondary-container-color));
-  color: rgba(var(--on-secondary-container-color));
-  padding: 24px;
-  border-radius: 12px;
-  gap: 12px;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 20px 0;
 }
-.warning-message-box.component > i {
-  font-size: 24px;
+button.component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button.component.disabled {
+  cursor: default;
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+button.component.contained {
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  box-shadow: var(--box-shadow);
+}
+button.component.contained:hover {
+  background-color: var(--button-hover-color);
+}
+button.component.text {
+  color: var(--button-text-color);
+}
+button.component.text:hover {
+  background-color: var(--text-button-hover-color);
 }
 :root {
   --primary-color: 208, 188, 255;
@@ -1844,30 +1689,6 @@ body {
 }
 .token-info-popup > footer {
   border-top: 1px solid rgba(var(--on-surface-conatiner-color), 0.1);
-  padding: 8px;
-  display: flex;
-  justify-content: flex-end;
-}
-.trade-token-popup {
-  max-width: 600px;
-  width: 90%;
-  margin: auto;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--box-shadow);
-  background-color: rgba(var(--surface-conatiner-color));
-  color: rgba(var(--on-surface-conatiner-color));
-}
-.trade-token-popup > h1 {
-  padding: 16px 24px;
-  font-size: 20px;
-  font-weight: bold;
-}
-.trade-token-popup > main {
-  padding: 0 24px 20px;
-}
-.trade-token-popup > footer {
   padding: 8px;
   display: flex;
   justify-content: flex-end;
