@@ -72,6 +72,8 @@
     ".vscode",
     "test-src",
     "old",
+    "app-old",
+    "app-next",
     "test",
     "typechain-types",
     "scripts",
