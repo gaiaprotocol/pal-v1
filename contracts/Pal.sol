@@ -6,16 +6,17 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 
 contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     using AddressUpgradeable for address payable;
+    using ECDSAUpgradeable for bytes32;
 
     address payable public protocolFeeDestination;
     uint256 public protocolFeePercent;
     uint256 public tokenOwnerFeePercent;
 
-    IERC20 public membershipToken;
-    uint256 public membershipWeight;
+    address public oracleAddress;
 
     uint256 private constant BASE_DIVIDER = 16000;
 
@@ -24,8 +25,7 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     event SetProtocolFeeDestination(address indexed destination);
     event SetProtocolFeePercent(uint256 percent);
     event SetTokenOwnerFeePercent(uint256 percent);
-    event SetMembershipToken(address indexed token);
-    event SetMembershipWeight(uint256 weight);
+    event SetOracleAddress(address indexed oracle);
 
     event UserTokenCreated(address indexed owner, address indexed tokenAddress, string name, string symbol);
     event Trade(
@@ -71,27 +71,39 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         emit SetTokenOwnerFeePercent(_feePercent);
     }
 
-    function setMembershipToken(address _token) public onlyOwner {
-        membershipToken = IERC20(_token);
-        emit SetMembershipToken(_token);
+    function setOracleAddress(address _oracle) public onlyOwner {
+        oracleAddress = _oracle;
+        emit SetOracleAddress(_oracle);
     }
 
-    function setMembershipWeight(uint256 _weight) public onlyOwner {
-        require(_weight <= protocolFeePercent, "Weight cannot exceed protocol fee percent");
-        membershipWeight = _weight;
-        emit SetMembershipWeight(_weight);
-    }
+    function splitSignatureData(bytes memory signature) internal pure returns (uint256 feeRatio, bytes32 originalHash) {
+        require(signature.length == 96, "Invalid signature length");
 
-    function calculateAdditionalTokenOwnerFee(uint256 price, address tokenOwner) public view returns (uint256) {
-        if (address(membershipToken) == address(0)) {
-            return 0;
+        // Split the signature into two parts: the feeRatio and the original signed hash
+        bytes32 feeRatioBytes;
+        assembly {
+            feeRatioBytes := mload(add(signature, 32))
+            originalHash := mload(add(signature, 64))
         }
 
-        uint256 memberBalance = membershipToken.balanceOf(tokenOwner);
-        uint256 feeIncrease = (((price * membershipWeight) / 1 ether) * memberBalance) / 1 ether;
-        uint256 maxAdditionalFee = (price * protocolFeePercent) / 1 ether;
+        feeRatio = uint256(feeRatioBytes);
+        require(feeRatio <= 1 ether, "Fee ratio out of bounds");
+        return (feeRatio, originalHash);
+    }
 
-        return feeIncrease < maxAdditionalFee ? feeIncrease : maxAdditionalFee;
+    function calculateAdditionalTokenOwnerFee(
+        uint256 price,
+        bytes memory oracleSignature
+    ) public view returns (uint256) {
+        // Extract the fee ratio from the oracle's signed message
+        (uint256 feeRatio, bytes32 originalHash) = splitSignatureData(oracleSignature);
+        bytes32 hash = keccak256(abi.encodePacked(price, feeRatio)).toEthSignedMessageHash();
+
+        require(originalHash == hash, "Invalid data provided");
+        address signer = hash.recover(oracleSignature);
+        require(signer == oracleAddress, "Invalid oracle signature");
+
+        return (price * feeRatio) / 1 ether;
     }
 
     // Users can create their own tokens using this function
@@ -136,12 +148,18 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         return price - protocolFee - tokenOwnerFee;
     }
 
-    function executeTrade(address tokenAddress, uint256 amount, uint256 price, bool isBuy) private nonReentrant {
+    function executeTrade(
+        address tokenAddress,
+        uint256 amount,
+        uint256 price,
+        bool isBuy,
+        bytes memory oracleSignature
+    ) private nonReentrant {
         require(isPalUserToken[tokenAddress], "Invalid token address");
 
         PalUserToken token = PalUserToken(tokenAddress);
         uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether;
-        uint256 additionalFee = calculateAdditionalTokenOwnerFee(price, token.owner());
+        uint256 additionalFee = calculateAdditionalTokenOwnerFee(price, oracleSignature);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether - additionalFee;
 
         if (isBuy) {
@@ -174,13 +192,13 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         );
     }
 
-    function buyToken(address tokenAddress, uint256 amount) external payable {
+    function buyToken(address tokenAddress, uint256 amount, bytes memory oracleSignature) external payable {
         uint256 price = getBuyPrice(tokenAddress, amount);
-        executeTrade(tokenAddress, amount, price, true);
+        executeTrade(tokenAddress, amount, price, true, oracleSignature);
     }
 
-    function sellToken(address tokenAddress, uint256 amount) external {
+    function sellToken(address tokenAddress, uint256 amount, bytes memory oracleSignature) external {
         uint256 price = getSellPrice(tokenAddress, amount);
-        executeTrade(tokenAddress, amount, price, false);
+        executeTrade(tokenAddress, amount, price, false, oracleSignature);
     }
 }

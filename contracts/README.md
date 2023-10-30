@@ -9,6 +9,9 @@ The primary contract, `Pal`, allows users to create their own ERC20 tokens with 
 #### Base
 - [0x6489f919432741965831f731Fa203553eA790614](https://basescan.org/address/0x6489f919432741965831f731Fa203553eA790614)
 
+#### Base Goerli
+- [0xcF18D57f24C067C00Fa83CC4e8fE1C134177047A](https://goerli.basescan.org/address/0xcF18D57f24C067C00Fa83CC4e8fE1C134177047A)
+
 ### PalToken
 This is the ERC20 token structure that gets generated when users decide to create their tokens. It includes standard ERC20 functionalities, along with additional methods for setting the token's name and symbol post-creation.
 
