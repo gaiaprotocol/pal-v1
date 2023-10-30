@@ -1,4 +1,4 @@
-import { DomNode, el, View, ViewParams } from "common-dapp-module";
+import { DomNode, el, View, ViewParams } from "common-app-module";
 import TokenList, { TokenListFilter } from "../component/list/TokenList.js";
 import Layout from "./Layout.js";
 

@@ -6,7 +6,7 @@ import {
   el,
   Popup,
   Store,
-} from "common-dapp-module";
+} from "common-app-module";
 import OpenMoji from "../openmoji/OpenMoji.js";
 
 export default class SelectEmojiPopup extends Popup {

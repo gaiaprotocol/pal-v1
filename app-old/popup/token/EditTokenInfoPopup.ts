@@ -6,7 +6,7 @@ import {
   el,
   Input,
   Popup,
-} from "common-dapp-module";
+} from "common-app-module";
 import { ethers } from "ethers";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import PalUserTokenContract from "../../contract/PalUserTokenContract.js";

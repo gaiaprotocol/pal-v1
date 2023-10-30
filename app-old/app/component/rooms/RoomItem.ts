@@ -1,4 +1,4 @@
-import { DomNode, el, Router, StringUtil } from "common-dapp-module";
+import { DomNode, el, Router, StringUtil } from "common-app-module";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";

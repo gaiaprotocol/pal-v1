@@ -1,4 +1,4 @@
-import { DomNode, el, ErrorAlert, StringUtil } from "common-dapp-module";
+import { DomNode, el, ErrorAlert, StringUtil } from "common-app-module";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import BlockTimeCacher from "../../cacher/BlockTimeCacher.js";

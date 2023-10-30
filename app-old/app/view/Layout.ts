@@ -5,7 +5,7 @@ import {
   Router,
   View,
   ViewParams,
-} from "common-dapp-module";
+} from "common-app-module";
 import Icon from "../component/Icon.js";
 import UserSummary from "../component/UserSummary.js";
 

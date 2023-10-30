@@ -1,4 +1,4 @@
-import { DomNode } from "common-dapp-module";
+import { DomNode } from "common-app-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import MessageForm from "./chatroom/MessageForm.js";
 import MessageList from "./chatroom/MessageList.js";

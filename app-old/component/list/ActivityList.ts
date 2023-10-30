@@ -1,4 +1,4 @@
-import { DomNode, el } from "common-dapp-module";
+import { DomNode, el } from "common-app-module";
 import SupabaseManager from "../../SupabaseManager.js";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";

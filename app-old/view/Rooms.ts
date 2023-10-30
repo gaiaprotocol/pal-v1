@@ -1,4 +1,4 @@
-import { DomNode, el, View } from "common-dapp-module";
+import { DomNode, el, View } from "common-app-module";
 import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
 import RoomList from "../component/rooms/RoomList.js";
 import Constants from "../Constants.js";

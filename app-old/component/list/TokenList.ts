@@ -1,5 +1,5 @@
 import { PostgrestError } from "@supabase/supabase-js";
-import { DomNode, el } from "common-dapp-module";
+import { DomNode, el } from "common-app-module";
 import Constants from "../../Constants.js";
 import OnlineUserManager from "../../OnlineUserManager.js";
 import SupabaseManager from "../../SupabaseManager.js";

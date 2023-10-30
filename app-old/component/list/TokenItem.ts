@@ -1,4 +1,4 @@
-import { DomNode, el, ErrorAlert, StringUtil } from "common-dapp-module";
+import { DomNode, el, ErrorAlert, StringUtil } from "common-app-module";
 import { ethers } from "ethers";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";

@@ -1,4 +1,4 @@
-import { DomNode, el } from "common-dapp-module";
+import { DomNode, el } from "common-app-module";
 import dayjs from "dayjs";
 import SupabaseManager from "../../../SupabaseManager.js";
 import UserDetailsCacher from "../../../cacher/UserDetailsCacher.js";

@@ -6,7 +6,7 @@ import {
   el,
   Popup,
   Router,
-} from "common-dapp-module";
+} from "common-app-module";
 import Icon from "../../component/Icon.js";
 import TokenList, { TokenListFilter } from "../../component/list/TokenList.js";
 import ListLoading from "../../component/ListLoading.js";

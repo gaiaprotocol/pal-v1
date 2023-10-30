@@ -1,4 +1,4 @@
-import { DomNode } from "common-dapp-module";
+import { DomNode } from "common-app-module";
 
 export default class Tab extends DomNode {
   constructor(public _id: string, label: string) {

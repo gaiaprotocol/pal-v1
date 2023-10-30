@@ -1,4 +1,4 @@
-import { ArrayUtil, DomNode, el } from "common-dapp-module";
+import { ArrayUtil, DomNode, el } from "common-app-module";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import TokenInfo from "../../data/TokenInfo.js";
 import ListLoading from "../ListLoading.js";

@@ -1,4 +1,4 @@
-import { DomNode, el, ErrorAlert } from "common-dapp-module";
+import { DomNode, el, ErrorAlert } from "common-app-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
 import UserDetails from "../data/UserDetails.js";

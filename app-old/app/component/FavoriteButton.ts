@@ -1,4 +1,4 @@
-import { DomNode } from "common-dapp-module";
+import { DomNode } from "common-app-module";
 import FavoriteManager from "../FavoriteManager.js";
 import Icon from "./Icon.js";
 

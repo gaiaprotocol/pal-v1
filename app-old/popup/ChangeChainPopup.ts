@@ -7,7 +7,7 @@ import {
   DomNode,
   Popup,
   el,
-} from "common-dapp-module";
+} from "common-app-module";
 import Config from "../Config.js";
 
 export default class ChangeChainPopup extends Popup {

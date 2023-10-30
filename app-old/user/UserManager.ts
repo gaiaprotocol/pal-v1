@@ -1,6 +1,6 @@
 import { User } from "@supabase/supabase-js";
 import { getNetwork, getWalletClient } from "@wagmi/core";
-import { EventContainer } from "common-dapp-module";
+import { EventContainer } from "common-app-module";
 import { BrowserProvider, JsonRpcSigner } from "ethers";
 import Config from "../Config.js";
 import Constants from "../Constants.js";

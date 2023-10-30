@@ -1,4 +1,4 @@
-import { I18NText } from "common-dapp-module";
+import { I18NText } from "common-app-module";
 
 export enum MessageType {
   MESSAGE,

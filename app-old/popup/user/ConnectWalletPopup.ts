@@ -5,7 +5,7 @@ import {
   DomNode,
   el,
   Popup,
-} from "common-dapp-module";
+} from "common-app-module";
 import WalletConnectionManager from "../../user/WalletConnectionManager.js";
 import WalletManager from "../../user/WalletManager.js";
 

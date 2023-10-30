@@ -1,4 +1,4 @@
-import { DomNode, el } from "common-dapp-module";
+import { DomNode, el } from "common-app-module";
 import { ethers } from "ethers";
 import UserDetails from "../../data/UserDetails.js";
 import UserInfoPopup from "../../popup/user/UserInfoPopup.js";

@@ -1,4 +1,4 @@
-import { Button, DomNode, el } from "common-dapp-module";
+import { Button, DomNode, el } from "common-app-module";
 import UserManager from "../user/UserManager.js";
 import TokenSummary from "./TokenSummary.js";
 

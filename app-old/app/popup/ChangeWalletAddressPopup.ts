@@ -5,7 +5,7 @@ import {
   DomNode,
   el,
   Popup,
-} from "common-dapp-module";
+} from "common-app-module";
 
 export default class ChangeWalletAddressPopup extends Popup {
   public content: DomNode;

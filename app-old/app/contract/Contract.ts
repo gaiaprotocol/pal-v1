@@ -1,4 +1,4 @@
-import { EventContainer } from "common-dapp-module";
+import { EventContainer } from "common-app-module";
 import { BaseContract, ethers, Interface, InterfaceAbi } from "ethers";
 import Config from "../Config.js";
 import UserManager from "../user/UserManager.js";

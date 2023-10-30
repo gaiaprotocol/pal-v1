@@ -1,4 +1,4 @@
-import { DomNode, el } from "common-dapp-module";
+import { DomNode, el } from "common-app-module";
 
 export default class RoomLoading extends DomNode {
   constructor() {

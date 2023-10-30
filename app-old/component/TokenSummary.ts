@@ -1,4 +1,4 @@
-import { DomNode, el } from "common-dapp-module";
+import { DomNode, el } from "common-app-module";
 import { generateJazziconDataURL } from "common-dapp-module/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
 import TokenInfoCacher from "../cacher/TokenInfoCacher.js";

@@ -1,5 +1,5 @@
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { ArrayUtil, DomNode, el } from "common-dapp-module";
+import { ArrayUtil, DomNode, el } from "common-app-module";
 import SupabaseManager from "../../../SupabaseManager.js";
 import ChatMessage from "../../../data/ChatMessage.js";
 import MessageItem from "./MessageItem.js";
