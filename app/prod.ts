@@ -1,8 +1,8 @@
 import initialize from "./initialize.js";
 import { ChainId } from "./multichain/ChainInfo.js";
 await initialize({
-  dev: true,
+  dev: false,
   palAddresses: {
-    [ChainId.Base]: "0xcF18D57f24C067C00Fa83CC4e8fE1C134177047A",
+    [ChainId.Base]: "0x6489f919432741965831f731Fa203553eA790614",
   },
 });

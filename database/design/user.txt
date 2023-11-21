@@ -1,0 +1,15 @@
+users_public
+	user_id - uuid - auth.uid() - pk
+	wallet_address - text - nullable
+	total_earned_trading_fees - numeric - 0
+	display_name - text - nullable
+	profile_image - text - nullable
+	profile_image_thumbnail - text - nullable
+	profile_image_stored - bool - false
+	x_username - text - nullable
+	metadata - jsonb - nullable
+	follower_count - int4 - 0
+	following_count - int4 - 0
+	blocked - bool - false
+	created_at - timestampz - now()
+	updated_at - timestampz - nullable
