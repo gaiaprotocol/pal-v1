@@ -1,8 +1,7 @@
 import initialize from "./initialize.js";
-import { ChainId } from "./multichain/ChainInfo.js";
 await initialize({
   dev: true,
-  palAddresses: {
-    [ChainId.Base]: "0xcF18D57f24C067C00Fa83CC4e8fE1C134177047A",
-  },
+  supabaseUrl: "https://htqrhdvdiwmcnslcsocr.supabase.co",
+  supabaseAnonKey:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0cXJoZHZkaXdtY25zbGNzb2NyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA0OTQyODUsImV4cCI6MjAxNjA3MDI4NX0._r3KAXsSwtNhI4LoWRKDwLpnY-Da-4lwfjpYOndERw8",
 });
