@@ -119,14 +119,14 @@ meter {
   src: url(https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmWUlvAw.ttf) format('truetype');
 }
 :root {
-  --wrapper-bg-color: #1a1a1a;
-  --content-bg-color: #151515;
+  --wrapper-bg-color: #0A0A0A;
+  --content-bg-color: #131313;
   --text-color: #fff;
-  --line-color: #1f1f1f;
-  --accent-color: #04E7E7;
+  --line-color: #242424;
+  --accent-color: #9B4CFF;
   --popup-bg-color: rgba(0, 0, 0, 0.5);
-  --button-bg-color: rgba(4, 231, 231, 0.12);
-  --hover-color: rgba(4, 231, 231, 0.12);
+  --button-bg-color: rgba(155, 76, 255, 0.12);
+  --hover-color: rgba(155, 76, 255, 0.12);
   width: 100%;
   height: 100%;
   background-color: var(--wrapper-bg-color);
@@ -211,7 +211,8 @@ button.component > .title {
   }
 }
 .nav-bar.component > h1.logo > a > img {
-  width: 55px;
+  max-width: 55px;
+  max-height: 55px;
 }
 .nav-bar.component > a.menu {
   display: flex;
@@ -373,6 +374,57 @@ button.component > .title {
   border-bottom: 1px solid #242424;
 }
 :root {
-  --primary-color: #9B4CFF;
+  --wrapper-bg-color: #0A0A0A;
+  --content-bg-color: #131313;
+  --text-color: #fff;
+  --line-color: #242424;
+  --accent-color: #9B4CFF;
+  --popup-bg-color: rgba(0, 0, 0, 0.5);
+  --button-bg-color: rgba(155, 76, 255, 0.12);
+  --hover-color: rgba(155, 76, 255, 0.12);
+}
+.layout {
+  height: 100%;
+  overflow-y: auto;
+}
+.layout > main {
+  width: 1280px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding-top: 56px;
+  padding-left: 90px;
+  background-color: var(--content-bg-color);
+  border-right: 1px solid var(--line-color);
+}
+@container (width < 1280px) {
+  .layout > main {
+    width: 100%;
+    padding-left: 0;
+    padding-bottom: calc(90px + env(safe-area-inset-bottom));
+    border-right: none;
+  }
+}
+.title-bar {
+  position: fixed;
+  left: calc(50% - 1280px / 2 + 90px);
+  top: 0;
+  width: calc(1280px - 90px - 1px);
+  height: 56px;
+  background-color: var(--content-bg-color);
+  border-bottom: 1px solid var(--line-color);
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+@container (width < 1280px) {
+  .title-bar {
+    left: 0;
+    width: 100%;
+  }
+}
+.title-bar > button {
+  margin-left: auto;
 }
 

@@ -1,5 +1,6 @@
 import {
   AppInitializer,
+  el,
   MaterialIconSystem,
   msg,
   Router,
@@ -7,6 +8,9 @@ import {
 } from "common-app-module";
 import { TestChatView, TestPostListView, TestPostView } from "sofi-module";
 import Config from "./Config.js";
+import EnvironmentManager from "./EnvironmentManager.js";
+import Layout from "./layout/Layout.js";
+import PalSignedUserManager from "./user/PalSignedUserManager.js";
 
 msg.setMessages({});
 
@@ -19,7 +23,13 @@ export default async function initialize(config: Config) {
     config.dev,
   );
 
-  await SplashLoader.load("Loading...", []);
+  EnvironmentManager.messageForWalletLinking = config.messageForWalletLinking;
+
+  await SplashLoader.load(el("img", { src: "/images/logo-transparent.png" }), [
+    PalSignedUserManager.fetchUserOnInit(),
+  ]);
+
+  Router.route("**", Layout, ["test/**"]);
 
   Router.route("test/chat", TestChatView);
   Router.route("test/posts", TestPostListView);
