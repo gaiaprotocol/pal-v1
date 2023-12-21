@@ -1,4 +1,4 @@
-import { Button, DomNode, el, StringUtil } from "common-app-module";
+import { Button, DomNode, el, msg, StringUtil } from "common-app-module";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 
 export default class TitleBar extends DomNode {
@@ -45,6 +45,6 @@ export default class TitleBar extends DomNode {
   }
 
   public changeTitle(uri: string) {
-    this.titleDisplay.text = uri === "" ? "Posts" : StringUtil.toTitleCase(uri);
+    this.titleDisplay.text = msg(`title-${uri === "" ? "posts" : uri}`);
   }
 }
