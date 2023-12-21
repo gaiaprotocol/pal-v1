@@ -36,6 +36,7 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         uint256 price,
         uint256 protocolFee,
         uint256 tokenOwnerFee,
+        uint256 additionalFee,
         uint256 supply
     );
 
@@ -77,7 +78,7 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     }
 
     function splitSignatureData(bytes memory signature) internal pure returns (uint256 feeRatio, bytes32 originalHash) {
-        require(signature.length == 96, "Invalid signature length");
+        require(signature.length == 96, "Pal: Invalid signature length");
 
         // Split the signature into two parts: the feeRatio and the original signed hash
         bytes32 feeRatioBytes;
@@ -87,7 +88,7 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         }
 
         feeRatio = uint256(feeRatioBytes);
-        require(feeRatio <= 1 ether, "Fee ratio out of bounds");
+        require(feeRatio <= 1 ether, "Pal: Fee ratio out of bounds");
         return (feeRatio, originalHash);
     }
 
@@ -99,9 +100,9 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         (uint256 feeRatio, bytes32 originalHash) = splitSignatureData(oracleSignature);
         bytes32 hash = keccak256(abi.encodePacked(price, feeRatio)).toEthSignedMessageHash();
 
-        require(originalHash == hash, "Invalid data provided");
+        require(originalHash == hash, "Pal: Invalid data provided");
         address signer = hash.recover(oracleSignature);
-        require(signer == oracleAddress, "Invalid oracle signature");
+        require(signer == oracleAddress, "Pal: Invalid oracle signature");
 
         return (price * feeRatio) / 1 ether;
     }
@@ -155,29 +156,29 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         bool isBuy,
         bytes memory oracleSignature
     ) private nonReentrant {
-        require(isPalUserToken[tokenAddress], "Invalid token address");
+        require(isPalUserToken[tokenAddress], "Pal: Invalid token address");
 
         PalUserToken token = PalUserToken(tokenAddress);
-        uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether;
         uint256 additionalFee = calculateAdditionalTokenOwnerFee(price, oracleSignature);
+        uint256 tokenOwnerFee = (price * tokenOwnerFeePercent) / 1 ether + additionalFee;
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether - additionalFee;
 
         if (isBuy) {
-            require(msg.value >= price + protocolFee + tokenOwnerFee + additionalFee, "Insufficient payment");
+            require(msg.value >= price + protocolFee + tokenOwnerFee, "Pal: Insufficient payment");
             token.mint(msg.sender, amount);
             protocolFeeDestination.sendValue(protocolFee);
-            payable(token.owner()).sendValue(tokenOwnerFee + additionalFee);
-            if (msg.value > price + protocolFee + tokenOwnerFee + additionalFee) {
-                uint256 refund = msg.value - price - protocolFee - tokenOwnerFee - additionalFee;
+            payable(token.owner()).sendValue(tokenOwnerFee);
+            if (msg.value > price + protocolFee + tokenOwnerFee) {
+                uint256 refund = msg.value - price - protocolFee - tokenOwnerFee;
                 payable(msg.sender).sendValue(refund);
             }
         } else {
-            require(token.balanceOf(msg.sender) >= amount, "Insufficient tokens");
+            require(token.balanceOf(msg.sender) >= amount, "Pal: Insufficient tokens");
             token.burn(msg.sender, amount);
-            uint256 netAmount = price - protocolFee - tokenOwnerFee - additionalFee;
+            uint256 netAmount = price - protocolFee - tokenOwnerFee;
             payable(msg.sender).sendValue(netAmount);
             protocolFeeDestination.sendValue(protocolFee);
-            payable(token.owner()).sendValue(tokenOwnerFee + additionalFee);
+            payable(token.owner()).sendValue(tokenOwnerFee);
         }
 
         emit Trade(
@@ -187,7 +188,8 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
             amount,
             price,
             protocolFee,
-            tokenOwnerFee + additionalFee,
+            tokenOwnerFee,
+            additionalFee,
             token.totalSupply()
         );
     }

@@ -1,4 +1,4 @@
-import { Button, DomNode, el } from "common-app-module";
+import { Button, Constants, DomNode, el } from "common-app-module";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import SupabaseManager from "../../SupabaseManager.js";
@@ -83,7 +83,7 @@ export default class TokenPurchaseForm extends DomNode {
         );
 
         this.lastMessageSentAtDisplay.text =
-          tokenInfo.last_message_sent_at === "-infinity"
+          tokenInfo.last_message_sent_at === Constants.NEGATIVE_INFINITY
             ? ""
             : "Last message sent " + dayjs(
               tokenInfo.last_message_sent_at,

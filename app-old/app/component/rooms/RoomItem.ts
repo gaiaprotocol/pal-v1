@@ -1,4 +1,4 @@
-import { DomNode, el, Router, StringUtil } from "common-app-module";
+import { Constants, DomNode, el, Router, StringUtil } from "common-app-module";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";
@@ -61,7 +61,7 @@ export default class RoomItem extends DomNode {
       " ETH";
     this.lastMessageDisplay.text = tokenInfo.last_message ?? "";
     this.lastMessageSentAtDisplay.text =
-      tokenInfo.last_message_sent_at === "-infinity"
+      tokenInfo.last_message_sent_at === Constants.NEGATIVE_INFINITY
         ? ""
         : dayjs(tokenInfo.last_message_sent_at).fromNow();
 
