@@ -1,0 +1,25 @@
+tokens
+	chain - text - pk
+	token_address - text - pk
+	owner - text - not null
+	name - text - not null
+    symbol - text - not null
+	image - text - nullable
+	metadata - jsonb - nullable
+    supply - numeric - 1
+	last_fetched_key_price - numeric - 68750000000000
+	total_trading_key_volume - numeric - 0
+	is_price_up - bool - nullable
+	last_message - text - nullable
+	last_message_sent_at - timestampz - -infinity
+	holder_count - int4 - 1
+	last_key_purchased_at - timestampz - -infinity
+	created_at - timestampz - now()
+	updated_at - timestampz - nullable
+
+krew_key_holders
+	krew - text - pk
+	wallet_address - text - pk
+	last_fetched_balance - int8 - 0
+	created_at - timestampz - now()
+	updated_at - timestampz - nullable
