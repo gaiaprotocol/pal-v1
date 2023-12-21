@@ -1,6 +1,6 @@
-/*!**********************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../common-app-module/style/lib/reset.css ***!
-  \**********************************************************************************************************************/
+/*!******************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../common-app-module/style/reset.css ***!
+  \******************************************************************************************************************/
 /***
     The new CSS reset - version 1.8.4 (last updated 14.2.2023)
     GitHub page: https://github.com/elad2412/the-new-css-reset
@@ -119,13 +119,25 @@ meter {
   src: url(https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmWUlvAw.ttf) format('truetype');
 }
 :root {
-  --primary-color: #9B4CFF;
-  --on-primary-color: #ffffff;
-  background-color: #0A0A0A;
-  color: #fff;
-  font-family: Roboto;
+  --wrapper-bg-color: #1a1a1a;
+  --content-bg-color: #151515;
+  --text-color: #fff;
+  --line-color: #1f1f1f;
+  --accent-color: #04E7E7;
+  --popup-bg-color: rgba(0, 0, 0, 0.5);
+  --button-bg-color: rgba(4, 231, 231, 0.12);
+  --hover-color: rgba(4, 231, 231, 0.12);
+  width: 100%;
+  height: 100%;
+  background-color: var(--wrapper-bg-color);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
   font-size: 14px;
-  font-weight: 400;
+}
+body {
+  width: 100%;
+  height: 100%;
+  container-type: inline-size;
 }
 .profile-image {
   flex-shrink: 0;
@@ -134,14 +146,160 @@ meter {
   border-radius: 50%;
   background-color: #252525;
 }
-@media only screen and (max-width: 859px) {
-  .profile-image {
-    width: 34px;
-    height: 34px;
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 0, 'opsz' 24;
+}
+button.component {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  color: var(--accent-color);
+  line-height: 1em;
+}
+button.component.disabled {
+  cursor: not-allowed;
+}
+button.component.contained {
+  border: 1px solid var(--accent-color);
+  border-radius: 6px;
+  background-color: var(--button-bg-color);
+}
+button.component > .title {
+  text-transform: capitalize;
+}
+.nav-bar.component {
+  position: fixed;
+  left: calc(50% - 1280px / 2);
+  top: 0;
+  z-index: 999990;
+  width: 90px;
+  height: 100%;
+  background-color: var(--wrapper-bg-color);
+  border-right: 1px solid var(--line-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+@container (width < 1280px) {
+  .nav-bar.component {
+    left: 0;
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    height: calc(90px + env(safe-area-inset-bottom));
+    padding-bottom: calc(6px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line-color);
+    border-right: none;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
   }
+  .nav-bar.component::before,
+  .nav-bar.component::after {
+    content: '';
+  }
+}
+.nav-bar.component > h1.logo {
+  padding: 21px 0;
+}
+@container (width < 1280px) {
+  .nav-bar.component > h1.logo {
+    display: none;
+  }
+}
+.nav-bar.component > h1.logo > a > img {
+  width: 55px;
+}
+.nav-bar.component > a.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+}
+.nav-bar.component > a.menu > .icon {
+  font-size: 42px;
+}
+.nav-bar.component > a.menu.active {
+  color: var(--accent-color);
+}
+.splash-screen.component {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.splash-screen.component > img {
+  width: 120px;
+  height: 120px;
+}
+.popup-background {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999998;
+  width: 100%;
+  height: 100%;
+  background-color: var(--popup-bg-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 20px 0;
+}
+.popup.component {
+  max-width: 614px;
+  width: 90%;
+  margin: auto;
+  border: 1px solid var(--line-color);
+  border-radius: 16px;
+  background-color: var(--content-bg-color);
+}
+.popup.component > header {
+  display: flex;
+  align-items: center;
+  padding: 30px;
+}
+.popup.component > header > h1 {
+  flex-grow: 1;
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+@keyframes loading-spinner-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading-spinner.component:after {
+  content: " ";
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--text-color);
+  border-color: var(--text-color) transparent var(--text-color) transparent;
+  animation: loading-spinner-animation 1.2s linear infinite;
 }
 .file-drop-area.component.highlight {
   outline: 2px dotted var(--primary-color);
+}
+.rich-display.component:empty {
+  display: none;
+}
+.rich-display.component > .image-container > a {
+  cursor: pointer;
 }
 .rich-display.component > .image-container > a > img {
   border-radius: 12px;
@@ -149,15 +307,17 @@ meter {
   object-fit: cover;
 }
 .post-display.sofi-component {
+  position: relative;
   display: flex;
   gap: 10px;
   cursor: pointer;
   padding: 20px;
+  /*@media @phone {
+        gap: 6px;
+    }*/
 }
-@media only screen and (max-width: 859px) {
-  .post-display.sofi-component {
-    gap: 6px;
-  }
+.post-display.sofi-component > main {
+  flex-grow: 1;
 }
 .post-display.sofi-component .author-profile-image {
   flex-shrink: 0;
@@ -166,12 +326,6 @@ meter {
   border-radius: 50%;
   background-color: #252525;
   cursor: pointer;
-}
-@media only screen and (max-width: 859px) {
-  .post-display.sofi-component .author-profile-image {
-    width: 34px;
-    height: 34px;
-  }
 }
 .post-display.sofi-component .author {
   padding-top: 4px;
@@ -187,6 +341,9 @@ meter {
   cursor: pointer;
 }
 .post-display.sofi-component button.owner-menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   cursor: pointer;
 }
 .post-display.sofi-component .message {

@@ -1,11 +1,13 @@
 users_public
-	user_id - uuid - auth.uid() - pk
+	user_id - uuid, fk to auth.user - auth.uid() - pk
 	wallet_address - text - nullable
 	total_earned_trading_fees - numeric - 0
 	display_name - text - nullable
-	profile_image - text - nullable
-	profile_image_thumbnail - text - nullable
-	profile_image_stored - bool - false
+	avatar - text - nullable
+	avatar_thumbnail - text - nullable
+	avatar_stored - bool - false
+	stored_avatar - text - nullable
+	stored_avatar_thumbnail - text - nullable
 	x_username - text - nullable
 	metadata - jsonb - nullable
 	follower_count - int4 - 0
@@ -13,3 +15,14 @@ users_public
 	blocked - bool - false
 	created_at - timestampz - now()
 	updated_at - timestampz - nullable
+
+wallet_linking_nonces
+	user_id - uuid, fk to users_public.user_id - auth.uid() - pk
+	wallet_address - text - not null
+	nonce - uuid - gen_random_uuid()
+	created_at - timestampz - now()
+
+follows
+	follower_id - uuid, fk to users_public.user_id - auth.uid() - pk
+	followee_id - uuid, fk to users_public.user_id - pk
+	followed_at - timestampz - now()
