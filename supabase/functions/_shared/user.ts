@@ -1,13 +1,11 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.31.0";
+import { ethers } from "https://esm.sh/ethers@6.7.0";
+import supabase from "./supabase.ts";
 
-export const getSignedUser = async (req: Request) => {
-  const userSupabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_ANON_KEY")!,
-    {
-      global: { headers: { Authorization: req.headers.get("Authorization")! } },
-    },
-  );
-  const { data: { user } } = await userSupabase.auth.getUser();
-  return user;
+export const getUserWalletAddress = async (userId: string) => {
+  const { data, error } = await supabase.from("users_public").select(
+    "wallet_address",
+  ).eq("user_id", userId);
+  if (error) throw error;
+  const walletAddress = data?.[0]?.wallet_address;
+  return walletAddress ? ethers.getAddress(walletAddress) : undefined;
 };
