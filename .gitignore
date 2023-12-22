@@ -27,6 +27,7 @@ dist
 # secure
 .env
 supabase/functions/_shared/firebase-adminsdk-key.json
+old/supabase/functions/_shared/firebase-adminsdk-key.json
 
 # vscode
 .history
