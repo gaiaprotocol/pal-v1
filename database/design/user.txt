@@ -1,7 +1,6 @@
 users_public
 	user_id - uuid, fk to auth.user - auth.uid() - pk
 	wallet_address - text - nullable
-	total_earned_trading_fees - numeric - 0
 	display_name - text - nullable
 	avatar - text - nullable
 	avatar_thumbnail - text - nullable
@@ -13,6 +12,13 @@ users_public
 	follower_count - int4 - 0
 	following_count - int4 - 0
 	blocked - bool - false
+	created_at - timestampz - now()
+	updated_at - timestampz - nullable
+
+wallets
+	wallet_address - text - pk
+	total_key_balance - int8 - 0
+	total_earned_trading_fees - numeric - 0
 	created_at - timestampz - now()
 	updated_at - timestampz - nullable
 
