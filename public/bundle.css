@@ -139,12 +139,19 @@ body {
   height: 100%;
   container-type: inline-size;
 }
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 .profile-image {
   flex-shrink: 0;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   background-color: #252525;
+  background-size: cover;
 }
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 0, 'opsz' 24;
@@ -330,6 +337,7 @@ button.component > .title {
   height: 50px;
   border-radius: 50%;
   background-color: #252525;
+  background-size: cover;
   cursor: pointer;
 }
 .post-display.sofi-component .author {
@@ -430,5 +438,25 @@ button.component > .title {
 }
 .title-bar > section.user {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.title-bar-user-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.title-bar-user-display > .profile-image {
+  width: 26px;
+  height: 26px;
+}
+.title-bar-user-display > .name {
+  font-size: 14px;
+  font-weight: bold;
+}
+.title-bar-user-display > button.dropdown {
+  margin-bottom: -2px;
 }
 

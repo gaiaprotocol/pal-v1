@@ -1,5 +1,6 @@
-import { Button, DomNode, el, msg, StringUtil } from "common-app-module";
+import { Button, DomNode, el, MaterialIcon, msg } from "common-app-module";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
+import TitleBarUserDisplay from "./title-bar/TitleBarUserDisplay.js";
 
 export default class TitleBar extends DomNode {
   private titleDisplay: DomNode;
@@ -40,7 +41,10 @@ export default class TitleBar extends DomNode {
         }),
       );
     } else {
-      //TODO:
+      this.userSection.append(
+        el("button.noti", new MaterialIcon("notifications"), {}),
+        new TitleBarUserDisplay(PalSignedUserManager.user!),
+      );
     }
   }
 
