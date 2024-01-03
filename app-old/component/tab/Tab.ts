@@ -1,4 +1,4 @@
-import { DomNode } from "common-app-module";
+import { DomNode } from "@common-module/app";
 
 export default class Tab extends DomNode {
   constructor(public _id: string, label: string) {

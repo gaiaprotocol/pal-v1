@@ -1,4 +1,4 @@
-import { EventContainer } from "common-app-module";
+import { EventContainer } from "@common-module/app";
 import { BaseContract, ethers, Interface, InterfaceAbi } from "ethers";
 import Config from "../Config.js";
 import UserManager from "../user/UserManager.js";

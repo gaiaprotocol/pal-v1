@@ -1,4 +1,4 @@
-import { Constants, DomNode, el, Router, StringUtil } from "common-app-module";
+import { Constants, DomNode, el, Router, StringUtil } from "@common-module/app";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import UserDetailsCacher from "../../cacher/UserDetailsCacher.js";

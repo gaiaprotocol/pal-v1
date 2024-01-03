@@ -1,4 +1,4 @@
-import { EventContainer } from "common-app-module";
+import { EventContainer } from "@common-module/app";
 import Constants from "../Constants.js";
 import SupabaseManager from "../SupabaseManager.js";
 import TokenInfo from "../data/TokenInfo.js";

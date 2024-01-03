@@ -1,12 +1,17 @@
-import { Supabase } from "common-app-module";
-import { SignedUserManager, SoFiUserPublic } from "sofi-module";
+import { Supabase } from "@common-module/app";
+import { SignedUserManager } from "@common-module/social";
 import EnvironmentManager from "../EnvironmentManager.js";
+import PalUserPublic from "../database-interface/PalUserPublic.js";
 import WalletManager from "../wallet/WalletManager.js";
 import PalUserService from "./PalUserService.js";
 
-class PalSignedUserManager extends SignedUserManager<SoFiUserPublic> {
+class PalSignedUserManager extends SignedUserManager<PalUserPublic> {
   protected async fetchUser(userId: string) {
     return await PalUserService.fetchUser(userId);
+  }
+
+  public get walletLinked() {
+    return this.user?.wallet_address !== undefined;
   }
 
   public async signIn() {

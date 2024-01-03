@@ -5,7 +5,7 @@ import {
   ErrorAlert,
   Router,
   View,
-} from "common-app-module";
+} from "@common-module/app";
 import Icon from "../component/Icon.js";
 import Config from "../Config.js";
 import FCM from "../fcm/FCM.js";

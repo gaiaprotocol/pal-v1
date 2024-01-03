@@ -8,7 +8,7 @@ import {
   Popup,
   Router,
   WarningMessageBox,
-} from "common-app-module";
+} from "@common-module/app";
 import { ethers } from "ethers";
 import PalContract from "../../contract/PalContract.js";
 import SupabaseManager from "../../SupabaseManager.js";

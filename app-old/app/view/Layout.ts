@@ -5,7 +5,7 @@ import {
   Router,
   View,
   ViewParams,
-} from "common-app-module";
+} from "@common-module/app";
 import Icon from "../component/Icon.js";
 import UserSummary from "../component/UserSummary.js";
 

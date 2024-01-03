@@ -2,12 +2,12 @@ import {
   BodyNode,
   DomNode,
   el,
-  Icon,
+  MaterialIcon,
   msg,
   NavBar,
   View,
-  ViewParams,
-} from "common-app-module";
+  ViewParams
+} from "@common-module/app";
 import TitleBar from "./TitleBar.js";
 
 export default class Layout extends View {
@@ -32,26 +32,26 @@ export default class Layout extends View {
           logo: el("img", { src: "/images/logo-transparent.png" }),
           menu: [
             {
-              id: "posts",
-              icon: new Icon("post"),
+              id: "bridge",
+              icon: new MaterialIcon("post"),
               title: msg("nav-bar-menu-posts"),
               uri: "/posts",
             },
             {
               id: "chats",
-              icon: new Icon("chat"),
+              icon: new MaterialIcon("chat"),
               title: msg("nav-bar-menu-chats"),
               uri: "/chats",
             },
             {
               id: "activity",
-              icon: new Icon("activity"),
+              icon: new MaterialIcon("browse_activity"),
               title: msg("nav-bar-menu-activity"),
               uri: "/activity",
             },
             {
               id: "explore",
-              icon: new Icon("explore"),
+              icon: new MaterialIcon("explore"),
               title: msg("nav-bar-menu-explore"),
               uri: "/explore",
             },

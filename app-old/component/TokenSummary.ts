@@ -1,5 +1,5 @@
-import { DomNode, el } from "common-app-module";
-import { generateJazziconDataURL } from "common-app-module/lib/component/Jazzicon.js";
+import { DomNode, el } from "@common-module/app";
+import { generateJazziconDataURL } from "@common-module/app/lib/component/Jazzicon.js";
 import { ethers } from "ethers";
 import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
 import UserDetailsCacher from "../cacher/UserDetailsCacher.js";

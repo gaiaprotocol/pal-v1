@@ -7,7 +7,7 @@ import {
   ErrorAlert,
   Input,
   Popup,
-} from "common-app-module";
+} from "@common-module/app";
 import { ethers } from "ethers";
 import TokenInfoCacher from "../../cacher/TokenInfoCacher.js";
 import ProfileImageDisplay from "../../component/ProfileImageDisplay.js";

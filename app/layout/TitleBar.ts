@@ -1,4 +1,4 @@
-import { Button, DomNode, el, MaterialIcon, msg } from "common-app-module";
+import { Button, DomNode, el, MaterialIcon, msg } from "@common-module/app";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TitleBarUserDisplay from "./title-bar/TitleBarUserDisplay.js";
 

@@ -1,4 +1,4 @@
-import { BodyNode, DomNode, el, View, ViewParams } from "common-app-module";
+import { BodyNode, DomNode, el, View, ViewParams } from "@common-module/app";
 import Lottie, { AnimationItem } from "lottie-web";
 import animationData from "./loading.json" assert { type: "json" };
 

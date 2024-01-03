@@ -6,7 +6,7 @@ import {
   el,
   View,
   ViewParams,
-} from "common-app-module";
+} from "@common-module/app";
 import ChatRoom from "../component/token-room/ChatRoom.js";
 import RoomLoading from "../component/token-room/RoomLoading.js";
 import RoomTitleBar from "../component/token-room/RoomTitleBar.js";

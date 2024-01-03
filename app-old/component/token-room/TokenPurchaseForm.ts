@@ -1,4 +1,4 @@
-import { Button, Constants, DomNode, el } from "common-app-module";
+import { Button, Constants, DomNode, el } from "@common-module/app";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import SupabaseManager from "../../SupabaseManager.js";

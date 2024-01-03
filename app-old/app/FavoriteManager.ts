@@ -1,4 +1,4 @@
-import { EventContainer } from "common-app-module";
+import { EventContainer } from "@common-module/app";
 import SupabaseManager from "./SupabaseManager.js";
 import UserManager from "./user/UserManager.js";
 

@@ -1,4 +1,4 @@
-import { SoFiUserPublic, SoFiUserService } from "sofi-module";
+import { SoFiUserPublic, SoFiUserService } from "@common-module/social";
 
 class PalUserService extends SoFiUserService<SoFiUserPublic> {
   constructor() {

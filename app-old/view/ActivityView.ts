@@ -1,4 +1,4 @@
-import { DomNode, el, View, ViewParams } from "common-app-module";
+import { DomNode, el, View, ViewParams } from "@common-module/app";
 import TokenInfoCacher from "../cacher/TokenInfoCacher.js";
 import ActivityList from "../component/list/ActivityList.js";
 import Constants from "../Constants.js";

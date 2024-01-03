@@ -1,4 +1,4 @@
-import { EventContainer } from "common-app-module";
+import { EventContainer } from "@common-module/app";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import Config from "../Config.js";

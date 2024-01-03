@@ -5,7 +5,7 @@ import {
   DomNode,
   el,
   Popup,
-} from "common-app-module";
+} from "@common-module/app";
 import WalletConnectionManager from "../../user/WalletConnectionManager.js";
 import WalletManager from "../../user/WalletManager.js";
 

@@ -1,25 +1,23 @@
-import { DomNode, el, MaterialIcon } from "common-app-module";
-import { AuthorUtil, SoFiUserPublic } from "sofi-module";
+import { DomNode, el } from "@common-module/app";
+import { AuthorUtil, SoFiUserPublic } from "@common-module/social";
+import SidePanel from "../SidePanel.js";
 
 export default class TitleBarUserDisplay extends DomNode {
   constructor(user: SoFiUserPublic) {
     super(".title-bar-user-display");
 
-    const profileImage = el(".profile-image");
+    const avatar = el(".avatar");
 
-    AuthorUtil.selectLoadableProfileImage(profileImage, [
+    AuthorUtil.selectLoadableAvatar(avatar, [
       user.avatar_thumb,
       user.stored_avatar_thumb,
     ]);
 
     this.append(
-      profileImage,
+      avatar,
       el(".name", user.display_name),
-      el("button.dropdown", new MaterialIcon("arrow_drop_down")),
     );
 
-    this.onDom("click", (event) => {
-      //TODO:
-    });
+    this.onDom("click", () => new SidePanel());
   }
 }

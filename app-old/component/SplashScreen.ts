@@ -1,4 +1,4 @@
-import { BodyNode, DomNode } from "common-app-module";
+import { BodyNode, DomNode } from "@common-module/app";
 
 export default class SplashScreen extends DomNode {
   constructor() {

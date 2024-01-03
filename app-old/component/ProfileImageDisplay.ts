@@ -1,5 +1,5 @@
-import { DomNode, el, ErrorAlert } from "common-app-module";
-import { generateJazziconDataURL } from "common-app-module/lib/component/Jazzicon.js";
+import { DomNode, el, ErrorAlert } from "@common-module/app";
+import { generateJazziconDataURL } from "@common-module/app/lib/component/Jazzicon.js";
 import UserDetailsCacher from "../cacher/UserDetailsCacher.js";
 import UserDetails from "../data/UserDetails.js";
 import OnlineUserManager from "../OnlineUserManager.js";

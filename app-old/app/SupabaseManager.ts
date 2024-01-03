@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { EventContainer } from "common-app-module";
+import { EventContainer } from "@common-module/app";
 import Config from "./Config.js";
 import UserManager from "./user/UserManager.js";
 

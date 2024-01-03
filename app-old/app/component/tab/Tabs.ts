@@ -1,4 +1,4 @@
-import { DomNode } from "common-app-module";
+import { DomNode } from "@common-module/app";
 import Tab from "./Tab.js";
 
 export default class Tabs extends DomNode {

@@ -1,4 +1,4 @@
-import { ErrorAlert, msg, Router } from "common-app-module";
+import { ErrorAlert, msg, Router } from "@common-module/app";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
 import BlockTimeCacher from "./cacher/BlockTimeCacher.js";

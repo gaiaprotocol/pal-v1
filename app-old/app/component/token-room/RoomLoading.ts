@@ -1,4 +1,4 @@
-import { DomNode, el } from "common-app-module";
+import { DomNode, el } from "@common-module/app";
 
 export default class RoomLoading extends DomNode {
   constructor() {
