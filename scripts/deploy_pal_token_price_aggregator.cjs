@@ -9,6 +9,8 @@ async function main() {
   await aggregator.waitForDeployment();
 
   console.log("PalTokenPriceAggregator deployed to:", aggregator.target);
+
+  process.exit();
 }
 
 main();

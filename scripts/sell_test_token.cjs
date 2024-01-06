@@ -15,6 +15,8 @@ async function main() {
     "0x7E26F602D8D023eDdED7E73Bb81c90Bc24590321",
     ethers.parseEther("1"),
   );
+
+  process.exit();
 }
 
 main();

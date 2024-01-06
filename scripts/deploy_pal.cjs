@@ -20,6 +20,7 @@ async function main() {
   await pal.waitForDeployment();
 
   console.log("Pal deployed to:", pal.target);
+  process.exit();
 }
 
 main();

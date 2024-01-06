@@ -42,30 +42,20 @@ module.exports = {
       accounts,
       chainId: 1,
     },
-    polygon: {
-      url: `https://polygon-rpc.com/`,
+    optimism: {
+      url: "https://mainnet.optimism.io",
       accounts,
-      chainId: 137,
+      chainId: 10,
     },
-    bnb: {
-      url: `https://bsc-dataseed.binance.org/`,
+    arbitrum: {
+      url: "https://arb1.arbitrum.io/rpc",
       accounts,
-      chainId: 56,
+      chainId: 42161,
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
       accounts,
       chainId: 5,
-    },
-    mumbai: {
-      url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts,
-      chainId: 80001,
-    },
-    baobab: {
-      url: "https://public-node-api.klaytnapi.com/v1/baobab",
-      accounts,
-      chainId: 1001,
     },
     base: {
       url: "https://mainnet.base.org",

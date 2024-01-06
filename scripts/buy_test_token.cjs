@@ -16,6 +16,8 @@ async function main() {
     ethers.parseEther("1"),
     { value: price },
   );
+
+  process.exit();
 }
 
 main();

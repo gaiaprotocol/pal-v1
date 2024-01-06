@@ -6,6 +6,8 @@ async function main() {
   const pal = Pal.attach(process.env.PAL_ADDRESS);
 
   await pal.createToken("Test Token", "TEST");
+
+  process.exit();
 }
 
 main();
