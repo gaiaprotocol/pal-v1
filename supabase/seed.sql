@@ -342,6 +342,28 @@ CREATE TABLE IF NOT EXISTS "public"."old_pal_tokens" (
 
 ALTER TABLE "public"."old_pal_tokens" OWNER TO "postgres";
 
+CREATE TABLE IF NOT EXISTS "public"."tokens" (
+    "chain" "text" NOT NULL,
+    "token_address" "text" NOT NULL,
+    "owner" "text" NOT NULL,
+    "name" "text" NOT NULL,
+    "symbol" "text" NOT NULL,
+    "image" "text",
+    "metadata" "jsonb",
+    "supply" numeric DEFAULT '1'::numeric NOT NULL,
+    "last_fetched_key_price" numeric DEFAULT '68750000000000'::numeric NOT NULL,
+    "total_trading_key_volume" numeric DEFAULT '0'::numeric NOT NULL,
+    "is_price_up" boolean,
+    "last_message" "text",
+    "last_message_sent_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
+    "holder_count" integer DEFAULT 1 NOT NULL,
+    "last_key_purchased_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone
+);
+
+ALTER TABLE "public"."tokens" OWNER TO "postgres";
+
 CREATE TABLE IF NOT EXISTS "public"."tracked_event_blocks" (
     "chain" "text" NOT NULL,
     "block_number" bigint NOT NULL,
@@ -385,6 +407,9 @@ ALTER TABLE ONLY "public"."old_pal_token_balances"
 
 ALTER TABLE ONLY "public"."old_pal_tokens"
     ADD CONSTRAINT "pal_tokens_pkey" PRIMARY KEY ("token_address", "chain");
+
+ALTER TABLE ONLY "public"."tokens"
+    ADD CONSTRAINT "tokens_pkey" PRIMARY KEY ("chain", "token_address");
 
 ALTER TABLE ONLY "public"."tracked_event_blocks"
     ADD CONSTRAINT "tracked_event_blocks_pkey" PRIMARY KEY ("chain");
@@ -435,6 +460,8 @@ ALTER TABLE "public"."old_pal_token_balances" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."old_pal_tokens" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."token_chat_messages" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "public"."tokens" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."tracked_event_blocks" ENABLE ROW LEVEL SECURITY;
 
@@ -543,6 +570,10 @@ GRANT ALL ON TABLE "public"."old_pal_token_balances" TO "service_role";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "anon";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "authenticated";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "service_role";
+
+GRANT ALL ON TABLE "public"."tokens" TO "anon";
+GRANT ALL ON TABLE "public"."tokens" TO "authenticated";
+GRANT ALL ON TABLE "public"."tokens" TO "service_role";
 
 GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "anon";
 GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "authenticated";
