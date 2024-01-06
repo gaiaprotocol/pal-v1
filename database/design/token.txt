@@ -21,6 +21,6 @@ token_holders
 	chain - text - pk
 	token_address - text - pk
 	wallet_address - text - pk
-	last_fetched_balance - int8 - 0
+	last_fetched_balance - numeric - 0
 	created_at - timestampz - now()
 	updated_at - timestampz - nullable

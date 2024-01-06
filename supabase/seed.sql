@@ -342,6 +342,17 @@ CREATE TABLE IF NOT EXISTS "public"."old_pal_tokens" (
 
 ALTER TABLE "public"."old_pal_tokens" OWNER TO "postgres";
 
+CREATE TABLE IF NOT EXISTS "public"."token_holders" (
+    "chain" "text" NOT NULL,
+    "token_address" "text" NOT NULL,
+    "wallet_address" "text" NOT NULL,
+    "last_fetched_balance" numeric DEFAULT '0'::numeric NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone
+);
+
+ALTER TABLE "public"."token_holders" OWNER TO "postgres";
+
 CREATE TABLE IF NOT EXISTS "public"."tokens" (
     "chain" "text" NOT NULL,
     "token_address" "text" NOT NULL,
@@ -408,6 +419,9 @@ ALTER TABLE ONLY "public"."old_pal_token_balances"
 ALTER TABLE ONLY "public"."old_pal_tokens"
     ADD CONSTRAINT "pal_tokens_pkey" PRIMARY KEY ("token_address", "chain");
 
+ALTER TABLE ONLY "public"."token_holders"
+    ADD CONSTRAINT "token_holders_pkey" PRIMARY KEY ("chain", "token_address", "wallet_address");
+
 ALTER TABLE ONLY "public"."tokens"
     ADD CONSTRAINT "tokens_pkey" PRIMARY KEY ("chain", "token_address");
 
@@ -460,6 +474,8 @@ ALTER TABLE "public"."old_pal_token_balances" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."old_pal_tokens" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."token_chat_messages" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "public"."token_holders" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."tokens" ENABLE ROW LEVEL SECURITY;
 
@@ -570,6 +586,10 @@ GRANT ALL ON TABLE "public"."old_pal_token_balances" TO "service_role";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "anon";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "authenticated";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "service_role";
+
+GRANT ALL ON TABLE "public"."token_holders" TO "anon";
+GRANT ALL ON TABLE "public"."token_holders" TO "authenticated";
+GRANT ALL ON TABLE "public"."token_holders" TO "service_role";
 
 GRANT ALL ON TABLE "public"."tokens" TO "anon";
 GRANT ALL ON TABLE "public"."tokens" TO "authenticated";
