@@ -16,13 +16,13 @@ these tokens based on a pricing formula.
 
 - [0x6489f919432741965831f731Fa203553eA790614](https://basescan.org/address/0x6489f919432741965831f731Fa203553eA790614)
 
-#### Optimism
-
-- [0x1640C880E14F8913bA71644F6812eE58EAeF412F](https://optimistic.etherscan.io/address/0x1640C880E14F8913bA71644F6812eE58EAeF412F)
-
 #### Arbitrum
 
 - [0xECFFc91149b8B702dEa6905Ae304A9D36527060F](https://arbiscan.io/address/0xECFFc91149b8B702dEa6905Ae304A9D36527060F)
+
+#### Optimism
+
+- [0x1640C880E14F8913bA71644F6812eE58EAeF412F](https://optimistic.etherscan.io/address/0x1640C880E14F8913bA71644F6812eE58EAeF412F)
 
 #### Base Goerli
 

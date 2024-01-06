@@ -3,10 +3,10 @@ users_public
 	wallet_address - text - nullable
 	display_name - text - nullable
 	avatar - text - nullable
-	avatar_thumbnail - text - nullable
+	avatar_thumb - text - nullable
 	avatar_stored - bool - false
 	stored_avatar - text - nullable
-	stored_avatar_thumbnail - text - nullable
+	stored_avatar_thumb - text - nullable
 	x_username - text - nullable
 	metadata - jsonb - nullable
 	follower_count - int4 - 0
