@@ -407,6 +407,9 @@ ALTER TABLE ONLY "public"."users_public"
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "users_public_pkey" PRIMARY KEY ("user_id");
 
+ALTER TABLE ONLY "public"."users_public"
+    ADD CONSTRAINT "users_public_wallet_address_key" UNIQUE ("wallet_address");
+
 CREATE OR REPLACE TRIGGER "increment_trading_fees_earned" AFTER INSERT ON "public"."pal_contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."increment_trading_fees_earned"();
 
 CREATE OR REPLACE TRIGGER "new_pal_token" AFTER INSERT ON "public"."pal_contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."new_pal_token"();
