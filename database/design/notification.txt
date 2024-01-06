@@ -1,0 +1,12 @@
+notifications
+	id - int8 - auto_increment - pk
+    user_id - uuid, fk to users_public.user_id - not null
+    triggerer - uuid, fk to users_public.user_id - nullable
+	type - int2 - not null
+	token_address - text - nullable
+	amount - int8 - nullable
+	post_id - int8, fk to posts.id - nullable
+	post_message - text - nullable
+	read - bool - false
+	read_at - timestampz - nullable
+	created_at - timestampz - now()

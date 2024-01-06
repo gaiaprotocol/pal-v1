@@ -329,6 +329,14 @@ CREATE TABLE IF NOT EXISTS "public"."old_pal_tokens" (
 
 ALTER TABLE "public"."old_pal_tokens" OWNER TO "postgres";
 
+CREATE TABLE IF NOT EXISTS "public"."tracked_event_blocks" (
+    "chain" "text" NOT NULL,
+    "block_number" bigint NOT NULL,
+    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+ALTER TABLE "public"."tracked_event_blocks" OWNER TO "postgres";
+
 CREATE TABLE IF NOT EXISTS "public"."users_public" (
     "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -361,6 +369,9 @@ ALTER TABLE ONLY "public"."old_pal_token_balances"
 
 ALTER TABLE ONLY "public"."old_pal_tokens"
     ADD CONSTRAINT "pal_tokens_pkey" PRIMARY KEY ("token_address", "chain");
+
+ALTER TABLE ONLY "public"."tracked_event_blocks"
+    ADD CONSTRAINT "tracked_event_blocks_pkey" PRIMARY KEY ("chain");
 
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "user_wallets_wallet_address_key" UNIQUE ("wallet_address");
@@ -406,6 +417,8 @@ ALTER TABLE "public"."old_pal_token_balances" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."old_pal_tokens" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."token_chat_messages" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "public"."tracked_event_blocks" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "update pal token's metadata" ON "public"."old_pal_tokens" FOR UPDATE TO "authenticated" USING (("owner" = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
@@ -508,6 +521,10 @@ GRANT ALL ON TABLE "public"."old_pal_token_balances" TO "service_role";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "anon";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "authenticated";
 GRANT ALL ON TABLE "public"."old_pal_tokens" TO "service_role";
+
+GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "anon";
+GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "authenticated";
+GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "service_role";
 
 GRANT ALL ON TABLE "public"."users_public" TO "anon";
 GRANT ALL ON TABLE "public"."users_public" TO "authenticated";
