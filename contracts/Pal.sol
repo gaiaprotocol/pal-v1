@@ -16,11 +16,14 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     uint256 public protocolFeePercent;
     uint256 public tokenOwnerFeePercent;
 
-    address public oracleAddress;
+    IERC20 public membershipToken; // deprecated
+    uint256 public membershipWeight; // deprecated
 
     uint256 private constant BASE_DIVIDER = 16000;
 
     mapping(address => bool) public isPalUserToken;
+
+    address public oracleAddress;
 
     event SetProtocolFeeDestination(address indexed destination);
     event SetProtocolFeePercent(uint256 percent);

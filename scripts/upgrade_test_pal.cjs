@@ -11,6 +11,8 @@ async function main() {
 
   await upgrades.upgradeProxy(deployedProxyAddress, TestPalUpgrade);
   console.log("Pal upgraded");
+
+  process.exit();
 }
 
 main();
