@@ -297,20 +297,7 @@ CREATE TABLE IF NOT EXISTS "public"."follows" (
 
 ALTER TABLE "public"."follows" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."pal_contract_events" (
-    "block_number" bigint NOT NULL,
-    "log_index" bigint NOT NULL,
-    "event_type" smallint NOT NULL,
-    "args" "text"[] DEFAULT '{}'::"text"[] NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "wallet_address" "text" NOT NULL,
-    "token_address" "text" NOT NULL,
-    "chain" "text" DEFAULT 'base'::"text" NOT NULL
-);
-
-ALTER TABLE "public"."pal_contract_events" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."pal_token_balances" (
+CREATE TABLE IF NOT EXISTS "public"."old_pal_token_balances" (
     "token_address" "text" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "wallet_address" "text" NOT NULL,
@@ -318,9 +305,9 @@ CREATE TABLE IF NOT EXISTS "public"."pal_token_balances" (
     "chain" "text" DEFAULT 'base'::"text" NOT NULL
 );
 
-ALTER TABLE "public"."pal_token_balances" OWNER TO "postgres";
+ALTER TABLE "public"."old_pal_token_balances" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
+CREATE TABLE IF NOT EXISTS "public"."old_pal_tokens" (
     "token_address" "text" NOT NULL,
     "owner" "text" NOT NULL,
     "name" "text" NOT NULL,
@@ -340,24 +327,7 @@ CREATE TABLE IF NOT EXISTS "public"."pal_tokens" (
     "trading_volume" numeric DEFAULT '0'::numeric NOT NULL
 );
 
-ALTER TABLE "public"."pal_tokens" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."tracked_event_blocks" (
-    "block_number" bigint NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "updated_at" timestamp with time zone,
-    "chain" "text" DEFAULT ''::"text" NOT NULL
-);
-
-ALTER TABLE "public"."tracked_event_blocks" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."user_fcm_tokens" (
-    "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "token" "text" NOT NULL
-);
-
-ALTER TABLE "public"."user_fcm_tokens" OWNER TO "postgres";
+ALTER TABLE "public"."old_pal_tokens" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."users_public" (
     "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
@@ -386,20 +356,11 @@ ALTER TABLE ONLY "public"."token_chat_messages"
 ALTER TABLE ONLY "public"."follows"
     ADD CONSTRAINT "follows_pkey" PRIMARY KEY ("follower_id", "followee_id");
 
-ALTER TABLE ONLY "public"."pal_contract_events"
-    ADD CONSTRAINT "pal_contract_events_pkey" PRIMARY KEY ("block_number", "log_index", "chain");
-
-ALTER TABLE ONLY "public"."pal_token_balances"
+ALTER TABLE ONLY "public"."old_pal_token_balances"
     ADD CONSTRAINT "pal_token_balances_pkey" PRIMARY KEY ("token_address", "wallet_address", "chain");
 
-ALTER TABLE ONLY "public"."pal_tokens"
+ALTER TABLE ONLY "public"."old_pal_tokens"
     ADD CONSTRAINT "pal_tokens_pkey" PRIMARY KEY ("token_address", "chain");
-
-ALTER TABLE ONLY "public"."tracked_event_blocks"
-    ADD CONSTRAINT "tracked_event_blocks_pkey" PRIMARY KEY ("chain");
-
-ALTER TABLE ONLY "public"."user_fcm_tokens"
-    ADD CONSTRAINT "user_fcm_tokens_pkey" PRIMARY KEY ("user_id", "token");
 
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "user_wallets_wallet_address_key" UNIQUE ("wallet_address");
@@ -410,15 +371,11 @@ ALTER TABLE ONLY "public"."users_public"
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "users_public_wallet_address_key" UNIQUE ("wallet_address");
 
-CREATE OR REPLACE TRIGGER "increment_trading_fees_earned" AFTER INSERT ON "public"."pal_contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."increment_trading_fees_earned"();
-
-CREATE OR REPLACE TRIGGER "new_pal_token" AFTER INSERT ON "public"."pal_contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."new_pal_token"();
-
 CREATE OR REPLACE TRIGGER "set_users_public_updated_at" BEFORE UPDATE ON "public"."users_public" FOR EACH ROW EXECUTE FUNCTION "public"."set_updated_at"();
 
 CREATE OR REPLACE TRIGGER "update_last_message" AFTER INSERT ON "public"."token_chat_messages" FOR EACH ROW EXECUTE FUNCTION "public"."update_last_message"();
 
-CREATE OR REPLACE TRIGGER "update_price_trend" BEFORE UPDATE ON "public"."pal_tokens" FOR EACH ROW EXECUTE FUNCTION "public"."update_price_trend"();
+CREATE OR REPLACE TRIGGER "update_price_trend" BEFORE UPDATE ON "public"."old_pal_tokens" FOR EACH ROW EXECUTE FUNCTION "public"."update_price_trend"();
 
 ALTER TABLE ONLY "public"."follows"
     ADD CONSTRAINT "follows_followee_id_fkey" FOREIGN KEY ("followee_id") REFERENCES "public"."users_public"("user_id");
@@ -429,17 +386,12 @@ ALTER TABLE ONLY "public"."follows"
 ALTER TABLE ONLY "public"."token_chat_messages"
     ADD CONSTRAINT "token_chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "auth"."users"("id");
 
-ALTER TABLE ONLY "public"."user_fcm_tokens"
-    ADD CONSTRAINT "user_fcm_tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
-
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "users_public_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
 
-CREATE POLICY "allow anon select" ON "public"."pal_contract_events" FOR SELECT USING (true);
+CREATE POLICY "allow anon select" ON "public"."old_pal_token_balances" FOR SELECT USING (true);
 
-CREATE POLICY "allow anon select" ON "public"."pal_token_balances" FOR SELECT USING (true);
-
-CREATE POLICY "allow anon select" ON "public"."pal_tokens" FOR SELECT USING (true);
+CREATE POLICY "allow anon select" ON "public"."old_pal_tokens" FOR SELECT USING (true);
 
 CREATE POLICY "allow anon select" ON "public"."users_public" FOR SELECT USING (true);
 
@@ -449,25 +401,17 @@ CREATE POLICY "can unfollow only follower" ON "public"."follows" FOR DELETE TO "
 
 ALTER TABLE "public"."follows" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "only user" ON "public"."user_fcm_tokens" TO "authenticated" USING (("user_id" = "auth"."uid"())) WITH CHECK (("user_id" = "auth"."uid"()));
+ALTER TABLE "public"."old_pal_token_balances" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."pal_contract_events" ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE "public"."pal_token_balances" ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE "public"."pal_tokens" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."old_pal_tokens" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."token_chat_messages" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."tracked_event_blocks" ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "update pal token's metadata" ON "public"."pal_tokens" FOR UPDATE TO "authenticated" USING (("owner" = ( SELECT "users_public"."wallet_address"
+CREATE POLICY "update pal token's metadata" ON "public"."old_pal_tokens" FOR UPDATE TO "authenticated" USING (("owner" = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
   WHERE ("users_public"."user_id" = "auth"."uid"())))) WITH CHECK (("owner" = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
   WHERE ("users_public"."user_id" = "auth"."uid"()))));
-
-ALTER TABLE "public"."user_fcm_tokens" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."users_public" ENABLE ROW LEVEL SECURITY;
 
@@ -475,27 +419,27 @@ CREATE POLICY "view everyone" ON "public"."follows" FOR SELECT USING (true);
 
 CREATE POLICY "view everyone" ON "public"."users_public" FOR SELECT USING (true);
 
-CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR SELECT TO "authenticated" USING (((( SELECT "pal_tokens"."owner"
-   FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."token_address" = "token_chat_messages"."token_address")) = ( SELECT "users_public"."wallet_address"
+CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR SELECT TO "authenticated" USING (((( SELECT "old_pal_tokens"."owner"
+   FROM "public"."old_pal_tokens"
+  WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "pal_tokens"."view_token_required"
-   FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."token_address" = "token_chat_messages"."token_address")) <= ( SELECT "pal_token_balances"."last_fetched_balance"
-   FROM "public"."pal_token_balances"
-  WHERE (("pal_token_balances"."token_address" = "token_chat_messages"."token_address") AND ("pal_token_balances"."wallet_address" = ( SELECT "users_public"."wallet_address"
+  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "old_pal_tokens"."view_token_required"
+   FROM "public"."old_pal_tokens"
+  WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) <= ( SELECT "old_pal_token_balances"."last_fetched_balance"
+   FROM "public"."old_pal_token_balances"
+  WHERE (("old_pal_token_balances"."token_address" = "token_chat_messages"."token_address") AND ("old_pal_token_balances"."wallet_address" = ( SELECT "users_public"."wallet_address"
            FROM "public"."users_public"
           WHERE ("users_public"."user_id" = "auth"."uid"()))))))));
 
-CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((("auth"."uid"() = "author") AND ((( SELECT "pal_tokens"."owner"
-   FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."token_address" = "token_chat_messages"."token_address")) = ( SELECT "users_public"."wallet_address"
+CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((("auth"."uid"() = "author") AND ((( SELECT "old_pal_tokens"."owner"
+   FROM "public"."old_pal_tokens"
+  WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "pal_tokens"."write_token_required"
-   FROM "public"."pal_tokens"
-  WHERE ("pal_tokens"."token_address" = "token_chat_messages"."token_address")) <= ( SELECT "pal_token_balances"."last_fetched_balance"
-   FROM "public"."pal_token_balances"
-  WHERE (("pal_token_balances"."token_address" = "token_chat_messages"."token_address") AND ("pal_token_balances"."wallet_address" = ( SELECT "users_public"."wallet_address"
+  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "old_pal_tokens"."write_token_required"
+   FROM "public"."old_pal_tokens"
+  WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) <= ( SELECT "old_pal_token_balances"."last_fetched_balance"
+   FROM "public"."old_pal_token_balances"
+  WHERE (("old_pal_token_balances"."token_address" = "token_chat_messages"."token_address") AND ("old_pal_token_balances"."wallet_address" = ( SELECT "users_public"."wallet_address"
            FROM "public"."users_public"
           WHERE ("users_public"."user_id" = "auth"."uid"())))))))));
 
@@ -557,25 +501,13 @@ GRANT ALL ON TABLE "public"."follows" TO "anon";
 GRANT ALL ON TABLE "public"."follows" TO "authenticated";
 GRANT ALL ON TABLE "public"."follows" TO "service_role";
 
-GRANT ALL ON TABLE "public"."pal_contract_events" TO "anon";
-GRANT ALL ON TABLE "public"."pal_contract_events" TO "authenticated";
-GRANT ALL ON TABLE "public"."pal_contract_events" TO "service_role";
+GRANT ALL ON TABLE "public"."old_pal_token_balances" TO "anon";
+GRANT ALL ON TABLE "public"."old_pal_token_balances" TO "authenticated";
+GRANT ALL ON TABLE "public"."old_pal_token_balances" TO "service_role";
 
-GRANT ALL ON TABLE "public"."pal_token_balances" TO "anon";
-GRANT ALL ON TABLE "public"."pal_token_balances" TO "authenticated";
-GRANT ALL ON TABLE "public"."pal_token_balances" TO "service_role";
-
-GRANT ALL ON TABLE "public"."pal_tokens" TO "anon";
-GRANT ALL ON TABLE "public"."pal_tokens" TO "authenticated";
-GRANT ALL ON TABLE "public"."pal_tokens" TO "service_role";
-
-GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "anon";
-GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "authenticated";
-GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "service_role";
-
-GRANT ALL ON TABLE "public"."user_fcm_tokens" TO "anon";
-GRANT ALL ON TABLE "public"."user_fcm_tokens" TO "authenticated";
-GRANT ALL ON TABLE "public"."user_fcm_tokens" TO "service_role";
+GRANT ALL ON TABLE "public"."old_pal_tokens" TO "anon";
+GRANT ALL ON TABLE "public"."old_pal_tokens" TO "authenticated";
+GRANT ALL ON TABLE "public"."old_pal_tokens" TO "service_role";
 
 GRANT ALL ON TABLE "public"."users_public" TO "anon";
 GRANT ALL ON TABLE "public"."users_public" TO "authenticated";

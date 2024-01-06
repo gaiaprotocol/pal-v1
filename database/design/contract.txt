@@ -9,4 +9,6 @@ contract_events
 	log_index - int8 - pk
 	event_name - text - not null
 	args - text[] - not null
+	wallet_address - text - not null
+	token_address - text - not null
 	created_at - timestampz - now()
