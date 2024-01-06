@@ -18,7 +18,9 @@ import messages_ja from "../locales/ja.yml";
 import messages_zh from "../locales/zh.yml";
 import messages_zh_HK from "../locales/zh_HK.yml";
 import messages_zh_TW from "../locales/zh_TW.yml";
+import { initBlockchains } from "./blockchain/Blockchains.js";
 import Config from "./Config.js";
+import Env from "./Env.js";
 import EnvironmentManager from "./EnvironmentManager.js";
 import Layout from "./layout/Layout.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
@@ -36,6 +38,11 @@ msg.setMessages({
 MaterialIconSystem.launch();
 
 export default async function initialize(config: Config) {
+  Env.dev = config.dev;
+  Env.infuraKey = config.infuraKey;
+
+  initBlockchains();
+
   AppInitializer.initialize(
     config.supabaseUrl,
     config.supabaseAnonKey,

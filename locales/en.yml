@@ -1,3 +1,16 @@
+no-wallet-connected-title: No wallet connected
+no-wallet-connected-message: You need to connect a wallet to perform this action.
+no-wallet-linked-title: No wallet linked
+no-wallet-linked-message: You need to link a wallet to perform this action.
+no-wallet-linked-confirm: Link wallet
+no-wallet-linked-linking: Linking...
+
+wallet-address-mismatch-title: Wallet address mismatch
+wallet-address-mismatch-message: The wallet address associated with your account and the current crypto wallet address do not match. Please change the crypto wallet address.
+
+invalid-network-title: Invalid network
+invalid-network-message: You need to be on the {chain} network to perform this action.
+
 title-posts: Posts
 title-chats: Chats
 title-activity: Activity

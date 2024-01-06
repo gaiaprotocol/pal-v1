@@ -1,6 +1,10 @@
 import { Supabase } from "@common-module/app";
 import { SignedUserManager } from "@common-module/social";
+import { getNetwork, getWalletClient } from "@wagmi/core";
+import { BrowserProvider, JsonRpcSigner } from "ethers";
 import EnvironmentManager from "../EnvironmentManager.js";
+import BlockchainType from "../blockchain/BlockchainType.js";
+import Blockchains from "../blockchain/Blockchains.js";
 import PalUserPublic from "../database-interface/PalUserPublic.js";
 import WalletManager from "../wallet/WalletManager.js";
 import PalUserService from "./PalUserService.js";
@@ -47,8 +51,37 @@ class PalSignedUserManager extends SignedUserManager<PalUserPublic> {
     }
   }
 
-  public async getContractSigner() {
-    //TODO:
+  public async getContractSigner(_chain: BlockchainType) {
+    if (!this.user) throw new Error("User not signed in");
+    if (WalletManager.connected !== true) {
+      throw new Error("Wallet not connected");
+    }
+    if (!this.user.wallet_address) throw new Error("Wallet not linked");
+
+    const walletClient = await getWalletClient();
+    if (!walletClient) throw new Error("Wallet not connected");
+    const { account, transport } = walletClient;
+
+    if (account.address !== this.user.wallet_address) {
+      throw new Error("Wallet address mismatch");
+    }
+
+    const { chain } = getNetwork();
+    if (!chain) throw new Error("Chain not found");
+    if (chain.id !== Blockchains[_chain]?.chainId) {
+      throw new Error("Wrong chain");
+    }
+
+    if (chain && account && transport) {
+      return new JsonRpcSigner(
+        new BrowserProvider(transport, {
+          chainId: chain.id,
+          name: chain.name,
+          ensAddress: chain.contracts?.ensRegistry?.address,
+        }),
+        account.address,
+      );
+    }
   }
 }
 
