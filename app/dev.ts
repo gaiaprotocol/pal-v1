@@ -1,6 +1,7 @@
 import initialize from "./initialize.js";
 await initialize({
-  dev: true,
+  //dev: true,
+  dev: false,
 
   supabaseUrl: "https://zwsbatwxnlcsgycwiymn.supabase.co",
   supabaseAnonKey:

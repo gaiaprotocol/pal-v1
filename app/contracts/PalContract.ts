@@ -1,5 +1,6 @@
 import Env from "../Env.js";
 import BlockchainType from "../blockchain/BlockchainType.js";
+import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import Contract from "./Contract.js";
 import { Pal } from "./abi/pal/Pal.js";
 import PalArtifact from "./abi/pal/Pal.json" assert {
@@ -16,6 +17,12 @@ const addresses: { [chain: string]: string } = {
   [BlockchainType.Optimism]: "0x1640C880E14F8913bA71644F6812eE58EAeF412F",
 };
 
+export function getDeployedBlockchainsForPal(): BlockchainType[] {
+  return Object.keys(Env.dev ? testnetAddresses : addresses).map((chain) =>
+    chain as BlockchainType
+  );
+}
+
 export default class PalContract extends Contract<Pal> {
   constructor(chain: BlockchainType) {
     super(
@@ -23,5 +30,24 @@ export default class PalContract extends Contract<Pal> {
       chain,
       (Env.dev ? testnetAddresses : addresses)[chain],
     );
+  }
+
+  public async createToken(name: string, symbol: string) {
+    const writeContract = await this.getWriteContract();
+    const tx = await writeContract.createToken(name, symbol);
+    const receipt = await tx.wait();
+
+    if (!receipt) throw new Error("No receipt");
+    if (!PalSignedUserManager.user) throw new Error("No user");
+
+    const events = await writeContract.queryFilter(
+      writeContract.filters.UserTokenCreated(
+        PalSignedUserManager.user.wallet_address,
+      ),
+      receipt.blockNumber,
+      receipt.blockNumber,
+    );
+    if (!events || events.length === 0) throw new Error("No events");
+    return events[0].args?.[1];
   }
 }
