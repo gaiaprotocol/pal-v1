@@ -70,7 +70,7 @@ BEGIN
             ) values (
                 new.chain, new.args[2], new.args[1], new.args[4]::numeric
             ) on conflict (chain, token_address, wallet_address) do update
-                set last_fetched_balance = last_fetched_balance + new.args[4]::numeric;
+                set last_fetched_balance = token_holders.last_fetched_balance + new.args[4]::numeric;
             
             -- if token holder is new, add to token holder count
             IF NOT FOUND THEN

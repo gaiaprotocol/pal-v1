@@ -243,7 +243,7 @@ BEGIN
             ) values (
                 new.chain, new.args[2], new.args[1], new.args[4]::numeric
             ) on conflict (chain, token_address, wallet_address) do update
-                set last_fetched_balance = last_fetched_balance + new.args[4]::numeric;
+                set last_fetched_balance = token_holders.last_fetched_balance + new.args[4]::numeric;
             
             -- if token holder is new, add to token holder count
             IF NOT FOUND THEN
@@ -569,6 +569,16 @@ CREATE TABLE IF NOT EXISTS "public"."users_public" (
 
 ALTER TABLE "public"."users_public" OWNER TO "postgres";
 
+CREATE TABLE IF NOT EXISTS "public"."wallets" (
+    "wallet_address" "text" NOT NULL,
+    "total_key_balance" bigint DEFAULT '0'::bigint NOT NULL,
+    "total_earned_trading_fees" numeric DEFAULT '0'::numeric NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone
+);
+
+ALTER TABLE "public"."wallets" OWNER TO "postgres";
+
 ALTER TABLE ONLY "public"."activities"
     ADD CONSTRAINT "activities_pkey" PRIMARY KEY ("chain", "block_number", "log_index");
 
@@ -607,6 +617,9 @@ ALTER TABLE ONLY "public"."users_public"
 
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "users_public_wallet_address_key" UNIQUE ("wallet_address");
+
+ALTER TABLE ONLY "public"."wallets"
+    ADD CONSTRAINT "wallets_pkey" PRIMARY KEY ("wallet_address");
 
 CREATE OR REPLACE TRIGGER "parse_contract_event" AFTER INSERT ON "public"."contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."parse_contract_event"();
 
@@ -676,6 +689,8 @@ CREATE POLICY "view everyone" ON "public"."follows" FOR SELECT USING (true);
 
 CREATE POLICY "view everyone" ON "public"."users_public" FOR SELECT USING (true);
 
+CREATE POLICY "view everyone" ON "public"."wallets" FOR SELECT USING (true);
+
 CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR SELECT TO "authenticated" USING (((( SELECT "old_pal_tokens"."owner"
    FROM "public"."old_pal_tokens"
   WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) = ( SELECT "users_public"."wallet_address"
@@ -687,6 +702,8 @@ CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR 
   WHERE (("old_pal_token_balances"."token_address" = "token_chat_messages"."token_address") AND ("old_pal_token_balances"."wallet_address" = ( SELECT "users_public"."wallet_address"
            FROM "public"."users_public"
           WHERE ("users_public"."user_id" = "auth"."uid"()))))))));
+
+ALTER TABLE "public"."wallets" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((("auth"."uid"() = "author") AND ((( SELECT "old_pal_tokens"."owner"
    FROM "public"."old_pal_tokens"
@@ -801,6 +818,10 @@ GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "service_role";
 GRANT ALL ON TABLE "public"."users_public" TO "anon";
 GRANT ALL ON TABLE "public"."users_public" TO "authenticated";
 GRANT ALL ON TABLE "public"."users_public" TO "service_role";
+
+GRANT ALL ON TABLE "public"."wallets" TO "anon";
+GRANT ALL ON TABLE "public"."wallets" TO "authenticated";
+GRANT ALL ON TABLE "public"."wallets" TO "service_role";
 
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "postgres";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "anon";
