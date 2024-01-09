@@ -12,6 +12,7 @@ import BlockchainType from "../blockchain/BlockchainType.js";
 import PalContract, {
   getDeployedBlockchainsForPal,
 } from "../contracts/PalContract.js";
+import TrackEventManager from "../TrackEventManager.js";
 
 export default class CreateTokenPopup extends Popup {
   private chainSelect: Select<BlockchainType>;
@@ -62,6 +63,8 @@ export default class CreateTokenPopup extends Popup {
                 const contract = new PalContract(chain);
                 const tokenAddress = await contract.createToken(name, symbol);
                 console.log(tokenAddress);
+
+                await TrackEventManager.trackEvent(chain);
               }
             },
           }),

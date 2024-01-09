@@ -6,6 +6,7 @@ import {
   optimism,
   optimismGoerli,
 } from "npm:viem/chains";
+import { isDevMode } from "./supabase.ts";
 
 export enum BlockchainType {
   Ethereum = "ethereum",
@@ -14,16 +15,14 @@ export enum BlockchainType {
   Optimism = "optimism",
 }
 
-const dev = Deno.env.get("IS_DEV") === "true";
-
 export const rpcs: { [chain: string]: string } = {
   [BlockchainType.Ethereum]: `https://${
-    dev ? "goerli" : "mainnet"
+    isDevMode ? "goerli" : "mainnet"
   }.infura.io/v3/${Deno.env.get("INFURA_KEY")}`,
-  [BlockchainType.Base]: (dev ? baseGoerli : base).rpcUrls.default
+  [BlockchainType.Base]: (isDevMode ? baseGoerli : base).rpcUrls.default
     .http[0],
   [BlockchainType.Arbitrum]:
-    (dev ? arbitrumGoerli : arbitrum).rpcUrls.default.http[0],
+    (isDevMode ? arbitrumGoerli : arbitrum).rpcUrls.default.http[0],
   [BlockchainType.Optimism]:
-    (dev ? optimismGoerli : optimism).rpcUrls.default.http[0],
+    (isDevMode ? optimismGoerli : optimism).rpcUrls.default.http[0],
 };
