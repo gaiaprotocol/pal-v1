@@ -5,7 +5,7 @@ notifications
 	type - int2 - not null
     chain - text - nullable
 	token_address - text - nullable
-	amount - int8 - nullable
+	amount - numeric - nullable
 	post_id - int8, fk to posts.id - nullable
 	post_message - text - nullable
 	read - bool - false

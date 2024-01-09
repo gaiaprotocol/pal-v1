@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "public"."notifications" (
     "type" smallint NOT NULL,
     "chain" "text",
     "token_address" "text",
-    "amount" bigint,
+    "amount" numeric,
     "post_id" bigint,
     "post_message" "text",
     "read" boolean DEFAULT false NOT NULL,

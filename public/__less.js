@@ -7,26 +7,43 @@
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./public/style/main.less":
 /*!********************************!*\
   !*** ./public/style/main.less ***!
   \********************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("throw new Error(\"Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\\nHookWebpackError: Module build failed (from ./node_modules/less-loader/dist/cjs.js):\\n\\n\\n@import \\\"../../../@common-module/social/style/index.less\\\";\\n^\\nLess resolver error:\\n'../../../@common-module/social/style/index.less' wasn't found. Tried - /Users/hanul/Documents/GitHub/@common-module/social/style/index.less,../../../@common-module/social/style/index.less\\n\\nWebpack resolver error details:\\nresolve '../../../@common-module/social/style/index.less' in '/Users/hanul/Documents/GitHub/pal/public/style'\\n  using description file: /Users/hanul/Documents/GitHub/pal/package.json (relative path: ./public/style)\\n    No description file found in /Users/hanul/Documents/GitHub/@common-module/social/style or above\\n    no extension\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less doesn't exist\\n    .less\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less.less doesn't exist\\n    .css\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less.css doesn't exist\\n    as directory\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less doesn't exist\\n\\nWebpack resolver error missing:\\nundefined\\n\\n\\n      Error in /Users/hanul/Documents/GitHub/pal/public/style/main.less (line 1, column 0)\\n    at tryRunOrWebpackError (/Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/HookWebpackError.js:88:9)\\n    at __webpack_require_module__ (/Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/Compilation.js:5067:12)\\n    at __webpack_require__ (/Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/Compilation.js:5024:18)\\n    at /Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/Compilation.js:5095:20\\n    at symbolIterator (/Users/hanul/Documents/GitHub/pal/node_modules/neo-async/async.js:3485:9)\\n    at done (/Users/hanul/Documents/GitHub/pal/node_modules/neo-async/async.js:3527:9)\\n    at Hook.eval [as callAsync] (eval at create (/Users/hanul/Documents/GitHub/pal/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:15:1)\\n    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/Users/hanul/Documents/GitHub/pal/node_modules/tapable/lib/Hook.js:18:14)\\n    at /Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/Compilation.js:5002:43\\n    at symbolIterator (/Users/hanul/Documents/GitHub/pal/node_modules/neo-async/async.js:3482:9)\\n-- inner error --\\nError: Module build failed (from ./node_modules/less-loader/dist/cjs.js):\\n\\n\\n@import \\\"../../../@common-module/social/style/index.less\\\";\\n^\\nLess resolver error:\\n'../../../@common-module/social/style/index.less' wasn't found. Tried - /Users/hanul/Documents/GitHub/@common-module/social/style/index.less,../../../@common-module/social/style/index.less\\n\\nWebpack resolver error details:\\nresolve '../../../@common-module/social/style/index.less' in '/Users/hanul/Documents/GitHub/pal/public/style'\\n  using description file: /Users/hanul/Documents/GitHub/pal/package.json (relative path: ./public/style)\\n    No description file found in /Users/hanul/Documents/GitHub/@common-module/social/style or above\\n    no extension\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less doesn't exist\\n    .less\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less.less doesn't exist\\n    .css\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less.css doesn't exist\\n    as directory\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less doesn't exist\\n\\nWebpack resolver error missing:\\nundefined\\n\\n\\n      Error in /Users/hanul/Documents/GitHub/pal/public/style/main.less (line 1, column 0)\\n    at Object.<anonymous> (/Users/hanul/Documents/GitHub/pal/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!/Users/hanul/Documents/GitHub/pal/node_modules/less-loader/dist/cjs.js!/Users/hanul/Documents/GitHub/pal/public/style/main.less:1:7)\\n    at /Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/javascript/JavascriptModulesPlugin.js:452:10\\n    at Hook.eval [as call] (eval at create (/Users/hanul/Documents/GitHub/pal/node_modules/tapable/lib/HookCodeFactory.js:19:10), <anonymous>:7:1)\\n    at Hook.CALL_DELEGATE [as _call] (/Users/hanul/Documents/GitHub/pal/node_modules/tapable/lib/Hook.js:14:14)\\n    at /Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/Compilation.js:5069:39\\n    at tryRunOrWebpackError (/Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/HookWebpackError.js:83:7)\\n    at __webpack_require_module__ (/Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/Compilation.js:5067:12)\\n    at __webpack_require__ (/Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/Compilation.js:5024:18)\\n    at /Users/hanul/Documents/GitHub/pal/node_modules/webpack/lib/Compilation.js:5095:20\\n    at symbolIterator (/Users/hanul/Documents/GitHub/pal/node_modules/neo-async/async.js:3485:9)\\n\\nGenerated code for /Users/hanul/Documents/GitHub/pal/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!/Users/hanul/Documents/GitHub/pal/node_modules/less-loader/dist/cjs.js!/Users/hanul/Documents/GitHub/pal/public/style/main.less\\n1 | throw new Error(\\\"Module build failed (from ./node_modules/less-loader/dist/cjs.js):\\\\n\\\\n\\\\n@import \\\\\\\"../../../@common-module/social/style/index.less\\\\\\\";\\\\n^\\\\nLess resolver error:\\\\n'../../../@common-module/social/style/index.less' wasn't found. Tried - /Users/hanul/Documents/GitHub/@common-module/social/style/index.less,../../../@common-module/social/style/index.less\\\\n\\\\nWebpack resolver error details:\\\\nresolve '../../../@common-module/social/style/index.less' in '/Users/hanul/Documents/GitHub/pal/public/style'\\\\n  using description file: /Users/hanul/Documents/GitHub/pal/package.json (relative path: ./public/style)\\\\n    No description file found in /Users/hanul/Documents/GitHub/@common-module/social/style or above\\\\n    no extension\\\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less doesn't exist\\\\n    .less\\\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less.less doesn't exist\\\\n    .css\\\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less.css doesn't exist\\\\n    as directory\\\\n      /Users/hanul/Documents/GitHub/@common-module/social/style/index.less doesn't exist\\\\n\\\\nWebpack resolver error missing:\\\\nundefined\\\\n\\\\n\\\\n      Error in /Users/hanul/Documents/GitHub/pal/public/style/main.less (line 1, column 0)\\\");\");\n\n//# sourceURL=webpack:///./public/style/main.less?");
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack:///./public/style/main.less?");
 
 /***/ })
 
 /******/ 	});
 /************************************************************************/
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./public/style/main.less"]();
+/******/ 	__webpack_modules__["./public/style/main.less"](0, __webpack_exports__, __webpack_require__);
 /******/ 	
 /******/ })()
 ;
