@@ -181,9 +181,9 @@ BEGIN
         
         -- add activity
         insert into activities (
-            chain, block_number, log_index, wallet_address, token_address, activity_name, args
+            chain, block_number, log_index, tx, wallet_address, token_address, activity_name, args
         ) values (
-            new.chain, new.block_number, new.log_index, new.args[1], new.args[2], new.event_name, new.args
+            new.chain, new.block_number, new.log_index, new.tx, new.args[1], new.args[2], new.event_name, new.args
         );
         
         -- add token info
@@ -206,9 +206,9 @@ BEGIN
 
         -- add activity
         insert into activities (
-            chain, block_number, log_index, wallet_address, token_address, activity_name, args
+            chain, block_number, log_index, tx, wallet_address, token_address, activity_name, args
         ) values (
-            new.chain, new.block_number, new.log_index, new.args[1], new.args[2], new.event_name, new.args
+            new.chain, new.block_number, new.log_index, new.tx, new.args[1], new.args[2], new.event_name, new.args
         );
 
         -- notify
@@ -392,10 +392,11 @@ CREATE TABLE IF NOT EXISTS "public"."activities" (
     "chain" "text" NOT NULL,
     "block_number" bigint NOT NULL,
     "log_index" bigint NOT NULL,
+    "tx" "text" NOT NULL,
     "wallet_address" "text" NOT NULL,
     "token_address" "text" NOT NULL,
     "activity_name" "text" NOT NULL,
-    "args" "text" DEFAULT '[]'::"text" NOT NULL,
+    "args" "text"[],
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
 );
 
@@ -430,10 +431,11 @@ CREATE TABLE IF NOT EXISTS "public"."contract_events" (
     "chain" "text" NOT NULL,
     "block_number" bigint NOT NULL,
     "log_index" bigint NOT NULL,
+    "tx" "text" NOT NULL,
     "event_name" "text" NOT NULL,
-    "args" "text" DEFAULT '[]'::"text" NOT NULL,
-    "wallet_address" "text" NOT NULL,
-    "token_address" "text" NOT NULL,
+    "args" "text"[],
+    "wallet_address" "text",
+    "token_address" "text",
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
 );
 
@@ -604,6 +606,8 @@ ALTER TABLE ONLY "public"."users_public"
 
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "users_public_wallet_address_key" UNIQUE ("wallet_address");
+
+CREATE OR REPLACE TRIGGER "parse_contract_event" AFTER INSERT ON "public"."contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."parse_contract_event"();
 
 CREATE OR REPLACE TRIGGER "set_users_public_updated_at" BEFORE UPDATE ON "public"."users_public" FOR EACH ROW EXECUTE FUNCTION "public"."set_updated_at"();
 

@@ -8,9 +8,9 @@ BEGIN
         
         -- add activity
         insert into activities (
-            chain, block_number, log_index, wallet_address, token_address, activity_name, args
+            chain, block_number, log_index, tx, wallet_address, token_address, activity_name, args
         ) values (
-            new.chain, new.block_number, new.log_index, new.args[1], new.args[2], new.event_name, new.args
+            new.chain, new.block_number, new.log_index, new.tx, new.args[1], new.args[2], new.event_name, new.args
         );
         
         -- add token info
@@ -33,9 +33,9 @@ BEGIN
 
         -- add activity
         insert into activities (
-            chain, block_number, log_index, wallet_address, token_address, activity_name, args
+            chain, block_number, log_index, tx, wallet_address, token_address, activity_name, args
         ) values (
-            new.chain, new.block_number, new.log_index, new.args[1], new.args[2], new.event_name, new.args
+            new.chain, new.block_number, new.log_index, new.tx, new.args[1], new.args[2], new.event_name, new.args
         );
 
         -- notify

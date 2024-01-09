@@ -2,6 +2,7 @@ activities
 	chain - text - pk
 	block_number - int8 - pk
 	log_index - int8 - pk
+	tx - text - not null
 	wallet_address - text - not null
 	token_address - text - not null
     activity_name - text - not null

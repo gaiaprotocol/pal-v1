@@ -7,8 +7,9 @@ contract_events
 	chain - text - pk
 	block_number - int8 - pk
 	log_index - int8 - pk
+	tx - text - not null
 	event_name - text - not null
 	args - text[] - not null
-	wallet_address - text - not null
-	token_address - text - not null
+	wallet_address - text - nullable
+	token_address - text - nullable
 	created_at - timestampz - now()
