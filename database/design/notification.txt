@@ -3,6 +3,7 @@ notifications
     user_id - uuid, fk to users_public.user_id - not null
     triggerer - uuid, fk to users_public.user_id - nullable
 	type - int2 - not null
+    chain - text - nullable
 	token_address - text - nullable
 	amount - int8 - nullable
 	post_id - int8, fk to posts.id - nullable

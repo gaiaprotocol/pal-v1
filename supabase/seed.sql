@@ -196,11 +196,12 @@ BEGIN
         -- notify
         v_receiver := (SELECT user_id FROM users_public WHERE wallet_address = new.args[1]);
         IF v_receiver IS NOT NULL THEN
-        insert into notifications (
-            user_id, type, token_address
-        ) values (
-            v_receiver, 0, new.args[2]
-        );
+            insert into notifications (
+                user_id, type, chain, token_address
+            ) values (
+                v_receiver, 0, new.chain, new.args[2]
+            );
+        END IF;
 
     ELSIF new.event_name = 'Trade' THEN
 
@@ -218,9 +219,9 @@ BEGIN
         v_triggerer := (SELECT user_id FROM users_public WHERE wallet_address = new.args[1]);
         IF v_receiver IS NOT NULL AND v_receiver != v_triggerer THEN
             insert into notifications (
-                user_id, triggerer, type, token_address, amount
+                user_id, triggerer, type, chain, token_address, amount
             ) values (
-                v_receiver, v_triggerer, CASE WHEN new.args[3] = 'true' THEN 1 ELSE 2 END, new.args[2], new.args[4]::numeric
+                v_receiver, v_triggerer, CASE WHEN new.args[3] = 'true' THEN 1 ELSE 2 END, new.chain, new.args[2], new.args[4]::numeric
             );
         END IF;
 
@@ -229,10 +230,10 @@ BEGIN
             
             -- update token info
             update tokens set
-                supply = new.args[9]::numeric,
+                supply = CASE WHEN new.chain = 'base' AND new.block_number < 8865668 THEN new.args[8]::numeric ELSE new.args[9]::numeric END,
                 last_fetched_key_price = new.args[5]::numeric,
                 total_trading_key_volume = total_trading_key_volume + new.args[5]::numeric,
-                is_key_price_up = true,
+                is_price_up = true,
                 last_key_purchased_at = now()
             where chain = new.chain and token_address = new.args[2];
 
@@ -258,16 +259,15 @@ BEGIN
                 new.args[1], new.args[4]::numeric
             ) on conflict (wallet_address) do update
                 set total_key_balance = wallets.total_key_balance + new.args[4]::numeric;
-        END IF;
-        
+
         -- sell
         ELSE
             -- update token info
             update tokens set
-                supply = new.args[9]::numeric,
+                supply = CASE WHEN new.chain = 'base' AND new.block_number < 8865668 THEN new.args[8]::numeric ELSE new.args[9]::numeric END,
                 last_fetched_key_price = new.args[5]::numeric,
                 total_trading_key_volume = total_trading_key_volume + new.args[5]::numeric,
-                is_key_price_up = false
+                is_price_up = false
             where chain = new.chain and token_address = new.args[2];
 
             -- update token holder info
@@ -454,6 +454,7 @@ CREATE TABLE IF NOT EXISTS "public"."notifications" (
     "user_id" "uuid" NOT NULL,
     "triggerer" "uuid",
     "type" smallint NOT NULL,
+    "chain" "text",
     "token_address" "text",
     "amount" bigint,
     "post_id" bigint,

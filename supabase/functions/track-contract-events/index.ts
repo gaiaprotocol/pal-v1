@@ -1,16 +1,17 @@
 import { ethers } from "https://esm.sh/ethers@6.7.0";
-import { rpcs } from "../_shared/blockchain.ts";
+import { BlockchainType, rpcs } from "../_shared/blockchain.ts";
 import PalContract from "../_shared/contracts/PalContract.ts";
+import PalContractV1 from "../_shared/contracts/PalContractV1.ts";
 import { serveWithOptions } from "../_shared/cors.ts";
 import supabase from "../_shared/supabase.ts";
 
 serveWithOptions(async (req) => {
-  const { chain, blockPeriod = 750 } = await req.json();
+  const { chain, blockPeriod = 500 } = await req.json();
   if (!chain) throw new Error("Missing chain");
 
   const provider = new ethers.JsonRpcProvider(rpcs[chain]);
   const signer = new ethers.JsonRpcSigner(provider, ethers.ZeroAddress);
-  const contract = new PalContract(chain, signer);
+  let contract: PalContract | PalContractV1 = new PalContract(chain, signer);
 
   const { data, error: fetchEventBlockError } = await supabase.from(
     "tracked_event_blocks",
@@ -22,6 +23,10 @@ serveWithOptions(async (req) => {
 
   const currentBlock = await provider.getBlockNumber();
   if (toBlock > currentBlock) toBlock = currentBlock;
+
+  if (chain === BlockchainType.Base && toBlock < 8865668) {
+    contract = new PalContractV1(chain, signer);
+  }
 
   const events = await contract.getEvents(toBlock - blockPeriod * 2, toBlock);
   for (const event of events) {
@@ -47,7 +52,10 @@ serveWithOptions(async (req) => {
     const { error: saveEventError } = await supabase
       .from("contract_events")
       .upsert(data);
-    if (saveEventError) throw saveEventError;
+    if (saveEventError) {
+      console.log(data);
+      throw saveEventError;
+    }
   }
 
   const { error: saveEventBlockError } = await supabase.from(

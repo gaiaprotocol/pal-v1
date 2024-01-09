@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS "public"."notifications" (
     "user_id" "uuid" NOT NULL,
     "triggerer" "uuid",
     "type" smallint NOT NULL,
+    "chain" "text",
     "token_address" "text",
     "amount" bigint,
     "post_id" bigint,

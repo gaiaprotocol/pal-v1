@@ -2,10 +2,10 @@ import { ethers } from "https://esm.sh/ethers@6.7.0";
 import { BlockchainType } from "../blockchain.ts";
 import { isDevMode } from "../supabase.ts";
 import Contract from "./Contract.ts";
-import PalArtifact from "./abi/pal/Pal.json" assert {
+import PalArtifact from "./abi/pal/PalV1.json" assert {
   type: "json",
 };
-import { Pal } from "./abi/pal/Pal.ts";
+import { Pal } from "./abi/pal/PalV1.ts";
 
 const testnetAddresses: { [chain: string]: string } = {
   [BlockchainType.Base]: "0xcF18D57f24C067C00Fa83CC4e8fE1C134177047A",
@@ -13,8 +13,6 @@ const testnetAddresses: { [chain: string]: string } = {
 
 const addresses: { [chain: string]: string } = {
   [BlockchainType.Base]: "0x6489f919432741965831f731Fa203553eA790614",
-  [BlockchainType.Arbitrum]: "0xECFFc91149b8B702dEa6905Ae304A9D36527060F",
-  [BlockchainType.Optimism]: "0x1640C880E14F8913bA71644F6812eE58EAeF412F",
 };
 
 const testnetDeployBlockNumbers: { [chain: string]: number } = {
@@ -23,11 +21,9 @@ const testnetDeployBlockNumbers: { [chain: string]: number } = {
 
 const deployBlockNumbers: { [chain: string]: number } = {
   [BlockchainType.Base]: 4246959,
-  [BlockchainType.Arbitrum]: 167589306,
-  [BlockchainType.Optimism]: 114461187,
 };
 
-export default class PalContract extends Contract<Pal> {
+export default class PalContractV1 extends Contract<Pal> {
   constructor(chain: BlockchainType, signer: ethers.Signer) {
     super(
       (isDevMode ? testnetAddresses : addresses)[chain],
@@ -42,7 +38,6 @@ export default class PalContract extends Contract<Pal> {
         .SetProtocolFeePercent(),
       SetTokenOwnerFeePercent: this.ethersContract.filters
         .SetTokenOwnerFeePercent(),
-      SetOracleAddress: this.ethersContract.filters.SetOracleAddress(),
       UserTokenCreated: this.ethersContract.filters.UserTokenCreated(),
       Trade: this.ethersContract.filters.Trade(),
     };
