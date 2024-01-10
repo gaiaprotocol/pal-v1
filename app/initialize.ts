@@ -23,6 +23,7 @@ import Config from "./Config.js";
 import Env from "./Env.js";
 import EnvironmentManager from "./EnvironmentManager.js";
 import Layout from "./layout/Layout.js";
+import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import WalletManager from "./wallet/WalletManager.js";
 
@@ -58,6 +59,7 @@ export default async function initialize(config: Config) {
   ]);
 
   Router.route("**", Layout, ["test/**"]);
+  Router.route("settings", SettingsView);
 
   Router.route("test/chat", TestChatView);
   Router.route("test/posts", TestPostListView);

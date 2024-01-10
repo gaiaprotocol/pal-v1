@@ -15,8 +15,16 @@ title-posts: Posts
 title-chats: Chats
 title-activity: Activity
 title-explore: Explore
+title-settings: Settings
 
 nav-bar-menu-posts: Posts
 nav-bar-menu-chats: Chats
 nav-bar-menu-activity: Activity
 nav-bar-menu-explore: Explore
+
+settings-view-title: Settings
+settings-view-link-wallet-section-title: Link Wallet
+settings-view-link-wallet-section-linked: >
+  Linked:
+settings-view-link-wallet-section-description: You can link your wallet to use Pal.
+settings-view-link-wallet-button: Link Wallet

@@ -6,8 +6,13 @@ import { serveWithOptions } from "../_shared/cors.ts";
 import supabase from "../_shared/supabase.ts";
 
 serveWithOptions(async (req) => {
-  const { chain, blockPeriod = 500 } = await req.json();
+  let { chain, blockPeriod } = await req.json();
   if (!chain) throw new Error("Missing chain");
+  if (!blockPeriod) {
+    if (chain === BlockchainType.Base) blockPeriod = 500;
+    else if (chain === BlockchainType.Arbitrum) blockPeriod = 2500;
+    else blockPeriod = 750;
+  }
 
   const provider = new ethers.JsonRpcProvider(rpcs[chain]);
   const signer = new ethers.JsonRpcSigner(provider, ethers.ZeroAddress);
