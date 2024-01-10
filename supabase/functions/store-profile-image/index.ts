@@ -6,10 +6,10 @@ serveWithOptions(async (req) => {
   if (!user) throw new Error("Unauthorized");
 
   const { data: usersPublicData, error: usersPublicError } = await supabase
-    .from("users_public").select("profile_image_stored").eq("user_id", user.id);
+    .from("users_public").select("avatar_stored").eq("user_id", user.id);
   if (usersPublicError) throw usersPublicError;
 
-  const stored = usersPublicData?.[0]?.profile_image_stored;
+  const stored = usersPublicData?.[0]?.avatar_stored;
   if (stored === false) {
     let url: string | undefined = user.user_metadata.avatar_url;
     let thumbnailUrl: string | undefined;
@@ -26,7 +26,7 @@ serveWithOptions(async (req) => {
       if (!result.body) throw new Error("Failed to fetch avatar");
 
       const { error: storeError } = await supabase.storage.from(
-        "user_profile_images",
+        "user_avatars",
       ).upload(
         `${user.id}/profile-image.png`,
         result.body,
@@ -35,7 +35,7 @@ serveWithOptions(async (req) => {
       if (storeError) throw storeError;
 
       const { data: { publicUrl } } = supabase.storage.from(
-        "user_profile_images",
+        "user_avatars",
       )
         .getPublicUrl(`${user.id}/profile-image.png`);
 
@@ -47,7 +47,7 @@ serveWithOptions(async (req) => {
       if (!result.body) throw new Error("Failed to fetch avatar");
 
       const { error: storeError } = await supabase.storage.from(
-        "user_profile_images",
+        "user_avatars",
       ).upload(
         `${user.id}/profile-image-thumbnail.png`,
         result.body,
@@ -56,7 +56,7 @@ serveWithOptions(async (req) => {
       if (storeError) throw storeError;
 
       const { data: { publicUrl } } = supabase.storage.from(
-        "user_profile_images",
+        "user_avatars",
       )
         .getPublicUrl(`${user.id}/profile-image-thumbnail.png`);
 
@@ -64,14 +64,14 @@ serveWithOptions(async (req) => {
     }
 
     const { error: updateError } = await supabase.from("users_public").update({
-      profile_image_stored: true,
-      stored_profile_image: url?.startsWith("http://supabase_kong_sofia:8000/")
+      avatar_stored: true,
+      stored_avatar: url?.startsWith("http://supabase_kong_sofia:8000/")
         ? url.replace(
           "http://supabase_kong_sofia:8000/",
           "http://localhost:54321/",
         )
         : url,
-      stored_profile_image_thumbnail:
+      stored_avatar_thumb:
         thumbnailUrl?.startsWith("http://supabase_kong_sofia:8000/")
           ? thumbnailUrl.replace(
             "http://supabase_kong_sofia:8000/",
