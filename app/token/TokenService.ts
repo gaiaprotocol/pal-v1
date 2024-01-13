@@ -3,7 +3,7 @@ import Token, { TokenSelectQuery } from "../database-interface/Token.js";
 
 class TokenService extends SupabaseService<Token> {
   constructor() {
-    super("tokens", TokenSelectQuery, 1000);
+    super("tokens", TokenSelectQuery, 50);
   }
 
   public async fetchOwnedTokens(
