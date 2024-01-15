@@ -26,6 +26,7 @@ import Layout from "./layout/Layout.js";
 import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import WalletManager from "./wallet/WalletManager.js";
+import ActivityService from "./activity/ActivityService.js";
 
 inject_sofi_msg();
 msg.setMessages({
@@ -66,4 +67,6 @@ export default async function initialize(config: Config) {
   Router.route("test/post", TestPostView);
 
   AuthUtil.checkEmailAccess();
+
+  console.log(await ActivityService.fetchGlobalActivities());
 }

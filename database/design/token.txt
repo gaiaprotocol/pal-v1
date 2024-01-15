@@ -5,6 +5,10 @@ tokens
 	name - text - not null
     symbol - text - not null
 	image - text - nullable
+	image_thumb - text - nullable
+	image_stored - bool - false
+	stored_image - text - nullable
+	stored_image_thumb - text - nullable
 	metadata - jsonb - nullable
     supply - numeric - 0
 	last_fetched_key_price - numeric - 68750000000000

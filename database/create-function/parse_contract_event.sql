@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION "public"."parse_contract_event"() RETURNS "trigger"
     AS $$DECLARE
     v_receiver UUID;
     v_triggerer UUID;
+    owner_data RECORD;
 BEGIN
     IF new.event_name = 'UserTokenCreated' THEN
         
@@ -12,21 +13,33 @@ BEGIN
         ) values (
             new.chain, new.block_number, new.log_index, new.tx, new.args[1], new.args[2], new.event_name, new.args
         );
-        
-        -- add token info
-        insert into tokens (
-            chain, token_address, owner, name, symbol
-        ) values (
-            new.chain, new.args[2], new.args[1], new.args[3], new.args[4]
-        );
-        
-        -- notify
-        v_receiver := (SELECT user_id FROM users_public WHERE wallet_address = new.args[1]);
-        IF v_receiver IS NOT NULL THEN
+
+        SELECT user_id, avatar, avatar_thumb, avatar_stored, stored_avatar, stored_avatar_thumb
+        INTO owner_data
+        FROM users_public 
+        WHERE wallet_address = new.args[1];
+
+        IF FOUND THEN
+            
+            -- add token info
+            insert into tokens (
+                chain, token_address, owner, name, symbol, image, image_thumb, image_stored, stored_image, stored_image_thumb
+            ) values (
+                new.chain, new.args[2], new.args[1], new.args[3], new.args[4], owner_data.avatar, owner_data.avatar_thumb, owner_data.avatar_stored, owner_data.stored_avatar, owner_data.stored_avatar_thumb
+            );
+            
+            -- notify
             insert into notifications (
                 user_id, type, chain, token_address
             ) values (
-                v_receiver, 0, new.chain, new.args[2]
+                owner_data.user_id, 0, new.chain, new.args[2]
+            );
+        ELSE
+            -- add token info
+            insert into tokens (
+                chain, token_address, owner, name, symbol
+            ) values (
+                new.chain, new.args[2], new.args[1], new.args[3], new.args[4]
             );
         END IF;
 

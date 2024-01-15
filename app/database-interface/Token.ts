@@ -4,7 +4,8 @@ export default interface Token {
   owner: string;
   name: string;
   symbol: string;
-  image: string;
+  image?: string;
+  image_thumb?: string;
   metadata?: any;
   supply: string;
   last_fetched_key_price: string;

@@ -20,7 +20,11 @@ CREATE OR REPLACE FUNCTION "public"."get_global_activities_with_users"(
     "user_x_username" text,
     "token_name" text,
     "token_symbol" text,
-    "token_image" text
+    "token_image" text,
+    "token_image_thumb" text,
+    "token_image_stored" boolean,
+    "token_stored_image" text,
+    "token_stored_image_thumb" text
 ) LANGUAGE "plpgsql" AS $$
 BEGIN
     RETURN QUERY
@@ -43,7 +47,11 @@ BEGIN
         u.x_username as user_x_username,
         t.name as token_name,
         t.symbol as token_symbol,
-        t.image as token_image
+        t.image as token_image,
+        t.image_thumb as token_image_thumb,
+        t.image_stored as token_image_stored,
+        t.stored_image as token_stored_image,
+        t.stored_image_thumb as token_stored_image_thumb
     FROM 
         "public"."activities" a
     LEFT JOIN 

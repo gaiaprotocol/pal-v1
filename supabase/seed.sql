@@ -124,7 +124,7 @@ end;$$;
 
 ALTER FUNCTION "public"."decrement_token_favorite_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text")
+CREATE OR REPLACE FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text", "token_image_thumb" "text", "token_image_stored" boolean, "token_stored_image" "text", "token_stored_image_thumb" "text")
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -148,7 +148,11 @@ BEGIN
         u.x_username as user_x_username,
         t.name as token_name,
         t.symbol as token_symbol,
-        t.image as token_image
+        t.image as token_image,
+        t.image_thumb as token_image_thumb,
+        t.image_stored as token_image_stored,
+        t.stored_image as token_stored_image,
+        t.stored_image_thumb as token_stored_image_thumb
     FROM 
         "public"."activities" a
     LEFT JOIN 
@@ -166,7 +170,7 @@ $$;
 
 ALTER FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text")
+CREATE OR REPLACE FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text", "token_image_thumb" "text", "token_image_stored" boolean, "token_stored_image" "text", "token_stored_image_thumb" "text")
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -190,7 +194,11 @@ BEGIN
         u.x_username as user_x_username,
         t.name as token_name,
         t.symbol as token_symbol,
-        t.image as token_image
+        t.image as token_image,
+        t.image_thumb as token_image_thumb,
+        t.image_stored as token_image_stored,
+        t.stored_image as token_stored_image,
+        t.stored_image_thumb as token_stored_image_thumb
     FROM 
         "public"."activities" a
     INNER JOIN 
@@ -266,6 +274,7 @@ CREATE OR REPLACE FUNCTION "public"."parse_contract_event"() RETURNS "trigger"
     AS $$DECLARE
     v_receiver UUID;
     v_triggerer UUID;
+    owner_data RECORD;
 BEGIN
     IF new.event_name = 'UserTokenCreated' THEN
         
@@ -275,21 +284,33 @@ BEGIN
         ) values (
             new.chain, new.block_number, new.log_index, new.tx, new.args[1], new.args[2], new.event_name, new.args
         );
-        
-        -- add token info
-        insert into tokens (
-            chain, token_address, owner, name, symbol
-        ) values (
-            new.chain, new.args[2], new.args[1], new.args[3], new.args[4]
-        );
-        
-        -- notify
-        v_receiver := (SELECT user_id FROM users_public WHERE wallet_address = new.args[1]);
-        IF v_receiver IS NOT NULL THEN
+
+        SELECT user_id, avatar, avatar_thumb, avatar_stored, stored_avatar, stored_avatar_thumb
+        INTO owner_data
+        FROM users_public 
+        WHERE wallet_address = new.args[1];
+
+        IF FOUND THEN
+            
+            -- add token info
+            insert into tokens (
+                chain, token_address, owner, name, symbol, image, image_thumb, image_stored, stored_image, stored_image_thumb
+            ) values (
+                new.chain, new.args[2], new.args[1], new.args[3], new.args[4], owner_data.avatar, owner_data.avatar_thumb, owner_data.avatar_stored, owner_data.stored_avatar, owner_data.stored_avatar_thumb
+            );
+            
+            -- notify
             insert into notifications (
                 user_id, type, chain, token_address
             ) values (
-                v_receiver, 0, new.chain, new.args[2]
+                owner_data.user_id, 0, new.chain, new.args[2]
+            );
+        ELSE
+            -- add token info
+            insert into tokens (
+                chain, token_address, owner, name, symbol
+            ) values (
+                new.chain, new.args[2], new.args[1], new.args[3], new.args[4]
             );
         END IF;
 
@@ -373,6 +394,13 @@ BEGIN
             WHERE (wallet_address, last_fetched_balance) IN (
                 SELECT wallet_address, last_fetched_balance FROM updated WHERE last_fetched_balance = 0
             );
+
+            -- if token holder is gone, subtract from token holder count
+            IF FOUND THEN
+                update tokens set
+                    holders = holders - 1
+                where chain = new.chain and token_address = new.args[2];
+            END IF;
             
             -- update wallet's total key balance
             update wallets set
@@ -625,7 +653,11 @@ CREATE TABLE IF NOT EXISTS "public"."tokens" (
     "holder_count" integer DEFAULT 0 NOT NULL,
     "last_key_purchased_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "updated_at" timestamp with time zone
+    "updated_at" timestamp with time zone,
+    "image_thumb" "text",
+    "image_stored" boolean DEFAULT false NOT NULL,
+    "stored_image" "text",
+    "stored_image_thumb" "text"
 );
 
 ALTER TABLE "public"."tokens" OWNER TO "postgres";
@@ -790,7 +822,11 @@ CREATE POLICY "update pal token's metadata" ON "public"."old_pal_tokens" FOR UPD
 
 ALTER TABLE "public"."users_public" ENABLE ROW LEVEL SECURITY;
 
+CREATE POLICY "view everyone" ON "public"."activities" FOR SELECT USING (true);
+
 CREATE POLICY "view everyone" ON "public"."follows" FOR SELECT USING (true);
+
+CREATE POLICY "view everyone" ON "public"."tokens" FOR SELECT USING (true);
 
 CREATE POLICY "view everyone" ON "public"."users_public" FOR SELECT USING (true);
 
