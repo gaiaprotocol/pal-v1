@@ -12,6 +12,8 @@ SET row_security = off;
 
 CREATE EXTENSION IF NOT EXISTS "pg_cron" WITH SCHEMA "extensions";
 
+CREATE EXTENSION IF NOT EXISTS "pg_net" WITH SCHEMA "extensions";
+
 CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
 
 CREATE EXTENSION IF NOT EXISTS "http" WITH SCHEMA "extensions";
@@ -121,6 +123,94 @@ CREATE OR REPLACE FUNCTION "public"."decrement_token_favorite_count"() RETURNS "
 end;$$;
 
 ALTER FUNCTION "public"."decrement_token_favorite_count"() OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text")
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        a.chain,
+        a.block_number,
+        a.log_index,
+        a.tx,
+        a.wallet_address,
+        a.token_address,
+        a.activity_name,
+        a.args,
+        a.created_at,
+        u.user_id as user_id,
+        u.display_name as user_display_name,
+        u.avatar as user_avatar,
+        u.avatar_thumb as user_avatar_thumb,
+        u.stored_avatar as user_stored_avatar,
+        u.stored_avatar_thumb as user_stored_avatar_thumb,
+        u.x_username as user_x_username,
+        t.name as token_name,
+        t.symbol as token_symbol,
+        t.image as token_image
+    FROM 
+        "public"."activities" a
+    LEFT JOIN 
+        "public"."users_public" u ON a.wallet_address = u.wallet_address
+    LEFT JOIN
+        "public"."tokens" t ON a.token_address = t.token_address
+    WHERE 
+        (last_created_at IS NULL OR a.created_at < last_created_at)
+    ORDER BY 
+        a.created_at DESC
+    LIMIT 
+        max_count;
+END
+$$;
+
+ALTER FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text")
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        a.chain,
+        a.block_number,
+        a.log_index,
+        a.tx,
+        a.wallet_address,
+        a.token_address,
+        a.activity_name,
+        a.args,
+        a.created_at,
+        u.user_id,
+        u.display_name as user_display_name,
+        u.avatar as user_avatar,
+        u.avatar_thumb as user_avatar_thumb,
+        u.stored_avatar as user_stored_avatar,
+        u.stored_avatar_thumb as user_stored_avatar_thumb,
+        u.x_username as user_x_username,
+        t.name as token_name,
+        t.symbol as token_symbol,
+        t.image as token_image
+    FROM 
+        "public"."activities" a
+    INNER JOIN 
+        "public"."token_holders" th ON a.wallet_address = th.wallet_address
+    LEFT JOIN 
+        "public"."users_public" u ON a.wallet_address = u.wallet_address
+    LEFT JOIN
+        "public"."tokens" t ON a.token_address = t.token_address
+    WHERE 
+        th.token_address = a.token_address
+        AND th.wallet_address = p_wallet_address
+        AND (last_created_at IS NULL OR a.created_at < last_created_at)
+    ORDER BY 
+        a.created_at DESC
+    LIMIT 
+        max_count;
+END
+$$;
+
+ALTER FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."increment_token_favorite_count"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -456,7 +546,7 @@ CREATE TABLE IF NOT EXISTS "public"."notifications" (
     "type" smallint NOT NULL,
     "chain" "text",
     "token_address" "text",
-    "amount" bigint,
+    "amount" numeric,
     "post_id" bigint,
     "post_message" "text",
     "read" boolean DEFAULT false NOT NULL,
@@ -569,9 +659,18 @@ CREATE TABLE IF NOT EXISTS "public"."users_public" (
 
 ALTER TABLE "public"."users_public" OWNER TO "postgres";
 
+CREATE TABLE IF NOT EXISTS "public"."wallet_linking_nonces" (
+    "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
+    "wallet_address" "text" NOT NULL,
+    "nonce" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+ALTER TABLE "public"."wallet_linking_nonces" OWNER TO "postgres";
+
 CREATE TABLE IF NOT EXISTS "public"."wallets" (
     "wallet_address" "text" NOT NULL,
-    "total_key_balance" bigint DEFAULT '0'::bigint NOT NULL,
+    "total_key_balance" numeric DEFAULT '0'::numeric NOT NULL,
     "total_earned_trading_fees" numeric DEFAULT '0'::numeric NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "updated_at" timestamp with time zone
@@ -618,6 +717,9 @@ ALTER TABLE ONLY "public"."users_public"
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "users_public_wallet_address_key" UNIQUE ("wallet_address");
 
+ALTER TABLE ONLY "public"."wallet_linking_nonces"
+    ADD CONSTRAINT "wallet_linking_nonces_pkey" PRIMARY KEY ("user_id");
+
 ALTER TABLE ONLY "public"."wallets"
     ADD CONSTRAINT "wallets_pkey" PRIMARY KEY ("wallet_address");
 
@@ -646,6 +748,9 @@ ALTER TABLE ONLY "public"."token_chat_messages"
 
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "users_public_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
+
+ALTER TABLE ONLY "public"."wallet_linking_nonces"
+    ADD CONSTRAINT "wallet_linking_nonces_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users_public"("user_id");
 
 ALTER TABLE "public"."activities" ENABLE ROW LEVEL SECURITY;
 
@@ -703,6 +808,8 @@ CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR 
            FROM "public"."users_public"
           WHERE ("users_public"."user_id" = "auth"."uid"()))))))));
 
+ALTER TABLE "public"."wallet_linking_nonces" ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE "public"."wallets" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((("auth"."uid"() = "author") AND ((( SELECT "old_pal_tokens"."owner"
@@ -734,6 +841,14 @@ GRANT ALL ON FUNCTION "public"."check_write_granted"("parameter_token_address" "
 GRANT ALL ON FUNCTION "public"."decrement_token_favorite_count"() TO "anon";
 GRANT ALL ON FUNCTION "public"."decrement_token_favorite_count"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."decrement_token_favorite_count"() TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."increment_token_favorite_count"() TO "anon";
 GRANT ALL ON FUNCTION "public"."increment_token_favorite_count"() TO "authenticated";
@@ -818,6 +933,10 @@ GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "service_role";
 GRANT ALL ON TABLE "public"."users_public" TO "anon";
 GRANT ALL ON TABLE "public"."users_public" TO "authenticated";
 GRANT ALL ON TABLE "public"."users_public" TO "service_role";
+
+GRANT ALL ON TABLE "public"."wallet_linking_nonces" TO "anon";
+GRANT ALL ON TABLE "public"."wallet_linking_nonces" TO "authenticated";
+GRANT ALL ON TABLE "public"."wallet_linking_nonces" TO "service_role";
 
 GRANT ALL ON TABLE "public"."wallets" TO "anon";
 GRANT ALL ON TABLE "public"."wallets" TO "authenticated";
