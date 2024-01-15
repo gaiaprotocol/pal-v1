@@ -110,6 +110,13 @@ BEGIN
             WHERE (wallet_address, last_fetched_balance) IN (
                 SELECT wallet_address, last_fetched_balance FROM updated WHERE last_fetched_balance = 0
             );
+
+            -- if token holder is gone, subtract from token holder count
+            IF FOUND THEN
+                update tokens set
+                    holders = holders - 1
+                where chain = new.chain and token_address = new.args[2];
+            END IF;
             
             -- update wallet's total key balance
             update wallets set

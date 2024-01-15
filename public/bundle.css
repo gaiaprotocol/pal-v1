@@ -304,6 +304,9 @@ button.component > .title {
 }
 .popup.component > header > h1 {
   flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 18px;
   font-weight: bold;
   text-transform: capitalize;
@@ -387,6 +390,11 @@ button.component > .title {
 .snackbar.component > main > p {
   flex-grow: 1;
 }
+.input.component {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 .input.component > textarea,
 .input.component > input {
   width: 100%;
@@ -401,12 +409,15 @@ button.component > .title {
 }
 .select.component {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.select.component > .value {
   border: 1px solid var(--line-color);
   border-radius: 6px;
   background-color: var(--content-bg-color);
   cursor: pointer;
-}
-.select.component > .value {
   display: flex;
   align-items: center;
   padding: 8px 12px;
@@ -415,6 +426,7 @@ button.component > .title {
 }
 .select.component > .value:empty::before {
   content: attr(data-empty-message);
+  color: var(--disable-color);
 }
 .select.component > .option-container {
   display: none;
@@ -434,7 +446,7 @@ button.component > .title {
 .select.component > .option-container > .option:hover {
   background-color: var(--primary-color);
 }
-.select.component.open {
+.select.component.open > .value {
   border: 1px solid var(--primary-color);
 }
 .select.component.open > .option-container {
@@ -487,11 +499,6 @@ button.component > .title {
   border-radius: 12px;
   max-height: 320px;
   object-fit: cover;
-}
-.error-alert.component > header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 .error-alert.component > main > p {
   word-break: break-all;
@@ -596,6 +603,7 @@ button.component > .title {
   padding-left: 90px;
   background-color: var(--content-bg-color);
   border-right: 1px solid var(--line-color);
+  display: flex;
 }
 @container (width < 1280px) {
   .layout > main {
@@ -604,6 +612,12 @@ button.component > .title {
     padding-bottom: calc(90px + env(safe-area-inset-bottom));
     border-right: none;
   }
+}
+.layout > main > .content {
+  flex-grow: 1;
+}
+.layout > main > .sidebar {
+  flex-shrink: 0;
 }
 .title-bar {
   position: fixed;
@@ -631,24 +645,6 @@ button.component > .title {
   align-items: center;
   gap: 20px;
 }
-.side-panel {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 999998;
-  width: 100%;
-  height: 100%;
-  background-color: var(--popup-bg-color);
-}
-.side-panel > main {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 360px;
-  height: 100%;
-  border-left: 1px solid var(--line-color);
-  background-color: var(--content-bg-color);
-}
 .title-bar-user-display {
   display: flex;
   align-items: center;
@@ -668,5 +664,41 @@ button.component > .title {
 .title-bar-user-display > .name {
   font-size: 14px;
   font-weight: bold;
+}
+.sidebar {
+  width: 380px;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-left: 1px solid var(--line-color);
+}
+@container (width < 1280px) {
+  .sidebar {
+    display: none;
+  }
+}
+.side-panel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999998;
+  width: 100%;
+  height: 100%;
+  background-color: var(--popup-bg-color);
+}
+.side-panel > main {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 360px;
+  height: 100%;
+  border-left: 1px solid var(--line-color);
+  background-color: var(--content-bg-color);
+}
+.create-token-popup > main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 

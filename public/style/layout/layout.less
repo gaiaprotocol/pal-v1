@@ -10,12 +10,21 @@
         padding-left    : 90px;
         background-color: var(--content-bg-color);
         border-right    : 1px solid var(--line-color);
+        display         : flex;
 
         @container (width < @safe-width) {
             width         : 100%;
             padding-left  : 0;
             padding-bottom: calc(90px + env(safe-area-inset-bottom));
             border-right  : none;
+        }
+
+        >.content {
+            flex-grow: 1;
+        }
+
+        >.sidebar {
+            flex-shrink: 0;
         }
     }
 }

@@ -3,7 +3,9 @@ import {
   ButtonType,
   Component,
   el,
+  ErrorAlert,
   Input,
+  LoadingSpinner,
   msg,
   Popup,
   Select,
@@ -23,10 +25,13 @@ export default class CreateTokenPopup extends Popup {
     super({ barrierDismissible: true });
     this.append(
       new Component(
-        ".create-token-popup",
+        ".create-token-popup.popup",
+        el("header", el("h1", "Create Token")),
         el(
           "main",
           this.chainSelect = new Select({
+            label: "Blockchain",
+            placeholder: "Select a blockchain",
             options: getDeployedBlockchainsForPal().map((chain) => ({
               dom: el(".option", chain),
               value: chain,
@@ -52,12 +57,14 @@ export default class CreateTokenPopup extends Popup {
             click: () => this.delete(),
           }),
           new Button({
-            type: ButtonType.Text,
             tag: ".create-token",
             title: "Create Token",
-            click: async () => {
-              const chain = this.chainSelect.value;
-              if (chain) {
+            click: async (event, button) => {
+              button.disable().title = new LoadingSpinner();
+              try {
+                const chain = this.chainSelect.value;
+                if (!chain) throw new Error("Please select a blockchain.");
+
                 const name = this.nameInput.value;
                 const symbol = this.symbolInput.value;
                 const contract = new PalContract(chain);
@@ -65,6 +72,13 @@ export default class CreateTokenPopup extends Popup {
                 console.log(tokenAddress);
 
                 await TrackEventManager.trackEvent(chain);
+                this.delete();
+              } catch (e: any) {
+                new ErrorAlert({
+                  title: "Error",
+                  message: e.message,
+                });
+                button.enable().title = "Create Token";
               }
             },
           }),

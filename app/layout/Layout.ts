@@ -6,8 +6,9 @@ import {
   msg,
   NavBar,
   View,
-  ViewParams
+  ViewParams,
 } from "@common-module/app";
+import Sidebar from "./Sidebar.js";
 import TitleBar from "./TitleBar.js";
 
 export default class Layout extends View {
@@ -32,7 +33,7 @@ export default class Layout extends View {
           logo: el("img", { src: "/images/logo-transparent.png" }),
           menu: [
             {
-              id: "bridge",
+              id: "posts",
               icon: new MaterialIcon("post"),
               title: msg("nav-bar-menu-posts"),
               uri: "/posts",
@@ -61,6 +62,7 @@ export default class Layout extends View {
           "main",
           this.titleBar = new TitleBar(),
           this.content = el("section.content"),
+          new Sidebar(),
         ),
       ),
     );
