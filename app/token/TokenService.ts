@@ -6,6 +6,22 @@ class TokenService extends SupabaseService<Token> {
     super("tokens", TokenSelectQuery, 50);
   }
 
+  protected enhanceTokenData(tokens: Token[]): Token[] {
+    const _tokens = Supabase.safeResult<Token[]>(tokens);
+    for (const token of _tokens as any) {
+      token.owner = {
+        user_id: token.owner_user_id,
+        display_name: token.owner_display_name,
+        avatar: token.owner_avatar,
+        avatar_thumb: token.owner_avatar_thumb,
+        stored_avatar: token.owner_stored_avatar,
+        stored_avatar_thumb: token.owner_stored_avatar_thumb,
+        x_username: token.owner_x_username,
+      };
+    }
+    return _tokens;
+  }
+
   public async fetchOwnedTokens(
     owner: string,
     lastCreatedAt: string | undefined,
@@ -19,7 +35,7 @@ class TokenService extends SupabaseService<Token> {
       },
     );
     if (error) throw error;
-    return Supabase.safeResult<Token[]>(data ?? []);
+    return this.enhanceTokenData(data ?? []);
   }
 }
 

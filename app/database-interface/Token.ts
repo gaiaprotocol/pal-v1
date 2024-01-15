@@ -1,11 +1,16 @@
+import { Author } from "@common-module/social";
+
 export default interface Token {
   chain: string;
   token_address: string;
-  owner: string;
+  owner: Author;
   name: string;
   symbol: string;
   image?: string;
   image_thumb?: string;
+  image_stored?: boolean;
+  stored_image?: string;
+  stored_image_thumb?: string;
   metadata?: any;
   supply: string;
   last_fetched_key_price: string;

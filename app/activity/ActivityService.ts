@@ -6,8 +6,8 @@ class ActivityService extends SupabaseService<Activity> {
     super("activities", "*", 100);
   }
 
-  protected enhanceEventData(events: Activity[]): Activity[] {
-    const _activities = Supabase.safeResult<Activity[]>(events);
+  protected enhanceActivityData(activities: Activity[]): Activity[] {
+    const _activities = Supabase.safeResult<Activity[]>(activities);
     for (const activity of _activities as any) {
       activity.token = {
         chain: activity.chain,
@@ -42,8 +42,7 @@ class ActivityService extends SupabaseService<Activity> {
       },
     );
     if (error) throw error;
-    if (!data) data = [];
-    return this.enhanceEventData(data);
+    return this.enhanceActivityData(data ?? []);
   }
 
   public async fetchTokenHeldActivities(
@@ -59,8 +58,7 @@ class ActivityService extends SupabaseService<Activity> {
       },
     );
     if (error) throw error;
-    if (!data) data = [];
-    return this.enhanceEventData(data);
+    return this.enhanceActivityData(data ?? []);
   }
 }
 
