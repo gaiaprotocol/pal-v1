@@ -740,7 +740,7 @@ button.component > .title {
   display: none;
 }
 .activity-list-item {
-  padding: 20px;
+  padding: 12px 20px;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -775,11 +775,11 @@ button.component > .title {
   width: 0;
 }
 .activity-list-item > .description > a {
-  font-weight: bold;
+  color: var(--primary-color);
   cursor: pointer;
 }
 .activity-list-item > .date {
-  color: #474B54;
+  color: #595959;
   font-size: 12px;
 }
 
