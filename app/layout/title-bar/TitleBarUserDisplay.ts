@@ -1,5 +1,5 @@
 import { DomNode, el } from "@common-module/app";
-import { AuthorUtil, SoFiUserPublic } from "@common-module/social";
+import { AvatarUtil, SoFiUserPublic } from "@common-module/social";
 import SidePanel from "../SidePanel.js";
 
 export default class TitleBarUserDisplay extends DomNode {
@@ -8,7 +8,7 @@ export default class TitleBarUserDisplay extends DomNode {
 
     const avatar = el(".avatar");
 
-    AuthorUtil.selectLoadableAvatar(avatar, [
+    AvatarUtil.selectLoadable(avatar, [
       user.avatar_thumb,
       user.stored_avatar_thumb,
     ]);

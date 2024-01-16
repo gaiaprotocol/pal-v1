@@ -1,3 +1,4 @@
+import { EventContainer } from "@common-module/app";
 import {
   configureChains,
   createConfig,
@@ -13,7 +14,6 @@ import {
   w3mProvider,
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/html";
-import { EventContainer } from "@common-module/app";
 import { arbitrum, base, linea, optimism, scroll, zkSync } from "viem/chains";
 
 class WalletManager extends EventContainer {

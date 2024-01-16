@@ -28,3 +28,10 @@ settings-view-link-wallet-section-linked: >
   Linked:
 settings-view-link-wallet-section-description: You can link your wallet to use Pal.
 settings-view-link-wallet-button: Link Wallet
+
+global-activity-list-empty-message: No global activities yet
+token-held-activity-list-empty-message: No activities you hold tokens for yet
+
+activity-list-item-created-token-text: "{user} created {token}."
+activity-list-item-bought-token-text: "{user} bought {amount} {token} key for {price} ETH."
+activity-list-item-sold-token-text: "{user} sold {amount} {token} key for {price} ETH."

@@ -18,7 +18,9 @@ import messages_ja from "../locales/ja.yml";
 import messages_zh from "../locales/zh.yml";
 import messages_zh_HK from "../locales/zh_HK.yml";
 import messages_zh_TW from "../locales/zh_TW.yml";
+import ActivityView from "./activity/ActivityView.js";
 import { initBlockchains } from "./blockchain/Blockchains.js";
+import BlockTimeManager from "./BlockTimeManager.js";
 import Config from "./Config.js";
 import Env from "./Env.js";
 import EnvironmentManager from "./EnvironmentManager.js";
@@ -26,7 +28,6 @@ import Layout from "./layout/Layout.js";
 import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import WalletManager from "./wallet/WalletManager.js";
-import ActivityService from "./activity/ActivityService.js";
 
 inject_sofi_msg();
 msg.setMessages({
@@ -57,9 +58,11 @@ export default async function initialize(config: Config) {
 
   await SplashLoader.load(el("img", { src: "/images/logo-transparent.png" }), [
     PalSignedUserManager.fetchUserOnInit(),
+    BlockTimeManager.init(),
   ]);
 
   Router.route("**", Layout, ["test/**"]);
+  Router.route("activity", ActivityView);
   Router.route("settings", SettingsView);
 
   Router.route("test/chat", TestChatView);
@@ -67,6 +70,4 @@ export default async function initialize(config: Config) {
   Router.route("test/post", TestPostView);
 
   AuthUtil.checkEmailAccess();
-
-  console.log(await ActivityService.fetchGlobalActivities());
 }

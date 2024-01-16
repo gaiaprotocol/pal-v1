@@ -1,0 +1,74 @@
+import { DateUtil, DomNode, el, msgs, Router } from "@common-module/app";
+import { AvatarUtil } from "@common-module/social";
+import { ethers } from "ethers";
+import BlockTimeManager from "../BlockTimeManager.js";
+import Activity from "../database-interface/Activity.js";
+import TokenInfoPopup from "../token/TokenInfoPopup.js";
+
+export default class ActivityListItem extends DomNode {
+  constructor(activity: Activity) {
+    super(".activity-list-item");
+
+    const image = el(".image");
+
+    AvatarUtil.selectLoadable(image, [
+      activity.token?.image_thumb,
+      activity.token?.stored_image_thumb,
+    ]);
+
+    const user = el("a", activity.user?.display_name, {
+      click: () => Router.go(`/${activity.user?.x_username}`),
+    });
+
+    const token = el("a", activity.token?.name, {
+      click: () => new TokenInfoPopup(),
+    });
+
+    const date = el(
+      ".date",
+      DateUtil.fromNow(
+        BlockTimeManager.blockToTime(activity.chain, activity.block_number),
+      ),
+    );
+
+    if (activity.activity_name === "UserTokenCreated") {
+      this.append(
+        el("header", image),
+        el(
+          "p.description",
+          ...msgs("activity-list-item-created-token-text", { user, token }),
+        ),
+        date,
+      );
+    }
+
+    if (activity.activity_name === "Trade") {
+      const isBuy = activity.args[2] === "true";
+      const amount = activity.args[3];
+      const price = ethers.formatEther(activity.args[4]);
+
+      const traderProfileImage = el(".trader-profile-image", {
+        click: () => Router.go(`/${activity.user?.x_username}`),
+      });
+
+      AvatarUtil.selectLoadable(traderProfileImage, [
+        activity.user?.avatar_thumb,
+        activity.user?.stored_avatar_thumb,
+      ]);
+
+      this.append(
+        el("header", traderProfileImage, image),
+        el(
+          "p.description",
+          ...msgs(
+            isBuy
+              ? "activity-list-item-bought-token-text"
+              : "activity-list-item-sold-token-text",
+            { user, token, amount, price },
+          ),
+        ),
+        date,
+      );
+    }
+  }
+}

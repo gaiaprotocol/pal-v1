@@ -20,6 +20,7 @@ export function initBlockchains() {
       Env.dev ? "goerli" : "mainnet"
     }.infura.io/v3/${Env.infuraKey}`,
     blockExplorer: (Env.dev ? goerli : mainnet).blockExplorers.default,
+    blockTime: 12.05,
   };
 
   Blockchains[BlockchainType.Base] = {
@@ -27,6 +28,7 @@ export function initBlockchains() {
     name: base.name,
     rpc: (Env.dev ? baseGoerli : base).rpcUrls.default.http[0],
     blockExplorer: (Env.dev ? baseGoerli : base).blockExplorers.default,
+    blockTime: 2,
   };
 
   Blockchains[BlockchainType.Arbitrum] = {
@@ -34,6 +36,7 @@ export function initBlockchains() {
     name: arbitrum.name,
     rpc: (Env.dev ? arbitrumGoerli : arbitrum).rpcUrls.default.http[0],
     blockExplorer: (Env.dev ? arbitrumGoerli : arbitrum).blockExplorers.default,
+    blockTime: 0.26,
   };
 
   Blockchains[BlockchainType.Optimism] = {
@@ -41,6 +44,7 @@ export function initBlockchains() {
     name: optimism.name,
     rpc: (Env.dev ? optimismGoerli : optimism).rpcUrls.default.http[0],
     blockExplorer: (Env.dev ? optimismGoerli : optimism).blockExplorers.default,
+    blockTime: 2,
   };
 }
 

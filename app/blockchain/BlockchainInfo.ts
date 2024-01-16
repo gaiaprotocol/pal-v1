@@ -6,4 +6,5 @@ export default interface BlockchainInfo {
     name: string;
     url: string;
   };
+  blockTime: number;
 }
