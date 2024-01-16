@@ -1,4 +1,11 @@
-import { DateUtil, DomNode, el, msgs, Router } from "@common-module/app";
+import {
+  DateUtil,
+  DomNode,
+  el,
+  msgs,
+  Router,
+  StringUtil,
+} from "@common-module/app";
 import { AvatarUtil } from "@common-module/social";
 import { ethers } from "ethers";
 import BlockTimeManager from "../BlockTimeManager.js";
@@ -9,9 +16,9 @@ export default class ActivityListItem extends DomNode {
   constructor(activity: Activity) {
     super(".activity-list-item");
 
-    const image = el(".image");
+    const tokenImage = el(".token-image");
 
-    AvatarUtil.selectLoadable(image, [
+    AvatarUtil.selectLoadable(tokenImage, [
       activity.token?.image_thumb,
       activity.token?.stored_image_thumb,
     ]);
@@ -33,7 +40,7 @@ export default class ActivityListItem extends DomNode {
 
     if (activity.activity_name === "UserTokenCreated") {
       this.append(
-        el("header", image),
+        el("header", tokenImage),
         el(
           "p.description",
           ...msgs("activity-list-item-created-token-text", { user, token }),
@@ -44,8 +51,12 @@ export default class ActivityListItem extends DomNode {
 
     if (activity.activity_name === "Trade") {
       const isBuy = activity.args[2] === "true";
-      const amount = activity.args[3];
-      const price = ethers.formatEther(activity.args[4]);
+      const amount = StringUtil.numberWithCommas(
+        ethers.formatEther(activity.args[3]),
+      );
+      const price = StringUtil.numberWithCommas(
+        ethers.formatEther(activity.args[4]),
+      );
 
       const traderProfileImage = el(".trader-profile-image", {
         click: () => Router.go(`/${activity.user?.x_username}`),
@@ -57,7 +68,7 @@ export default class ActivityListItem extends DomNode {
       ]);
 
       this.append(
-        el("header", traderProfileImage, image),
+        el("header", traderProfileImage, tokenImage),
         el(
           "p.description",
           ...msgs(

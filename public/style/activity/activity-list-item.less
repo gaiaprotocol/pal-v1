@@ -1,0 +1,37 @@
+.activity-list-item {
+    padding      : 20px;
+    display      : flex;
+    gap          : 12px;
+    align-items  : center;
+    border-bottom: 1px solid var(--line-color);
+
+    >header {
+        display    : flex;
+        align-items: center;
+
+        >.trader-profile-image,
+        >.token-image {
+            .profile-image();
+            cursor: pointer;
+        }
+
+        >.trader-profile-image {
+            margin-right: -8px;
+        }
+    }
+
+    >.description {
+        flex-grow: 1;
+        width    : 0;
+
+        >a {
+            font-weight: bold;
+            cursor     : pointer;
+        }
+    }
+
+    >.date {
+        color    : #474B54;
+        font-size: 12px;
+    }
+}

@@ -390,6 +390,27 @@ button.component > .title {
 .snackbar.component > main > p {
   flex-grow: 1;
 }
+.tabs.component {
+  border-bottom: 1px solid var(--line-color);
+  display: flex;
+  gap: 40px;
+  padding: 10px 20px 0;
+}
+.tabs.component > .tab {
+  cursor: pointer;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  border-bottom: 3px solid transparent;
+  padding: 0 10px;
+}
+.tabs.component > .tab:hover {
+  color: var(--primary-color);
+}
+.tabs.component > .tab.active {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+}
 .input.component {
   display: flex;
   flex-direction: column;
@@ -591,6 +612,20 @@ button.component > .title {
   --button-bg-color: rgba(155, 76, 255, 0.12);
   --hover-color: rgba(155, 76, 255, 0.12);
 }
+.profile-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252525;
+  background-size: cover;
+}
+@container (width < 1280px) {
+  .profile-image {
+    width: 34px;
+    height: 34px;
+  }
+}
 .layout {
   height: 100%;
   overflow-y: auto;
@@ -700,5 +735,51 @@ button.component > .title {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+.activity-list.hidden {
+  display: none;
+}
+.activity-list-item {
+  padding: 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--line-color);
+}
+.activity-list-item > header {
+  display: flex;
+  align-items: center;
+}
+.activity-list-item > header > .trader-profile-image,
+.activity-list-item > header > .token-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252525;
+  background-size: cover;
+  cursor: pointer;
+}
+@container (width < 1280px) {
+  .activity-list-item > header > .trader-profile-image,
+  .activity-list-item > header > .token-image {
+    width: 34px;
+    height: 34px;
+  }
+}
+.activity-list-item > header > .trader-profile-image {
+  margin-right: -8px;
+}
+.activity-list-item > .description {
+  flex-grow: 1;
+  width: 0;
+}
+.activity-list-item > .description > a {
+  font-weight: bold;
+  cursor: pointer;
+}
+.activity-list-item > .date {
+  color: #474B54;
+  font-size: 12px;
 }
 
