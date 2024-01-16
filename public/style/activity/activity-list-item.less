@@ -20,18 +20,35 @@
         }
     }
 
-    >.description {
+    >main {
         flex-grow: 1;
         width    : 0;
 
-        >a {
-            color : var(--primary-color);
-            cursor: pointer;
+        >.description {
+            >a {
+                color : var(--primary-color);
+                cursor: pointer;
+            }
         }
-    }
 
-    >.date {
-        color    : #595959;
-        font-size: 12px;
+        >.info {
+            color: #595959;
+
+            >.price {
+                font-size: 12px;
+
+                &.up {
+                    color: var(--rising-color);
+                }
+
+                &.down {
+                    color: var(--falling-color);
+                }
+            }
+
+            >.date {
+                font-size: 12px;
+            }
+        }
     }
 }

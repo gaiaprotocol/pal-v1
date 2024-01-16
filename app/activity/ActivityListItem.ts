@@ -27,29 +27,36 @@ export default class ActivityListItem extends DomNode {
       click: () => Router.go(`/${activity.user?.x_username}`),
     });
 
-    const token = el("a", activity.token?.name, {
-      click: () => new TokenInfoPopup(),
-    });
-
     const date = el(
-      ".date",
+      "span.date",
       DateUtil.fromNow(
         BlockTimeManager.blockToTime(activity.chain, activity.block_number),
       ),
     );
 
     if (activity.activity_name === "UserTokenCreated") {
+      const token = el("a", activity.token?.name, {
+        click: () => new TokenInfoPopup(),
+      });
+
       this.append(
         el("header", tokenImage),
         el(
-          "p.description",
-          ...msgs("activity-list-item-created-token-text", { user, token }),
+          "main",
+          el(
+            "p.description",
+            ...msgs("activity-list-item-created-token-text", { user, token }),
+          ),
+          el(".info", date),
         ),
-        date,
       );
     }
 
     if (activity.activity_name === "Trade") {
+      const symbol = el("a", activity.token?.symbol, {
+        click: () => new TokenInfoPopup(),
+      });
+
       const isBuy = activity.args[2] === "true";
       const amount = StringUtil.numberWithCommas(
         ethers.formatEther(activity.args[3]),
@@ -70,15 +77,22 @@ export default class ActivityListItem extends DomNode {
       this.append(
         el("header", traderProfileImage, tokenImage),
         el(
-          "p.description",
-          ...msgs(
-            isBuy
-              ? "activity-list-item-bought-token-text"
-              : "activity-list-item-sold-token-text",
-            { user, token, amount, price },
+          "main",
+          el(
+            "p.description",
+            ...msgs(
+              isBuy
+                ? "activity-list-item-bought-token-text"
+                : "activity-list-item-sold-token-text",
+              { user, symbol, amount },
+            ),
+          ),
+          el(
+            ".info",
+            el("span.price" + (isBuy ? ".up" : ".down"), price, " ETH, "),
+            date,
           ),
         ),
-        date,
       );
     }
   }
