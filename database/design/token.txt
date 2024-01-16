@@ -11,13 +11,13 @@ tokens
 	stored_image_thumb - text - nullable
 	metadata - jsonb - nullable
     supply - numeric - 0
-	last_fetched_key_price - numeric - 68750000000000
-	total_trading_key_volume - numeric - 0
+	last_fetched_price - numeric - 68750000000000
+	total_trading_volume - numeric - 0
 	is_price_up - bool - nullable
 	last_message - text - nullable
 	last_message_sent_at - timestampz - -infinity
 	holder_count - int4 - 0
-	last_key_purchased_at - timestampz - -infinity
+	last_purchased_at - timestampz - -infinity
 	created_at - timestampz - now()
 	updated_at - timestampz - nullable
 

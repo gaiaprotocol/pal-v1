@@ -10,7 +10,6 @@ export interface TokenListOptions {
 export default abstract class TokenList extends DomNode {
   private store: Store | undefined;
   private refreshed = false;
-  protected lastCreatedAt: string | undefined;
 
   constructor(tag: string, options: TokenListOptions) {
     super(tag + ".token-list");
@@ -25,8 +24,6 @@ export default abstract class TokenList extends DomNode {
         }
       }
     }
-
-    this.refresh();
   }
 
   protected abstract fetchTokens(): Promise<Token[]>;
@@ -42,8 +39,17 @@ export default abstract class TokenList extends DomNode {
       for (const token of tokens) {
         new TokenListItem(token).appendTo(this);
       }
-      this.lastCreatedAt = tokens[tokens.length - 1]?.created_at;
       this.refreshed = true;
     }
+  }
+
+  public show() {
+    this.deleteClass("hidden");
+    if (!this.refreshed) this.refresh();
+    return this;
+  }
+
+  public hide() {
+    this.addClass("hidden");
   }
 }

@@ -1,9 +1,9 @@
-CREATE OR REPLACE FUNCTION "public"."get_owned_tokens"(
-    "p_wallet_address" "text", 
-    "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, 
-    "max_count" integer DEFAULT 1000
-) 
+CREATE OR REPLACE FUNCTION "public"."get_top_tokens"(
+    "last_rank" integer DEFAULT NULL,
+    "max_count" integer DEFAULT 10
+)
 RETURNS TABLE(
+    "rank" integer,
     "chain" "text", 
     "token_address" "text", 
     "owner" "text",
@@ -35,9 +35,13 @@ RETURNS TABLE(
 )
 LANGUAGE "plpgsql"
 AS $$
+DECLARE
+    row_rank integer;
 BEGIN
+    row_rank := COALESCE(last_rank, 0);
     RETURN QUERY
     SELECT
+        (row_number() OVER (ORDER BY t.last_fetched_price DESC) + row_rank)::integer AS rank,
         t.chain,
         t.token_address,
         t.owner,
@@ -68,21 +72,19 @@ BEGIN
         u.x_username AS owner_x_username
     FROM 
         public.tokens t
-    JOIN 
-        public.token_holders th ON t.token_address = th.token_address AND th.wallet_address = p_wallet_address
     LEFT JOIN 
         "public"."users_public" u ON t.owner = u.wallet_address
-    WHERE 
-        (last_created_at IS NULL OR t.created_at < last_created_at)
     ORDER BY 
-        t.created_at DESC
+        t.last_fetched_price DESC
+    OFFSET 
+        row_rank
     LIMIT 
         max_count;
 END;
 $$;
 
-ALTER FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_top_tokens"(integer, integer) OWNER TO "postgres";
 
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_top_tokens"(integer, integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_top_tokens"(integer, integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_top_tokens"(integer, integer) TO "service_role";

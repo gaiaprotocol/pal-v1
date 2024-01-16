@@ -733,6 +733,9 @@ button.component > .title {
   border-left: 1px solid var(--line-color);
   background-color: var(--content-bg-color);
 }
+.token-list.hidden {
+  display: none;
+}
 .create-token-popup > main {
   display: flex;
   flex-direction: column;

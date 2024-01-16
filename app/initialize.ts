@@ -28,6 +28,7 @@ import Layout from "./layout/Layout.js";
 import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import WalletManager from "./wallet/WalletManager.js";
+import ExploreView from "./explorer/ExplorerView.js";
 
 inject_sofi_msg();
 msg.setMessages({
@@ -63,6 +64,7 @@ export default async function initialize(config: Config) {
 
   Router.route("**", Layout, ["test/**"]);
   Router.route("activity", ActivityView);
+  Router.route("explore", ExploreView);
   Router.route("settings", SettingsView);
 
   Router.route("test/chat", TestChatView);

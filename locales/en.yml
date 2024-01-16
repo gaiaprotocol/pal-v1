@@ -35,3 +35,11 @@ token-held-activity-list-empty-message: No activities you hold tokens for yet
 activity-list-item-created-token-text: "{user} created {token}."
 activity-list-item-bought-token-text: "{user} bought {amount} {symbol}."
 activity-list-item-sold-token-text: "{user} sold {amount} {symbol}."
+
+explore-view-trending-tab: Trending
+explore-view-top-tab: Top
+explore-view-new-tab: New
+
+new-token-list-empty-message: No new tokens yet
+top-token-list-empty-message: No top tokens yet
+trending-token-list-empty-message: No trending tokens yet

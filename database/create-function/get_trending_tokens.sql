@@ -1,6 +1,5 @@
-CREATE OR REPLACE FUNCTION "public"."get_owned_tokens"(
-    "p_wallet_address" "text", 
-    "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, 
+CREATE OR REPLACE FUNCTION "public"."get_trending_tokens"(
+    "p_last_purchased_at" timestamp with time zone DEFAULT NULL::timestamp with time zone,
     "max_count" integer DEFAULT 1000
 ) 
 RETURNS TABLE(
@@ -68,21 +67,19 @@ BEGIN
         u.x_username AS owner_x_username
     FROM 
         public.tokens t
-    JOIN 
-        public.token_holders th ON t.token_address = th.token_address AND th.wallet_address = p_wallet_address
     LEFT JOIN 
         "public"."users_public" u ON t.owner = u.wallet_address
     WHERE 
-        (last_created_at IS NULL OR t.created_at < last_created_at)
+        (p_last_purchased_at IS NULL OR t.last_purchased_at > p_last_purchased_at)
     ORDER BY 
-        t.created_at DESC
+        t.last_purchased_at DESC
     LIMIT 
         max_count;
 END;
 $$;
 
-ALTER FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) TO "service_role";

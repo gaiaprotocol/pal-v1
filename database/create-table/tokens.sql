@@ -11,13 +11,13 @@ CREATE TABLE IF NOT EXISTS "public"."tokens" (
     "stored_image_thumb" "text",
     "metadata" "jsonb",
     "supply" numeric DEFAULT '0'::numeric NOT NULL,
-    "last_fetched_key_price" numeric DEFAULT '68750000000000'::numeric NOT NULL,
-    "total_trading_key_volume" numeric DEFAULT '0'::numeric NOT NULL,
+    "last_fetched_price" numeric DEFAULT '68750000000000'::numeric NOT NULL,
+    "total_trading_volume" numeric DEFAULT '0'::numeric NOT NULL,
     "is_price_up" boolean,
     "last_message" "text",
     "last_message_sent_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
     "holder_count" integer DEFAULT 1 NOT NULL,
-    "last_key_purchased_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
+    "last_purchased_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "updated_at" timestamp with time zone
 );

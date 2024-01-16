@@ -13,16 +13,18 @@ export default interface Token {
   stored_image_thumb?: string;
   metadata?: any;
   supply: string;
-  last_fetched_key_price: string;
-  total_trading_key_volume: string;
+  last_fetched_price: string;
+  total_trading_volume: string;
   is_price_up: boolean;
   last_message: string;
   last_message_sent_at: string;
   holder_count: number;
-  last_key_purchased_at: string;
+  last_purchased_at: string;
   created_at: string;
   updated_at?: string;
+
+  rank?: number;
 }
 
 export const TokenSelectQuery =
-  "*, supply::text, last_fetched_key_price::text, total_trading_key_volume::text";
+  "*, supply::text, last_fetched_price::text, total_trading_volume::text";
