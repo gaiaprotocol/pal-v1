@@ -1,9 +1,9 @@
 import { DomNode, el } from "@common-module/app";
-import { AvatarUtil, SoFiUserPublic } from "@common-module/social";
+import { AvatarUtil, SocialUserPublic } from "@common-module/social";
 import SidePanel from "../SidePanel.js";
 
 export default class TitleBarUserDisplay extends DomNode {
-  constructor(user: SoFiUserPublic) {
+  constructor(user: SocialUserPublic) {
     super(".title-bar-user-display");
 
     const avatar = el(".avatar");

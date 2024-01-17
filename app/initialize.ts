@@ -8,7 +8,7 @@ import {
 } from "@common-module/app";
 import {
   AuthUtil,
-  inject_sofi_msg,
+  inject_social_msg,
   TestChatView,
   TestPostListView,
   TestPostView,
@@ -24,13 +24,13 @@ import BlockTimeManager from "./BlockTimeManager.js";
 import Config from "./Config.js";
 import Env from "./Env.js";
 import EnvironmentManager from "./EnvironmentManager.js";
+import ExploreView from "./explorer/ExplorerView.js";
 import Layout from "./layout/Layout.js";
 import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import WalletManager from "./wallet/WalletManager.js";
-import ExploreView from "./explorer/ExplorerView.js";
 
-inject_sofi_msg();
+inject_social_msg();
 msg.setMessages({
   en: messages_en,
   zh: messages_zh,

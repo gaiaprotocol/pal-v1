@@ -9,7 +9,7 @@ export default class TokenListItem extends DomNode {
     super(".token-list-item");
 
     const tokenImage = el(".token-image", {
-      click: () => new TokenInfoPopup(),
+      click: () => new TokenInfoPopup(token.chain, token.token_address, token),
     });
 
     AvatarUtil.selectLoadable(tokenImage, [
@@ -22,11 +22,11 @@ export default class TokenListItem extends DomNode {
     });
 
     const tokenName = el("a", token.name, {
-      click: () => new TokenInfoPopup(),
+      click: () => new TokenInfoPopup(token.chain, token.token_address, token),
     });
 
     const symbol = el("a", " (", token.symbol, ").", {
-      click: () => new TokenInfoPopup(),
+      click: () => new TokenInfoPopup(token.chain, token.token_address, token),
     });
 
     const holderCount = StringUtil.numberWithCommas(String(token.holder_count));

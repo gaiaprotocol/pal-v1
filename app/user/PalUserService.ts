@@ -1,6 +1,6 @@
-import { SoFiUserPublic, SoFiUserService } from "@common-module/social";
+import { SocialUserPublic, SocialUserService } from "@common-module/social";
 
-class PalUserService extends SoFiUserService<SoFiUserPublic> {
+class PalUserService extends SocialUserService<SocialUserPublic> {
   constructor() {
     super("users_public", "*", 50);
   }

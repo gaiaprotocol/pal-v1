@@ -17,7 +17,13 @@ export default class ActivityListItem extends DomNode {
     super(".activity-list-item");
 
     const tokenImage = el(".token-image", {
-      click: () => new TokenInfoPopup(),
+      click: () =>
+        new TokenInfoPopup(
+          activity.chain,
+          activity.token_address,
+          undefined,
+          activity.token,
+        ),
     });
 
     AvatarUtil.selectLoadable(tokenImage, [
@@ -38,7 +44,13 @@ export default class ActivityListItem extends DomNode {
 
     if (activity.activity_name === "UserTokenCreated") {
       const token = el("a", activity.token?.name, {
-        click: () => new TokenInfoPopup(),
+        click: () =>
+          new TokenInfoPopup(
+            activity.chain,
+            activity.token_address,
+            undefined,
+            activity.token,
+          ),
       });
 
       this.append(
@@ -56,7 +68,13 @@ export default class ActivityListItem extends DomNode {
 
     if (activity.activity_name === "Trade") {
       const symbol = el("a", activity.token?.symbol, {
-        click: () => new TokenInfoPopup(),
+        click: () =>
+          new TokenInfoPopup(
+            activity.chain,
+            activity.token_address,
+            undefined,
+            activity.token,
+          ),
       });
 
       const isBuy = activity.args[2] === "true";

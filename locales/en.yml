@@ -43,3 +43,5 @@ explore-view-new-tab: New
 new-token-list-empty-message: No new tokens yet
 top-token-list-empty-message: No top tokens yet
 trending-token-list-empty-message: No trending tokens yet
+
+token-holder-list-empty-message: No holders yet

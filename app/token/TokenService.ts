@@ -1,9 +1,16 @@
 import { Supabase, SupabaseService } from "@common-module/app";
+import BlockchainType from "../blockchain/BlockchainType.js";
 import Token, { TokenSelectQuery } from "../database-interface/Token.js";
 
 class TokenService extends SupabaseService<Token> {
   constructor() {
     super("tokens", TokenSelectQuery, 50);
+  }
+
+  public async fetchToken(chain: BlockchainType, tokenAddress: string) {
+    return await this.safeSelectSingle((b) =>
+      b.eq("chain", chain).eq("token_address", tokenAddress)
+    );
   }
 
   protected enhanceTokenData(tokens: Token[]): Token[] {

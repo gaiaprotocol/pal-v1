@@ -535,7 +535,7 @@ button.component > .title {
 .warning-message-box.component > i {
   font-size: 24px;
 }
-.post-display.sofi-component {
+.post-display.social-component {
   position: relative;
   display: flex;
   gap: 10px;
@@ -545,10 +545,10 @@ button.component > .title {
         gap: 6px;
     }*/
 }
-.post-display.sofi-component > main {
+.post-display.social-component > main {
   flex-grow: 1;
 }
-.post-display.sofi-component .author-avatar {
+.post-display.social-component .author-avatar {
   flex-shrink: 0;
   width: 50px;
   height: 50px;
@@ -557,49 +557,49 @@ button.component > .title {
   background-size: cover;
   cursor: pointer;
 }
-.post-display.sofi-component .author {
+.post-display.social-component .author {
   padding-top: 4px;
   display: flex;
   gap: 4px;
 }
-.post-display.sofi-component .author > .name {
+.post-display.social-component .author > .name {
   font-weight: 700;
   cursor: pointer;
 }
-.post-display.sofi-component .author > .x-username {
+.post-display.social-component .author > .x-username {
   color: #595959;
   cursor: pointer;
 }
-.post-display.sofi-component button.owner-menu {
+.post-display.social-component button.owner-menu {
   position: absolute;
   top: 20px;
   right: 20px;
   cursor: pointer;
 }
-.post-display.sofi-component .message {
+.post-display.social-component .message {
   margin-top: 6px;
 }
-.post-display.sofi-component .rich-display {
+.post-display.social-component .rich-display {
   margin-top: 20px;
 }
-.post-display.sofi-component .date {
+.post-display.social-component .date {
   margin-top: 20px;
   color: #595959;
   font-size: 12px;
 }
-.post-display.sofi-component .actions {
+.post-display.social-component .actions {
   margin-top: 20px;
   display: flex;
   gap: 30px;
 }
-.post-display.sofi-component .actions > button {
+.post-display.social-component .actions > button {
   display: flex;
   gap: 16px;
   cursor: pointer;
   align-items: center;
 }
-.post-thread.sofi-component > .post-display,
-.post-thread.sofi-component > .post-form {
+.post-thread.social-component > .post-display,
+.post-thread.social-component > .post-form {
   border-bottom: 1px solid #242424;
 }
 :root {
