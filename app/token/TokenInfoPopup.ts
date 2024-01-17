@@ -12,7 +12,7 @@ export default class TokenInfoPopup extends Popup {
     super({ barrierDismissible: true });
     this.append(
       new Component(
-        ".token-info-popup",
+        ".token-info-popup.popup",
         el("header", el("h1")),
         el(
           "main",

@@ -8,13 +8,16 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 
-contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
+contract PalOnBase is OwnableUpgradeable, ReentrancyGuardUpgradeable {
     using AddressUpgradeable for address payable;
     using ECDSAUpgradeable for bytes32;
 
     address payable public protocolFeeDestination;
     uint256 public protocolFeePercent;
     uint256 public tokenOwnerFeePercent;
+
+    IERC20 public membershipToken; // deprecated
+    uint256 public membershipWeight; // deprecated
 
     uint256 private constant BASE_DIVIDER = 16000;
 
