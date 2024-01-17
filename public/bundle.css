@@ -736,6 +736,52 @@ button.component > .title {
 .token-list.hidden {
   display: none;
 }
+.token-list-item {
+  padding: 12px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--line-color);
+}
+.token-list-item > header {
+  display: flex;
+  align-items: center;
+}
+.token-list-item > header > .token-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252525;
+  background-size: cover;
+  cursor: pointer;
+}
+@container (width < 1280px) {
+  .token-list-item > header > .token-image {
+    width: 34px;
+    height: 34px;
+  }
+}
+.token-list-item > main {
+  flex-grow: 1;
+  width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.token-list-item > main > .description > a {
+  color: var(--primary-color);
+  cursor: pointer;
+}
+.token-list-item > main > .info {
+  font-size: 12px;
+}
+.token-list-item > main > .info > .price.up {
+  color: var(--rising-color);
+}
+.token-list-item > main > .info > .price.down {
+  color: var(--falling-color);
+}
 .create-token-popup > main {
   display: flex;
   flex-direction: column;
@@ -778,24 +824,22 @@ button.component > .title {
 .activity-list-item > main {
   flex-grow: 1;
   width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .activity-list-item > main > .description > a {
   color: var(--primary-color);
   cursor: pointer;
 }
 .activity-list-item > main > .info {
-  color: #595959;
-}
-.activity-list-item > main > .info > .price {
   font-size: 12px;
+  color: #595959;
 }
 .activity-list-item > main > .info > .price.up {
   color: var(--rising-color);
 }
 .activity-list-item > main > .info > .price.down {
   color: var(--falling-color);
-}
-.activity-list-item > main > .info > .date {
-  font-size: 12px;
 }
 

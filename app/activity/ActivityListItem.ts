@@ -16,7 +16,9 @@ export default class ActivityListItem extends DomNode {
   constructor(activity: Activity) {
     super(".activity-list-item");
 
-    const tokenImage = el(".token-image");
+    const tokenImage = el(".token-image", {
+      click: () => new TokenInfoPopup(),
+    });
 
     AvatarUtil.selectLoadable(tokenImage, [
       activity.token?.image_thumb,

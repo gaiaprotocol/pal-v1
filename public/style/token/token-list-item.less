@@ -1,4 +1,4 @@
-.activity-list-item {
+.token-list-item {
     padding      : 12px 20px;
     display      : flex;
     gap          : 12px;
@@ -9,14 +9,9 @@
         display    : flex;
         align-items: center;
 
-        >.trader-profile-image,
         >.token-image {
             .profile-image();
             cursor: pointer;
-        }
-
-        >.trader-profile-image {
-            margin-right: -8px;
         }
     }
 
@@ -36,7 +31,6 @@
 
         >.info {
             font-size: 12px;
-            color    : #595959;
 
             >.price {
                 &.up {
