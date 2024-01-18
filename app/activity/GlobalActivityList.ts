@@ -1,6 +1,6 @@
 import { msg } from "@common-module/app";
 import Activity from "../database-interface/Activity.js";
-import ActivityList from "./ActivityList.js";
+import { ActivityList } from "../index.js";
 import ActivityService from "./ActivityService.js";
 
 export default class GlobalActivityList extends ActivityList {

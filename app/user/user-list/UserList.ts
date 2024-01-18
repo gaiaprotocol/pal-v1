@@ -1,13 +1,13 @@
 import { DomNode, ListLoadingBar, Store } from "@common-module/app";
-import { SocialUserPublic } from "@common-module/social";
-import UserListItem from "./UserListItem.js";
+import PalUserPublic from "../../database-interface/PalUserPublic.js";
 
 export interface UserListOptions {
   storeName?: string;
   emptyMessage: string;
 }
 
-export default abstract class UserList extends DomNode {
+export default abstract class UserList<UT extends PalUserPublic>
+  extends DomNode {
   private store: Store | undefined;
   private refreshed = false;
 
@@ -17,7 +17,7 @@ export default abstract class UserList extends DomNode {
     this.domElement.setAttribute("data-empty-message", options.emptyMessage);
 
     if (this.store) {
-      const cached = this.store.get<SocialUserPublic[]>("cached-users");
+      const cached = this.store.get<UT[]>("cached-users");
       if (cached) {
         for (const user of cached) {
           this.addUserItem(user);
@@ -26,11 +26,8 @@ export default abstract class UserList extends DomNode {
     }
   }
 
-  protected abstract fetchUsers(): Promise<SocialUserPublic[]>;
-
-  protected addUserItem(user: SocialUserPublic) {
-    new UserListItem(user).appendTo(this);
-  }
+  protected abstract fetchUsers(): Promise<UT[]>;
+  protected abstract addUserItem(user: UT): void;
 
   protected async refresh() {
     this.append(new ListLoadingBar());

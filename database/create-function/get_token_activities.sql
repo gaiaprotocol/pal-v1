@@ -1,14 +1,14 @@
-CREATE OR REPLACE FUNCTION "public"."get_token_held_activities_with_users"(
-    "p_wallet_address" text,
-    "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone,
-    "max_count" integer DEFAULT 100
+CREATE OR REPLACE FUNCTION "public"."get_token_activities"(
+    p_chain text,
+    p_token_address text,
+    last_created_at timestamp with time zone DEFAULT NULL,
+    max_count integer DEFAULT 100
 ) RETURNS TABLE(
     "chain" text,
     "block_number" bigint,
     "log_index" bigint,
     "tx" text,
     "wallet_address" text,
-    "token_address" text,
     "activity_name" text,
     "args" text[],
     "created_at" timestamp with time zone,
@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION "public"."get_token_held_activities_with_users"(
     "token_image_stored" boolean,
     "token_stored_image" text,
     "token_stored_image_thumb" text
-) LANGUAGE "plpgsql" AS $$
+) LANGUAGE plpgsql AS $$
 BEGIN
     RETURN QUERY
     SELECT
@@ -35,7 +35,6 @@ BEGIN
         a.log_index,
         a.tx,
         a.wallet_address,
-        a.token_address,
         a.activity_name,
         a.args,
         a.created_at,
@@ -55,25 +54,23 @@ BEGIN
         t.stored_image_thumb as token_stored_image_thumb
     FROM 
         "public"."activities" a
-    INNER JOIN 
-        "public"."token_holders" th ON a.wallet_address = th.wallet_address
     LEFT JOIN 
         "public"."users_public" u ON a.wallet_address = u.wallet_address
     LEFT JOIN
         "public"."tokens" t ON a.token_address = t.token_address
     WHERE 
-        th.token_address = a.token_address
-        AND th.wallet_address = p_wallet_address
+        a.chain = p_chain
+        AND a.token_address = p_token_address
         AND (last_created_at IS NULL OR a.created_at < last_created_at)
     ORDER BY 
         a.created_at DESC
     LIMIT 
         max_count;
-END
+END;
 $$;
 
-ALTER FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" text, "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_token_activities"("p_chain" text, "p_token_address" text, "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_token_activities"("p_chain" text, "p_token_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token_activities"("p_chain" text, "p_token_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token_activities"("p_chain" text, "p_token_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";

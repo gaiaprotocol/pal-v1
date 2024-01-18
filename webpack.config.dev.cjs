@@ -1,6 +1,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { ProvidePlugin } = require("webpack");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 
 module.exports = {
   entry: {
@@ -68,5 +69,12 @@ module.exports = {
       Buffer: ["buffer", "Buffer"],
       process: "process/browser",
     }),
+    /*new CircularDependencyPlugin({
+      onDetected: function (
+        { module: webpackModuleRecord, paths, compilation },
+      ) {
+        compilation.warnings.push(new Error(paths.join(" -> ")));
+      },
+    }),*/
   ],
 };

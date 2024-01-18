@@ -1,4 +1,5 @@
-CREATE OR REPLACE FUNCTION "public"."get_global_activities_with_users"(
+CREATE OR REPLACE FUNCTION "public"."get_token_held_activities"(
+    "p_wallet_address" text,
     "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone,
     "max_count" integer DEFAULT 100
 ) RETURNS TABLE(
@@ -38,7 +39,7 @@ BEGIN
         a.activity_name,
         a.args,
         a.created_at,
-        u.user_id as user_id,
+        u.user_id,
         u.display_name as user_display_name,
         u.avatar as user_avatar,
         u.avatar_thumb as user_avatar_thumb,
@@ -54,12 +55,16 @@ BEGIN
         t.stored_image_thumb as token_stored_image_thumb
     FROM 
         "public"."activities" a
+    INNER JOIN 
+        "public"."token_holders" th ON a.wallet_address = th.wallet_address
     LEFT JOIN 
         "public"."users_public" u ON a.wallet_address = u.wallet_address
     LEFT JOIN
         "public"."tokens" t ON a.token_address = t.token_address
     WHERE 
-        (last_created_at IS NULL OR a.created_at < last_created_at)
+        th.token_address = a.token_address
+        AND th.wallet_address = p_wallet_address
+        AND (last_created_at IS NULL OR a.created_at < last_created_at)
     ORDER BY 
         a.created_at DESC
     LIMIT 
@@ -67,8 +72,8 @@ BEGIN
 END
 $$;
 
-ALTER FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_token_held_activities"("p_wallet_address" text, "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities"("p_wallet_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities"("p_wallet_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities"("p_wallet_address" text, "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";

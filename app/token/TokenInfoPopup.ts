@@ -12,6 +12,8 @@ import { AvatarUtil } from "@common-module/social";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import PreviewToken from "../database-interface/PreviewToken.js";
 import Token from "../database-interface/Token.js";
+import TokenActivityList from "./TokenActivityList.js";
+import TokenHolderList from "./TokenHolderList.js";
 import TokenService from "./TokenService.js";
 
 export default class TokenInfoPopup extends Popup {
@@ -69,8 +71,12 @@ export default class TokenInfoPopup extends Popup {
           { id: "holders", label: "Holders" },
           { id: "activity", label: "Activity" },
         ]),
-        this.holderList = new TokenHolderList(),
-        this.activityList = new TokenActivityList(),
+        this.holderList = new TokenHolderList(
+          chain,
+          tokenAddress,
+          previewToken ? previewToken.symbol : "",
+        ),
+        this.activityList = new TokenActivityList(chain, tokenAddress),
         el(
           "footer",
           new Button({
@@ -96,11 +102,21 @@ export default class TokenInfoPopup extends Popup {
     }
 
     token ? this.render(token) : this.fetchToken();
+
+    this.tabs.on("select", (id: string) => {
+      [
+        this.holderList,
+        this.activityList,
+      ].forEach((list) => list.hide());
+      if (id === "holders") this.holderList.show();
+      else if (id === "activity") this.activityList.show();
+    }).init();
   }
 
   private render(token: Token) {
     console.log(token);
     //TODO:
+    this.holderList.symbol = token.symbol;
     this.loadBalance();
   }
 

@@ -1,16 +1,16 @@
 import { msg } from "@common-module/app";
 import Activity from "../database-interface/Activity.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
-import ActivityList from "./ActivityList.js";
 import ActivityService from "./ActivityService.js";
+import { ActivityList } from "../index.js";
 
-export default class TokenHeldActivityList extends ActivityList {
+export default class HeldTokenActivityList extends ActivityList {
   constructor() {
     super(
-      ".token-held-activity-list",
+      ".held-token-activity-list",
       {
-        storeName: "token-held-activities",
-        emptyMessage: msg("token-held-activity-list-empty-message"),
+        storeName: "held-token-activities",
+        emptyMessage: msg("held-token-activity-list-empty-message"),
       },
     );
   }

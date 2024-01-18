@@ -35,7 +35,7 @@ class ActivityService extends SupabaseService<Activity> {
 
   public async fetchGlobalActivities(lastCreatedAt?: string) {
     let { data, error } = await Supabase.client.rpc(
-      "get_global_activities_with_users",
+      "get_global_activities",
       {
         last_created_at: lastCreatedAt,
         max_count: this.fetchLimit,
@@ -50,9 +50,27 @@ class ActivityService extends SupabaseService<Activity> {
     lastCreatedAt?: string,
   ) {
     let { data, error } = await Supabase.client.rpc(
-      "get_token_held_activities_with_users",
+      "get_token_held_activities",
       {
         p_wallet_address: walletAddress,
+        last_created_at: lastCreatedAt,
+        max_count: this.fetchLimit,
+      },
+    );
+    if (error) throw error;
+    return this.enhanceActivityData(data ?? []);
+  }
+
+  public async fetchTokenActivities(
+    chain: string,
+    tokenAddress: string,
+    lastCreatedAt?: string,
+  ) {
+    let { data, error } = await Supabase.client.rpc(
+      "get_token_activities",
+      {
+        p_chain: chain,
+        p_token_address: tokenAddress,
         last_created_at: lastCreatedAt,
         max_count: this.fetchLimit,
       },

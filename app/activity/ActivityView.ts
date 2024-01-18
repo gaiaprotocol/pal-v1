@@ -2,12 +2,12 @@ import { el, Tabs, View } from "@common-module/app";
 import Layout from "../layout/Layout.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import GlobalActivityList from "./GlobalActivityList.js";
-import TokenHeldActivityList from "./TokenHeldActivityList.js";
+import HeldTokenActivityList from "./HeldTokenActivityList.js";
 
 export default class ActivityView extends View {
   private tabs: Tabs;
   private globalActivityList: GlobalActivityList;
-  private tokenHeldActivityList: TokenHeldActivityList | undefined;
+  private tokenHeldActivityList: HeldTokenActivityList | undefined;
 
   constructor() {
     super();
@@ -29,7 +29,7 @@ export default class ActivityView extends View {
           ),
           this.globalActivityList = new GlobalActivityList(),
           this.tokenHeldActivityList = PalSignedUserManager.walletLinked
-            ? new TokenHeldActivityList()
+            ? new HeldTokenActivityList()
             : undefined,
         ),
       ),

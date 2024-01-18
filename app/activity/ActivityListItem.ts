@@ -10,7 +10,7 @@ import { AvatarUtil } from "@common-module/social";
 import { ethers } from "ethers";
 import BlockTimeManager from "../BlockTimeManager.js";
 import Activity from "../database-interface/Activity.js";
-import TokenInfoPopup from "../token/TokenInfoPopup.js";
+import { TokenInfoPopup } from "../index.js";
 
 export default class ActivityListItem extends DomNode {
   constructor(activity: Activity) {
