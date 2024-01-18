@@ -13,11 +13,8 @@ export default class UserListItem extends DomNode {
     ]);
 
     this.append(
-      el(
-        ".info",
-        profileImage,
-        el(".name", user.display_name),
-      ),
+      profileImage,
+      el(".name", user.display_name),
     );
     this.onDom("click", () => Router.go(`/${user.x_username}`));
   }

@@ -1,0 +1,13 @@
+.user-list {
+    &.hidden {
+        display: none;
+    }
+
+    &:empty::before {
+        display   : block;
+        content   : attr(data-empty-message);
+        text-align: center;
+        color     : #474B54;
+        padding   : 20px 0;
+    }
+}
