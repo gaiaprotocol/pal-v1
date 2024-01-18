@@ -17,9 +17,16 @@ export default class TokenListItem extends DomNode {
       token.stored_image_thumb,
     ]);
 
-    const owner = el("a", token.owner.display_name, {
-      click: () => Router.go(`/${token.owner.x_username}`),
-    });
+    const owner = el(
+      "a",
+      typeof token.owner === "string" ? token.owner : token.owner.display_name,
+      {
+        click: () =>
+          typeof token.owner === "string"
+            ? undefined
+            : Router.go(`/${token.owner.x_username}`),
+      },
+    );
 
     const tokenName = el("a", token.name, {
       click: () => new TokenInfoPopup(token.chain, token.token_address, token),

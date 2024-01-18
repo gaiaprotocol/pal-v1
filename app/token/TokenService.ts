@@ -16,15 +16,18 @@ class TokenService extends SupabaseService<Token> {
   protected enhanceTokenData(tokens: Token[]): Token[] {
     const _tokens = Supabase.safeResult<Token[]>(tokens);
     for (const token of _tokens as any) {
-      token.owner = {
-        user_id: token.owner_user_id,
-        display_name: token.owner_display_name,
-        avatar: token.owner_avatar,
-        avatar_thumb: token.owner_avatar_thumb,
-        stored_avatar: token.owner_stored_avatar,
-        stored_avatar_thumb: token.owner_stored_avatar_thumb,
-        x_username: token.owner_x_username,
-      };
+      if (token.owner_user_id) {
+        token.owner = {
+          user_id: token.owner_user_id,
+          wallet_address: token.owner_wallet_address,
+          display_name: token.owner_display_name,
+          avatar: token.owner_avatar,
+          avatar_thumb: token.owner_avatar_thumb,
+          stored_avatar: token.owner_stored_avatar,
+          stored_avatar_thumb: token.owner_stored_avatar_thumb,
+          x_username: token.owner_x_username,
+        };
+      }
     }
     return _tokens;
   }

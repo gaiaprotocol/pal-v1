@@ -39,7 +39,6 @@ export default class TokenHolderList
       this.token,
       this.lastBalance,
     );
-    console.log(holders);
     this.lastBalance = holders[holders.length - 1]?.balance;
     return holders;
   }

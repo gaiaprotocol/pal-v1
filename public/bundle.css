@@ -787,6 +787,39 @@ button.component > .title {
   flex-direction: column;
   gap: 16px;
 }
+.token-info-popup > header {
+  display: flex;
+  gap: 12px;
+}
+.token-info-popup > header > .token-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252525;
+  background-size: cover;
+  width: 34px;
+  height: 34px;
+}
+@container (width < 1280px) {
+  .token-info-popup > header > .token-image {
+    width: 34px;
+    height: 34px;
+  }
+}
+.token-info-popup > header > h1 {
+  gap: initial !important;
+}
+.token-info-popup > header > h1 > .symbol {
+  margin-left: 16px;
+  color: #595959;
+  font-size: 16px;
+}
+.token-info-popup > header > h1 > button {
+  margin-left: 6px;
+  padding: 0;
+  color: #595959;
+}
 .activity-list.hidden {
   display: none;
 }

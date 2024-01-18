@@ -96,6 +96,8 @@ contract Pal is OwnableUpgradeable, ReentrancyGuardUpgradeable {
         uint256 price,
         bytes memory oracleSignature
     ) public view returns (uint256) {
+        if (oracleSignature.length == 0) return 0;
+
         // Extract the fee ratio from the oracle's signed message
         (uint256 feeRatio, bytes32 originalHash) = splitSignatureData(oracleSignature);
         bytes32 hash = keccak256(abi.encodePacked(price, feeRatio)).toEthSignedMessageHash();

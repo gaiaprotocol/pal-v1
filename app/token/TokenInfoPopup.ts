@@ -4,14 +4,22 @@ import {
   Component,
   DomNode,
   el,
+  MaterialIcon,
   msg,
   Popup,
+  Router,
+  StringUtil,
   Tabs,
 } from "@common-module/app";
 import { AvatarUtil } from "@common-module/social";
+import { ethers } from "ethers";
 import BlockchainType from "../blockchain/BlockchainType.js";
+import PalContract from "../contracts/PalContract.js";
+import PalUserTokenContract from "../contracts/PalUserTokenContract.js";
 import PreviewToken from "../database-interface/PreviewToken.js";
 import Token from "../database-interface/Token.js";
+import TrackEventManager from "../TrackEventManager.js";
+import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TokenActivityList from "./TokenActivityList.js";
 import TokenHolderList from "./TokenHolderList.js";
 import TokenService from "./TokenService.js";
@@ -19,17 +27,20 @@ import TokenService from "./TokenService.js";
 export default class TokenInfoPopup extends Popup {
   private tokenImage: DomNode;
   private tokenName: DomNode;
-  private editButtonWrapper: DomNode;
   private descriptionDisplay: DomNode;
   private ownerDisplay: DomNode;
 
   private holderCountDisplay: DomNode;
   private priceDisplay: DomNode;
   private balanceDisplay: DomNode;
+  private buyButton: Button;
+  private sellButton: Button;
 
   private tabs: Tabs;
   private holderList: TokenHolderList;
   private activityList: TokenActivityList;
+
+  private footer: DomNode;
 
   constructor(
     private chain: BlockchainType,
@@ -46,7 +57,6 @@ export default class TokenInfoPopup extends Popup {
           "header",
           this.tokenImage = el(".token-image"),
           this.tokenName = el("h1", "..."),
-          this.editButtonWrapper = el(".edit-button-wrapper"),
         ),
         el(
           "main",
@@ -57,14 +67,26 @@ export default class TokenInfoPopup extends Popup {
             el(
               ".holder-count",
               el("label", "Holders"),
-              this.holderCountDisplay = el("span"),
+              this.holderCountDisplay = el("span", "..."),
             ),
-            el(".price", el("label", "Price"), this.priceDisplay = el("span")),
+            el(
+              ".price",
+              el("label", "Price"),
+              this.priceDisplay = el("span", "..."),
+            ),
           ),
           el(
             "section.balance",
             el("label", "Your Balance"),
-            this.balanceDisplay = el("span"),
+            this.balanceDisplay = el("span", "..."),
+            this.buyButton = new Button({
+              title: "Buy",
+              click: () => this.buyToken(),
+            }),
+            this.sellButton = new Button({
+              title: "Sell",
+              click: () => this.sellToken(),
+            }),
           ),
         ),
         this.tabs = new Tabs("token-info-popup", [
@@ -77,7 +99,7 @@ export default class TokenInfoPopup extends Popup {
           previewToken ? previewToken.symbol : "",
         ),
         this.activityList = new TokenActivityList(chain, tokenAddress),
-        el(
+        this.footer = el(
           "footer",
           new Button({
             type: ButtonType.Text,
@@ -115,7 +137,81 @@ export default class TokenInfoPopup extends Popup {
 
   private render(token: Token) {
     console.log(token);
-    //TODO:
+
+    AvatarUtil.selectLoadable(this.tokenImage, [
+      token.image_thumb,
+      token.stored_image_thumb,
+    ]);
+
+    this.tokenName.empty().append(
+      token.name,
+      " ",
+      el("span.symbol", token.symbol),
+    );
+
+    if (
+      (typeof token.owner === "string" &&
+        token.owner === PalSignedUserManager.user?.wallet_address) ||
+      (typeof token.owner !== "string" &&
+        token.owner.wallet_address ===
+          PalSignedUserManager.user?.wallet_address)
+    ) {
+      this.tokenName.append(
+        new Button({
+          type: ButtonType.Text,
+          icon: new MaterialIcon("edit"),
+          click: () => {
+            //TODO:
+          },
+        }),
+      );
+
+      new Button({
+        title: "Edit",
+        click: () => {
+          //TODO:
+        },
+      }).appendTo(this.footer, 0);
+    }
+
+    this.descriptionDisplay.text = token.metadata?.description ?? "";
+
+    const profileImage = el(".profile-image");
+
+    if (typeof token.owner !== "string") {
+      AvatarUtil.selectLoadable(profileImage, [
+        token.owner?.avatar_thumb,
+        token.owner?.stored_avatar_thumb,
+      ]);
+    }
+
+    this.ownerDisplay.append(el(
+      "section.owner",
+      el("h3", "Owner"),
+      el(
+        ".info-container",
+        profileImage,
+        el(
+          ".info",
+          el(
+            ".name",
+            typeof token.owner === "string"
+              ? token.owner
+              : token.owner.display_name,
+          ),
+          el(
+            ".x-username",
+            typeof token.owner === "string" ? "" : token.owner.x_username,
+          ),
+        ),
+      ),
+    ));
+
+    this.holderCountDisplay.text = token.holder_count.toString();
+    this.priceDisplay.text = StringUtil.numberWithCommas(
+      ethers.formatEther(token.last_fetched_price),
+    );
+
     this.holderList.symbol = token.symbol;
     this.loadBalance();
   }
@@ -125,7 +221,41 @@ export default class TokenInfoPopup extends Popup {
     if (token) this.render(token);
   }
 
-  private loadBalance() {
-    //TODO:
+  private async loadBalance() {
+    const contract = new PalUserTokenContract(this.chain, this.tokenAddress);
+    const walletAddress = PalSignedUserManager.user?.wallet_address;
+    if (walletAddress) {
+      const balance = await contract.balanceOf(walletAddress);
+      this.balanceDisplay.text = StringUtil.numberWithCommas(
+        ethers.formatEther(balance),
+      );
+    }
+  }
+
+  private async buyToken() {
+    this.buyButton.title = "Buying...";
+    try {
+      const contract = new PalContract(this.chain);
+      await contract.buyToken(this.tokenAddress, ethers.parseEther("1"));
+      await TrackEventManager.trackEvent(this.chain);
+      this.delete();
+      Router.go(`/${this.chain}/${this.tokenAddress}`);
+    } catch (e) {
+      console.error(e);
+      this.buyButton.title = "Buy";
+    }
+  }
+
+  private async sellToken() {
+    this.sellButton.title = "Selling...";
+    try {
+      const contract = new PalContract(this.chain);
+      await contract.sellToken(this.tokenAddress, ethers.parseEther("1"));
+      await TrackEventManager.trackEvent(this.chain);
+      this.delete();
+    } catch (e) {
+      console.error(e);
+      this.sellButton.title = "Sell";
+    }
   }
 }

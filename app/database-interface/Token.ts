@@ -1,10 +1,10 @@
-import { Author } from "@common-module/social";
 import BlockchainType from "../blockchain/BlockchainType.js";
+import TokenOwner from "./TokenOwner.js";
 
 export default interface Token {
   chain: BlockchainType;
   token_address: string;
-  owner: Author;
+  owner: TokenOwner | string;
   name: string;
   symbol: string;
   image?: string;
