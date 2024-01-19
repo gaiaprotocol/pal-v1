@@ -5,6 +5,7 @@ import {
   DomNode,
   el,
   Jazzicon,
+  LoadingSpinner,
   MaterialIcon,
   msg,
   Popup,
@@ -57,23 +58,27 @@ export default class TokenInfoPopup extends Popup {
         el(
           "header",
           this.tokenImage = el(".token-image"),
-          this.tokenName = el("h1", "..."),
+          this.tokenName = el("h1", new LoadingSpinner()),
         ),
         el(
           "main",
           this.descriptionDisplay = el("p.description"),
-          this.ownerDisplay = el("section.owner", el("h3", "Owner"), "..."),
+          this.ownerDisplay = el(
+            "section.owner",
+            el("h3", "Owner"),
+            new LoadingSpinner(),
+          ),
           el(
             ".metrics",
             el(
               "section.holder-count",
               el("h3", "Holders"),
-              this.holderCountDisplay = el("span.value", "..."),
+              this.holderCountDisplay = el("span.value", new LoadingSpinner()),
             ),
             el(
               "section.price",
               el("h3", "Price"),
-              this.priceDisplay = el("span.value", "..."),
+              this.priceDisplay = el("span.value", new LoadingSpinner()),
             ),
           ),
           el(
@@ -81,7 +86,7 @@ export default class TokenInfoPopup extends Popup {
             el(
               ".info",
               el("h3", "Your Balance"),
-              this.balanceDisplay = el("span.value", "..."),
+              this.balanceDisplay = el("span.value", new LoadingSpinner()),
             ),
             this.buyButton = new Button({
               title: "Buy",
