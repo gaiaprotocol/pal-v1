@@ -54,6 +54,22 @@ class TokenService extends SupabaseService<Token> {
     return this.enhanceTokenData(data ?? []);
   }
 
+  public async fetchHeldOrOwnedTokens(
+    owner: string,
+    lastCreatedAt: string | undefined,
+  ) {
+    const { data, error } = await Supabase.client.rpc(
+      "get_held_or_owned_tokens",
+      {
+        p_wallet_address: owner,
+        last_created_at: lastCreatedAt,
+        max_count: this.fetchLimit,
+      },
+    );
+    if (error) throw error;
+    return this.enhanceTokenData(data ?? []);
+  }
+
   public async fetchNewTokens(lastCreatedAt: string | undefined) {
     const { data, error } = await Supabase.client.rpc(
       "get_new_tokens",

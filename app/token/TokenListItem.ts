@@ -19,7 +19,9 @@ export default class TokenListItem extends DomNode {
 
     const owner = el(
       "a",
-      typeof token.owner === "string" ? token.owner : token.owner.display_name,
+      typeof token.owner === "string"
+        ? StringUtil.shortenEthereumAddress(token.owner)
+        : token.owner.display_name,
       {
         click: () =>
           typeof token.owner === "string"

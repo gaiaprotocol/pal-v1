@@ -763,6 +763,8 @@ button.component > .title {
   height: 100%;
   border-left: 1px solid var(--line-color);
   background-color: var(--content-bg-color);
+  overflow-y: auto;
+  padding-bottom: 120px;
 }
 .side-panel > main > header {
   display: flex;
@@ -793,13 +795,13 @@ button.component > .title {
   padding: 4px 6px;
 }
 .side-panel > main > section {
-  padding: 16px 20px;
   border-bottom: 1px solid var(--line-color);
 }
 .side-panel > main > section > header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 16px 20px;
 }
 .side-panel > main > section > header > h3 {
   color: #595959;
@@ -807,6 +809,9 @@ button.component > .title {
 }
 .side-panel > main > section > header > button {
   padding: 4px 6px;
+}
+.side-panel > main > section > .token-list {
+  border-top: 1px solid var(--line-color);
 }
 .side-panel > main > ul.menu {
   padding: 8px 0;

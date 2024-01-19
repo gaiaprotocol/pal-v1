@@ -8,6 +8,7 @@ import {
 } from "@common-module/app";
 import { AvatarUtil } from "@common-module/social";
 import CreateTokenPopup from "../token/CreateTokenPopup.js";
+import HeldTokenList from "../token/HeldTokenList.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 
 export default class SidePanel extends DomNode {
@@ -47,9 +48,7 @@ export default class SidePanel extends DomNode {
         new Button({
           tag: ".close",
           icon: new MaterialIcon("close"),
-          click: () => {
-            this.delete();
-          },
+          click: () => this.delete(),
         }),
       ),
       el(
@@ -95,6 +94,7 @@ export default class SidePanel extends DomNode {
             },
           }),
         ),
+        new HeldTokenList(),
       ),
     ));
 
