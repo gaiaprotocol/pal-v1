@@ -820,6 +820,63 @@ button.component > .title {
   padding: 0;
   color: #595959;
 }
+.token-info-popup > main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 20px !important;
+}
+.token-info-popup > main section {
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.token-info-popup > main section h3 {
+  color: #595959;
+  font-size: 12px;
+}
+.token-info-popup > main section .value {
+  font-size: 16px;
+}
+.token-info-popup > main > .owner > .info-container {
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.token-info-popup > main > .owner > .info-container > .info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.token-info-popup > main > .owner > .info-container > .info > .name {
+  color: var(--primary-color);
+}
+.token-info-popup > main > .owner > .info-container > .info > .x-username {
+  color: #595959;
+  font-size: 12px;
+}
+.token-info-popup > main > .metrics {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+.token-info-popup > main > .metrics > section {
+  width: 50%;
+}
+.token-info-popup > main > .balance {
+  flex-direction: row;
+  gap: 10px;
+}
+.token-info-popup > main > .balance > .info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 .activity-list.hidden {
   display: none;
 }

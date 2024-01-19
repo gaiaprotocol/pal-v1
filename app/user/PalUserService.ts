@@ -8,6 +8,14 @@ class PalUserService extends SocialUserService<PalUserPublic> {
     super("users_public", "*", 50);
   }
 
+  public async fetchByWalletAddress(
+    walletAddress: string,
+  ): Promise<PalUserPublic | undefined> {
+    return await this.safeSelectSingle((b) =>
+      b.eq("wallet_address", walletAddress)
+    );
+  }
+
   public async fetchTokenHolders(
     chain: BlockchainType,
     tokenAddress: string,

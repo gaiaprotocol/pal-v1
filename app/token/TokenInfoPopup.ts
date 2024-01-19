@@ -4,6 +4,7 @@ import {
   Component,
   DomNode,
   el,
+  Jazzicon,
   MaterialIcon,
   msg,
   Popup,
@@ -61,24 +62,27 @@ export default class TokenInfoPopup extends Popup {
         el(
           "main",
           this.descriptionDisplay = el("p.description"),
-          this.ownerDisplay = el("section.owner"),
+          this.ownerDisplay = el("section.owner", el("h3", "Owner"), "..."),
           el(
-            "section.metrics",
+            ".metrics",
             el(
-              ".holder-count",
-              el("label", "Holders"),
-              this.holderCountDisplay = el("span", "..."),
+              "section.holder-count",
+              el("h3", "Holders"),
+              this.holderCountDisplay = el("span.value", "..."),
             ),
             el(
-              ".price",
-              el("label", "Price"),
-              this.priceDisplay = el("span", "..."),
+              "section.price",
+              el("h3", "Price"),
+              this.priceDisplay = el("span.value", "..."),
             ),
           ),
           el(
             "section.balance",
-            el("label", "Your Balance"),
-            this.balanceDisplay = el("span", "..."),
+            el(
+              ".info",
+              el("h3", "Your Balance"),
+              this.balanceDisplay = el("span.value", "..."),
+            ),
             this.buyButton = new Button({
               title: "Buy",
               click: () => this.buyToken(),
@@ -185,27 +189,32 @@ export default class TokenInfoPopup extends Popup {
       ]);
     }
 
-    this.ownerDisplay.append(el(
-      "section.owner",
+    this.ownerDisplay.empty().append(
       el("h3", "Owner"),
       el(
         ".info-container",
-        profileImage,
-        el(
-          ".info",
-          el(
-            ".name",
-            typeof token.owner === "string"
-              ? token.owner
-              : token.owner.display_name,
+        typeof token.owner === "string"
+          ? new Jazzicon(".profile-image", token.owner)
+          : profileImage,
+        typeof token.owner === "string"
+          ? el(".owner", StringUtil.shortenEthereumAddress(token.owner))
+          : el(
+            ".info",
+            el(".name", token.owner.display_name),
+            el(".x-username", `@${token.owner.x_username}`),
           ),
-          el(
-            ".x-username",
-            typeof token.owner === "string" ? "" : token.owner.x_username,
-          ),
-        ),
+        {
+          click: () => {
+            if (typeof token.owner !== "string") {
+              Router.go(`/${token.owner.x_username}`);
+              this.delete();
+            } else {
+              open(`https://etherscan.io/address/${token.owner}`);
+            }
+          },
+        },
       ),
-    ));
+    );
 
     this.holderCountDisplay.text = token.holder_count.toString();
     this.priceDisplay.text = StringUtil.numberWithCommas(
