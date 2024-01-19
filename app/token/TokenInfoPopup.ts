@@ -142,6 +142,8 @@ export default class TokenInfoPopup extends Popup {
       if (id === "holders") this.holderList.show();
       else if (id === "activity") this.activityList.show();
     }).init();
+
+    this.loadBalance();
   }
 
   private render(token: Token) {
@@ -227,7 +229,6 @@ export default class TokenInfoPopup extends Popup {
     );
 
     this.holderList.symbol = token.symbol;
-    this.loadBalance();
   }
 
   private async fetchToken() {

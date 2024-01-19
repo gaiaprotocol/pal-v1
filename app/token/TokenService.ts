@@ -1,25 +1,10 @@
 import { Supabase, SupabaseService } from "@common-module/app";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import Token, { TokenSelectQuery } from "../database-interface/Token.js";
-import TokenOwner from "../database-interface/TokenOwner.js";
-import PalUserService from "../user/PalUserService.js";
 
 class TokenService extends SupabaseService<Token> {
   constructor() {
     super("tokens", TokenSelectQuery, 50);
-  }
-
-  public async fetchToken(chain: BlockchainType, tokenAddress: string) {
-    const token = await this.safeSelectSingle((b) =>
-      b.eq("chain", chain).eq("token_address", tokenAddress)
-    );
-    if (token) {
-      const owner = await PalUserService.fetchByWalletAddress(
-        token.owner as string,
-      );
-      if (owner) token.owner = owner as TokenOwner;
-    }
-    return token;
   }
 
   protected enhanceTokenData(tokens: Token[]): Token[] {
@@ -39,6 +24,18 @@ class TokenService extends SupabaseService<Token> {
       }
     }
     return _tokens;
+  }
+
+  public async fetchToken(chain: BlockchainType, tokenAddress: string) {
+    const { data, error } = await Supabase.client.rpc(
+      "get_token",
+      {
+        p_chain: chain,
+        p_token_address: tokenAddress,
+      },
+    );
+    if (error) throw error;
+    return this.enhanceTokenData(data ?? [])[0];
   }
 
   public async fetchOwnedTokens(

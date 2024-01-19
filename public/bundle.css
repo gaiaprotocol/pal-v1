@@ -764,6 +764,29 @@ button.component > .title {
   border-left: 1px solid var(--line-color);
   background-color: var(--content-bg-color);
 }
+.side-panel > main > section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line-color);
+}
+.side-panel > main > section > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.side-panel > main > section > header > h3 {
+  color: #595959;
+  font-size: 12px;
+}
+.side-panel > main > section > header > button {
+  padding: 4px 10px;
+}
+.side-panel > main > ul.menu {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line-color);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .token-list {
   position: relative;
 }

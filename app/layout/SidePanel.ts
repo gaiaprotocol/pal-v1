@@ -18,17 +18,30 @@ export default class SidePanel extends DomNode {
       el("section.profile"),
       el(
         "ul.menu",
-        el("li", el("a", "Profile")),
+        el(
+          "li",
+          el("a", "Profile", {
+            click: () => {
+              this.delete();
+            },
+          }),
+        ),
         el(
           "li",
           el("a", "Settings", {
-            click: () => Router.go("/settings"),
+            click: () => {
+              Router.go("/settings");
+              this.delete();
+            },
           }),
         ),
         el(
           "li",
           el("a", "Logout", {
-            click: () => PalSignedUserManager.signOut(),
+            click: () => {
+              PalSignedUserManager.signOut();
+              this.delete();
+            },
           }),
         ),
       ),
@@ -36,7 +49,7 @@ export default class SidePanel extends DomNode {
         "section.tokens",
         el(
           "header",
-          el("h3", "Tokens"),
+          el("h3", "Your Tokens"),
           new Button({
             icon: new MaterialIcon("add"),
             click: () => {

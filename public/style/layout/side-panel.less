@@ -15,5 +15,35 @@
         height          : 100%;
         border-left     : 1px solid var(--line-color);
         background-color: var(--content-bg-color);
+
+        >section {
+            padding      : 16px 20px;
+            border-bottom: 1px solid var(--line-color);
+
+            >header {
+                display        : flex;
+                align-items    : center;
+                justify-content: space-between;
+
+                >h3 {
+                    color    : #595959;
+                    font-size: 12px;
+                }
+
+                >button {
+                    padding: 4px 10px;
+                }
+            }
+        }
+
+        >ul.menu {
+            padding       : 16px 20px;
+            border-bottom : 1px solid var(--line-color);
+            display       : flex;
+            flex-direction: column;
+            gap           : 16px;
+
+            >li {}
+        }
     }
 }
