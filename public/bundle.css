@@ -764,6 +764,34 @@ button.component > .title {
   border-left: 1px solid var(--line-color);
   background-color: var(--content-bg-color);
 }
+.side-panel > main > header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line-color);
+}
+.side-panel > main > header > .signed-user {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  cursor: pointer;
+}
+.side-panel > main > header > .signed-user > .info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.side-panel > main > header > .signed-user > .info > .name {
+  font-weight: bold;
+}
+.side-panel > main > header > .signed-user > .info > .x-username {
+  color: #595959;
+  font-size: 12px;
+}
+.side-panel > main > header > button.close {
+  margin-left: auto;
+  padding: 4px 6px;
+}
 .side-panel > main > section {
   padding: 16px 20px;
   border-bottom: 1px solid var(--line-color);
@@ -778,14 +806,18 @@ button.component > .title {
   font-size: 12px;
 }
 .side-panel > main > section > header > button {
-  padding: 4px 10px;
+  padding: 4px 6px;
 }
 .side-panel > main > ul.menu {
-  padding: 16px 20px;
+  padding: 8px 0;
   border-bottom: 1px solid var(--line-color);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+}
+.side-panel > main > ul.menu > li > a {
+  display: block;
+  padding: 8px 20px;
+}
+.side-panel > main > ul.menu > li > a:hover {
+  background-color: var(--hover-color);
 }
 .token-list {
   position: relative;

@@ -16,6 +16,40 @@
         border-left     : 1px solid var(--line-color);
         background-color: var(--content-bg-color);
 
+        >header {
+            display      : flex;
+            align-items  : center;
+            padding      : 16px 20px;
+            border-bottom: 1px solid var(--line-color);
+
+            >.signed-user {
+                display    : flex;
+                gap        : 12px;
+                align-items: center;
+                cursor     : pointer;
+
+                >.info {
+                    display       : flex;
+                    flex-direction: column;
+                    gap           : 4px;
+
+                    >.name {
+                        font-weight: bold;
+                    }
+
+                    >.x-username {
+                        color    : #595959;
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            >button.close {
+                margin-left: auto;
+                padding    : 4px 6px;
+            }
+        }
+
         >section {
             padding      : 16px 20px;
             border-bottom: 1px solid var(--line-color);
@@ -31,19 +65,23 @@
                 }
 
                 >button {
-                    padding: 4px 10px;
+                    padding: 4px 6px;
                 }
             }
         }
 
         >ul.menu {
-            padding       : 16px 20px;
-            border-bottom : 1px solid var(--line-color);
-            display       : flex;
-            flex-direction: column;
-            gap           : 16px;
+            padding      : 8px 0;
+            border-bottom: 1px solid var(--line-color);
 
-            >li {}
+            >li>a {
+                display: block;
+                padding: 8px 20px;
+
+                &:hover {
+                    background-color: var(--hover-color);
+                }
+            }
         }
     }
 }
