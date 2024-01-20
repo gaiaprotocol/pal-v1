@@ -1,5 +1,6 @@
-import { el, Router } from "@common-module/app";
+import { el, Router, StringUtil } from "@common-module/app";
 import { AvatarUtil } from "@common-module/social";
+import { ethers } from "ethers";
 import ChatRoomListItem from "../chat/ChatRoomListItem.js";
 import Token from "../database-interface/Token.js";
 
@@ -15,10 +16,27 @@ export default class TokenChatRoomListItem extends ChatRoomListItem {
     ]);
 
     this.append(
-      tokenImage,
+      el("header", tokenImage),
       el(
-        ".info",
-        el("h3", token.name),
+        "main",
+        el(
+          "h3",
+          el("span.name", token.name),
+          el(
+            "span.owner",
+            " by ",
+            typeof token.owner === "string"
+              ? StringUtil.shortenEthereumAddress(token.owner)
+              : token.owner.display_name,
+          ),
+          el(
+            "span.price" + (token.is_price_up ? ".up" : ".down"),
+            StringUtil.numberWithCommas(
+              ethers.formatEther(token.last_fetched_price),
+            ),
+            " ETH",
+          ),
+        ),
         this.lastMessageDisplay,
       ),
     ).onDom(

@@ -1,5 +1,6 @@
 general_chat_messages
 	id - int8 - pk
+	source - text - not null
 	author - uuid, fk to users_public.user_id - auth.uid() - nullable
 	external_author_id - text - nullable
 	external_author_name - text - nullable

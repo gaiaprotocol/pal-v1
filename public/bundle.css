@@ -691,6 +691,7 @@ button.component > .title {
   position: fixed;
   left: calc(50% - 1280px / 2 + 90px);
   top: 0;
+  z-index: 1;
   width: calc(1280px - 90px - 1px);
   height: 56px;
   background-color: var(--content-bg-color);
@@ -745,6 +746,9 @@ button.component > .title {
   .sidebar {
     display: none;
   }
+}
+.sidebar.hidden {
+  display: none;
 }
 .side-panel {
   position: fixed;
@@ -1055,5 +1059,109 @@ button.component > .title {
   margin-left: 8px;
   padding-left: 8px;
   border-left: 1px solid var(--line-color);
+}
+.chats-view {
+  width: 410px;
+  height: 100%;
+  overflow-y: scroll;
+  border-right: 1px solid var(--line-color);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 60px;
+}
+@container (width < 1280px) {
+  .chats-view {
+    width: 100%;
+    height: auto;
+    overflow-y: visible;
+    border-right: none;
+  }
+}
+.chat-room-list > main {
+  position: relative;
+}
+.chat-room-list-item {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line-color);
+  cursor: pointer;
+}
+.chat-room-list-item .last-message {
+  font-size: 12px;
+  color: #595959;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chat-room-list-item .last-message > .message {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 0;
+  flex-grow: 1;
+}
+.general-chat-room-list-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.general-chat-room-list-item > h3 {
+  font-weight: bold;
+}
+.token-chat-room-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.token-chat-room-list-item > header {
+  display: flex;
+  align-items: center;
+}
+.token-chat-room-list-item > header > .token-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252525;
+  background-size: cover;
+}
+@container (width < 1280px) {
+  .token-chat-room-list-item > header > .token-image {
+    width: 34px;
+    height: 34px;
+  }
+}
+.token-chat-room-list-item > main {
+  flex-grow: 1;
+  width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.token-chat-room-list-item > main > h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.token-chat-room-list-item > main > h3 > .name,
+.token-chat-room-list-item > main > h3 > .owner {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.token-chat-room-list-item > main > h3 > .name {
+  font-weight: bold;
+}
+.token-chat-room-list-item > main > h3 > .owner {
+  font-size: 12px;
+  color: #595959;
+}
+.token-chat-room-list-item > main > h3 > .price {
+  margin-left: auto;
+}
+.token-chat-room-list-item > main > h3 > .price.up {
+  color: var(--rising-color);
+}
+.token-chat-room-list-item > main > h3 > .price.down {
+  color: var(--falling-color);
 }
 

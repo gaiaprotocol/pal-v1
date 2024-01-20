@@ -14,7 +14,7 @@ export default abstract class ChatRoomListItem extends DomNode {
   }
 
   protected get lastMessageDisplay() {
-    this._lastMessageDisplay = el(".last-message-info");
+    this._lastMessageDisplay = el(".last-message");
     if (this.lastMessageData) this.updateLastMessageData(this.lastMessageData);
     return this._lastMessageDisplay;
   }

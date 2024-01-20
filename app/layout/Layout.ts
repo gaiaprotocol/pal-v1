@@ -21,6 +21,7 @@ export default class Layout extends View {
   private navBar: NavBar;
   private titleBar: TitleBar;
   private content: DomNode;
+  private sidebar: Sidebar;
 
   constructor(params: ViewParams, uri: string) {
     super();
@@ -62,7 +63,7 @@ export default class Layout extends View {
           "main",
           this.titleBar = new TitleBar(),
           this.content = el("section.content"),
-          new Sidebar(),
+          this.sidebar = new Sidebar(),
         ),
       ),
     );
@@ -75,6 +76,10 @@ export default class Layout extends View {
   }
 
   private changeUri(uri: string): void {
+    uri === "chats" || uri === "general" || uri.startsWith("0x")
+      ? this.sidebar.hide()
+      : this.sidebar.show();
+
     this.navBar.active(
       uri === "" ? "posts" : uri.substring(
         0,

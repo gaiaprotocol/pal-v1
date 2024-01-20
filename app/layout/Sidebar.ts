@@ -5,4 +5,12 @@ export default class Sidebar extends DomNode {
     super(".sidebar");
     this.append();
   }
+
+  public show() {
+    this.deleteClass("hidden");
+  }
+
+  public hide() {
+    this.addClass("hidden");
+  }
 }
