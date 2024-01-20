@@ -10,6 +10,7 @@ export default class TitleBar extends DomNode {
     super(".title-bar");
     this.append(
       this.titleDisplay = el("h1"),
+      //TODO: this.searchBar = el("input.search-bar", { type: "text" }),
       this.userSection = el("section.user"),
     );
 
@@ -49,6 +50,6 @@ export default class TitleBar extends DomNode {
   }
 
   public changeTitle(uri: string) {
-    this.titleDisplay.text = msg(`title-${uri === "" ? "posts" : uri}`);
+    this.titleDisplay.text = msg(`title-${uri}`);
   }
 }

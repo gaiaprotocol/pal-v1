@@ -1314,6 +1314,8 @@ CREATE POLICY "can follow only follower" ON "public"."follows" FOR INSERT TO "au
 
 CREATE POLICY "can unfollow only follower" ON "public"."follows" FOR DELETE TO "authenticated" USING (("follower_id" = "auth"."uid"()));
 
+CREATE POLICY "can write only authed" ON "public"."general_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((((("message" IS NOT NULL) AND ("message" <> ''::"text") AND ("length"("message") <= 1000)) OR (("message" IS NULL) AND ("rich" IS NOT NULL))) AND ("author" = "auth"."uid"())));
+
 ALTER TABLE "public"."contract_events" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."follows" ENABLE ROW LEVEL SECURITY;

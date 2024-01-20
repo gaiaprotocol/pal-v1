@@ -76,16 +76,19 @@ export default class Layout extends View {
   }
 
   private changeUri(uri: string): void {
-    uri === "chats" || uri === "general" || uri.startsWith("0x")
+    if (uri === "") uri = "posts";
+    if (uri === "general" || uri.indexOf("/0x") !== -1) uri = "chats";
+
+    uri = uri.substring(
+      0,
+      uri.indexOf("/") === -1 ? uri.length : uri.indexOf("/"),
+    );
+
+    uri === "chats" || uri === "general" || uri.indexOf("/0x") !== -1
       ? this.sidebar.hide()
       : this.sidebar.show();
 
-    this.navBar.active(
-      uri === "" ? "posts" : uri.substring(
-        0,
-        uri.indexOf("/") === -1 ? uri.length : uri.indexOf("/"),
-      ),
-    );
+    this.navBar.active(uri);
     this.titleBar.changeTitle(uri);
   }
 }
