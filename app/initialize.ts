@@ -21,6 +21,7 @@ import messages_zh_TW from "../locales/zh_TW.yml";
 import ActivityView from "./activity/ActivityView.js";
 import { initBlockchains } from "./blockchain/Blockchains.js";
 import BlockTimeManager from "./BlockTimeManager.js";
+import ChatsView from "./chat/ChatsView.js";
 import Config from "./Config.js";
 import Env from "./Env.js";
 import EnvironmentManager from "./EnvironmentManager.js";
@@ -66,6 +67,20 @@ export default async function initialize(config: Config) {
   Router.route("activity", ActivityView);
   Router.route("explore", ExploreView);
   Router.route("settings", SettingsView);
+
+  Router.route(["chats", "general", "{chain}/{tokenAddress}"], ChatsView, [
+    "post/{postId}",
+    "{xUsername}/holding",
+    "{xUsername}/following",
+    "{xUsername}/followers",
+  ]);
+  //Router.route("general", GeneralChatRoomView);
+  /*Router.route("{chain}/{tokenAddress}", TokenChatRoomView, [
+    "post/{postId}",
+    "{xUsername}/holding",
+    "{xUsername}/following",
+    "{xUsername}/followers",
+  ]);*/
 
   Router.route("test/chat", TestChatView);
   Router.route("test/posts", TestPostListView);
