@@ -28,7 +28,7 @@ serveWithOptions(async (req) => {
       const { error: storeError } = await supabase.storage.from(
         "user_avatars",
       ).upload(
-        `${user.id}/profile-image.png`,
+        `${user.id}/avatar.png`,
         result.body,
         { contentType: "image/png", upsert: true },
       );
@@ -37,7 +37,7 @@ serveWithOptions(async (req) => {
       const { data: { publicUrl } } = supabase.storage.from(
         "user_avatars",
       )
-        .getPublicUrl(`${user.id}/profile-image.png`);
+        .getPublicUrl(`${user.id}/avatar.png`);
 
       url = publicUrl;
     }
@@ -49,7 +49,7 @@ serveWithOptions(async (req) => {
       const { error: storeError } = await supabase.storage.from(
         "user_avatars",
       ).upload(
-        `${user.id}/profile-image-thumbnail.png`,
+        `${user.id}/avatar-thumbnail.png`,
         result.body,
         { contentType: "image/png", upsert: true },
       );
@@ -58,7 +58,7 @@ serveWithOptions(async (req) => {
       const { data: { publicUrl } } = supabase.storage.from(
         "user_avatars",
       )
-        .getPublicUrl(`${user.id}/profile-image-thumbnail.png`);
+        .getPublicUrl(`${user.id}/avatar-thumbnail.png`);
 
       thumbnailUrl = publicUrl;
     }

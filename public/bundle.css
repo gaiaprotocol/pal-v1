@@ -167,14 +167,6 @@ button {
   display: table;
   clear: both;
 }
-.avatar {
-  flex-shrink: 0;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #252527;
-  background-size: cover;
-}
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 0, 'opsz' 24;
 }
@@ -564,6 +556,20 @@ button.component > .title {
 .warning-message-box.component > i {
   font-size: 24px;
 }
+.avatar {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252527;
+  background-size: cover;
+}
+@container (width < 1280px) {
+  .avatar {
+    width: 34px;
+    height: 34px;
+  }
+}
 .post-display.social-component {
   position: relative;
   display: flex;
@@ -585,6 +591,12 @@ button.component > .title {
   background-color: #252527;
   background-size: cover;
   cursor: pointer;
+}
+@container (width < 1280px) {
+  .post-display.social-component .author-avatar {
+    width: 34px;
+    height: 34px;
+  }
 }
 .post-display.social-component .author {
   padding-top: 4px;
@@ -644,20 +656,6 @@ button.component > .title {
   --loading-bar-color: rgba(155, 76, 255, 0.5);
   --rising-color: #00A67E;
   --falling-color: #FB6565;
-}
-.profile-image {
-  flex-shrink: 0;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #252525;
-  background-size: cover;
-}
-@container (width < 1280px) {
-  .profile-image {
-    width: 34px;
-    height: 34px;
-  }
 }
 .layout {
   height: 100%;
@@ -850,7 +848,7 @@ button.component > .title {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #252525;
+  background-color: #252527;
   background-size: cover;
   cursor: pointer;
 }
@@ -894,7 +892,7 @@ button.component > .title {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #252525;
+  background-color: #252527;
   background-size: cover;
   width: 34px;
   height: 34px;
@@ -992,24 +990,24 @@ button.component > .title {
   display: flex;
   align-items: center;
 }
-.activity-list-item > header > .trader-profile-image,
+.activity-list-item > header > .trader-avatar,
 .activity-list-item > header > .token-image {
   flex-shrink: 0;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #252525;
+  background-color: #252527;
   background-size: cover;
   cursor: pointer;
 }
 @container (width < 1280px) {
-  .activity-list-item > header > .trader-profile-image,
+  .activity-list-item > header > .trader-avatar,
   .activity-list-item > header > .token-image {
     width: 34px;
     height: 34px;
   }
 }
-.activity-list-item > header > .trader-profile-image {
+.activity-list-item > header > .trader-avatarf {
   margin-right: -8px;
 }
 .activity-list-item > main {
@@ -1052,7 +1050,7 @@ button.component > .title {
   align-items: center;
   border-bottom: 1px solid var(--line-color);
 }
-.user-list-item > .profile-image {
+.user-list-item > .avatar {
   margin-right: 12px;
 }
 .user-list-item > .balance {
@@ -1121,7 +1119,7 @@ button.component > .title {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #252525;
+  background-color: #252527;
   background-size: cover;
 }
 @container (width < 1280px) {

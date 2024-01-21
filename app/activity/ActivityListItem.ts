@@ -85,17 +85,17 @@ export default class ActivityListItem extends DomNode {
         ethers.formatEther(activity.args[4]),
       );
 
-      const traderProfileImage = el(".trader-profile-image", {
+      const traderAvatar = el(".trader-avatar", {
         click: () => Router.go(`/${activity.user?.x_username}`),
       });
 
-      AvatarUtil.selectLoadable(traderProfileImage, [
+      AvatarUtil.selectLoadable(traderAvatar, [
         activity.user?.avatar_thumb,
         activity.user?.stored_avatar_thumb,
       ]);
 
       this.append(
-        el("header", traderProfileImage, tokenImage),
+        el("header", traderAvatar, tokenImage),
         el(
           "main",
           el(

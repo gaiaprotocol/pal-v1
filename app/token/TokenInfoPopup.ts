@@ -187,10 +187,10 @@ export default class TokenInfoPopup extends Popup {
 
     this.descriptionDisplay.text = token.metadata?.description ?? "";
 
-    const profileImage = el(".profile-image");
+    const avatar = el(".avatar");
 
     if (typeof token.owner !== "string") {
-      AvatarUtil.selectLoadable(profileImage, [
+      AvatarUtil.selectLoadable(avatar, [
         token.owner?.avatar_thumb,
         token.owner?.stored_avatar_thumb,
       ]);
@@ -201,8 +201,8 @@ export default class TokenInfoPopup extends Popup {
       el(
         ".info-container",
         typeof token.owner === "string"
-          ? new Jazzicon(".profile-image", token.owner)
-          : profileImage,
+          ? new Jazzicon(".avatar", token.owner)
+          : avatar,
         typeof token.owner === "string"
           ? el(".owner", StringUtil.shortenEthereumAddress(token.owner))
           : el(

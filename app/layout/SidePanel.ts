@@ -15,10 +15,10 @@ export default class SidePanel extends DomNode {
   constructor() {
     super(".side-panel");
 
-    const profileImage = el(".profile-image");
+    const avatar = el(".avatar");
 
     if (PalSignedUserManager.user) {
-      AvatarUtil.selectLoadable(profileImage, [
+      AvatarUtil.selectLoadable(avatar, [
         PalSignedUserManager.user.avatar_thumb,
         PalSignedUserManager.user.stored_avatar_thumb,
       ]);
@@ -31,7 +31,7 @@ export default class SidePanel extends DomNode {
         PalSignedUserManager.user
           ? el(
             ".signed-user",
-            profileImage,
+            avatar,
             el(
               ".info",
               el(".name", PalSignedUserManager.user.display_name),
