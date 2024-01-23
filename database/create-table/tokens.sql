@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS "public"."tokens" (
     "stored_image_thumb" "text",
     "metadata" "jsonb",
     "supply" numeric DEFAULT '0'::numeric NOT NULL,
+    "view_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
+    "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "last_fetched_price" numeric DEFAULT '68750000000000'::numeric NOT NULL,
     "total_trading_volume" numeric DEFAULT '0'::numeric NOT NULL,
     "is_price_up" boolean,

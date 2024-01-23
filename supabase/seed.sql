@@ -1169,7 +1169,9 @@ CREATE TABLE IF NOT EXISTS "public"."tokens" (
     "image_thumb" "text",
     "image_stored" boolean DEFAULT false NOT NULL,
     "stored_image" "text",
-    "stored_image_thumb" "text"
+    "stored_image_thumb" "text",
+    "view_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
+    "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL
 );
 
 ALTER TABLE "public"."tokens" OWNER TO "postgres";
@@ -1358,15 +1360,15 @@ CREATE POLICY "view everyone" ON "public"."users_public" FOR SELECT USING (true)
 
 CREATE POLICY "view everyone" ON "public"."wallets" FOR SELECT USING (true);
 
-CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR SELECT TO "authenticated" USING (((( SELECT "old_pal_tokens"."owner"
-   FROM "public"."old_pal_tokens"
-  WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) = ( SELECT "users_public"."wallet_address"
+CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR SELECT TO "authenticated" USING (((( SELECT "tokens"."owner"
+   FROM "public"."tokens"
+  WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "old_pal_tokens"."view_token_required"
-   FROM "public"."old_pal_tokens"
-  WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) <= ( SELECT "old_pal_token_balances"."last_fetched_balance"
-   FROM "public"."old_pal_token_balances"
-  WHERE (("old_pal_token_balances"."token_address" = "token_chat_messages"."token_address") AND ("old_pal_token_balances"."wallet_address" = ( SELECT "users_public"."wallet_address"
+  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."view_token_required"
+   FROM "public"."tokens"
+  WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) <= ( SELECT "token_holders"."last_fetched_balance"
+   FROM "public"."token_holders"
+  WHERE (("token_holders"."chain" = "token_chat_messages"."chain") AND ("token_holders"."token_address" = "token_chat_messages"."token_address") AND ("token_holders"."wallet_address" = ( SELECT "users_public"."wallet_address"
            FROM "public"."users_public"
           WHERE ("users_public"."user_id" = "auth"."uid"()))))))));
 
@@ -1374,15 +1376,15 @@ ALTER TABLE "public"."wallet_linking_nonces" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."wallets" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((("auth"."uid"() = "author") AND ((( SELECT "old_pal_tokens"."owner"
-   FROM "public"."old_pal_tokens"
-  WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) = ( SELECT "users_public"."wallet_address"
+CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((((("message" <> ''::"text") AND ("length"("message") < 1000)) OR ("rich" IS NOT NULL)) AND ("author" = "auth"."uid"()) AND ((( SELECT "tokens"."owner"
+   FROM "public"."tokens"
+  WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "old_pal_tokens"."write_token_required"
-   FROM "public"."old_pal_tokens"
-  WHERE ("old_pal_tokens"."token_address" = "token_chat_messages"."token_address")) <= ( SELECT "old_pal_token_balances"."last_fetched_balance"
-   FROM "public"."old_pal_token_balances"
-  WHERE (("old_pal_token_balances"."token_address" = "token_chat_messages"."token_address") AND ("old_pal_token_balances"."wallet_address" = ( SELECT "users_public"."wallet_address"
+  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."view_token_required"
+   FROM "public"."tokens"
+  WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) <= ( SELECT "token_holders"."last_fetched_balance"
+   FROM "public"."token_holders"
+  WHERE (("token_holders"."chain" = "token_chat_messages"."chain") AND ("token_holders"."token_address" = "token_chat_messages"."token_address") AND ("token_holders"."wallet_address" = ( SELECT "users_public"."wallet_address"
            FROM "public"."users_public"
           WHERE ("users_public"."user_id" = "auth"."uid"())))))))));
 

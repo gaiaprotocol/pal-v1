@@ -11,6 +11,8 @@ tokens
 	stored_image_thumb - text - nullable
 	metadata - jsonb - nullable
     supply - numeric - 0
+	view_token_required - numeric - 1000000000000000000
+	write_token_required - numeric - 1000000000000000000
 	last_fetched_price - numeric - 68750000000000
 	total_trading_volume - numeric - 0
 	is_price_up - bool - nullable

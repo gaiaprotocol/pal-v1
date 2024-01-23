@@ -30,6 +30,9 @@ import Layout from "./layout/Layout.js";
 import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import WalletManager from "./wallet/WalletManager.js";
+import PalContract from "./contracts/PalContract.js";
+import BlockchainType from "./blockchain/BlockchainType.js";
+import PalUserTokenContract from "./contracts/PalUserTokenContract.js";
 
 inject_social_msg();
 msg.setMessages({
