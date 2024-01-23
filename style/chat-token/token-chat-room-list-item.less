@@ -1,0 +1,58 @@
+.token-chat-room-list-item {
+    display    : flex;
+    align-items: center;
+    gap        : 12px;
+
+    >header {
+        display    : flex;
+        align-items: center;
+
+        >.token-image {
+            .avatar();
+        }
+    }
+
+    >main {
+        flex-grow     : 1;
+        width         : 0;
+        display       : flex;
+        flex-direction: column;
+        gap           : 4px;
+
+        >h3 {
+            display    : flex;
+            align-items: center;
+            gap        : 6px;
+
+            >.name,
+            >.owner {
+                white-space  : nowrap;
+                text-overflow: ellipsis;
+                overflow     : hidden;
+            }
+
+            >.name {
+                font-weight: bold;
+            }
+
+            >.owner {
+                font-size: 12px;
+                color    : #595959;
+            }
+
+            >.price {
+                flex-shrink: 0;
+                margin-left: auto;
+                font-size  : 12px;
+
+                &.up {
+                    color: var(--rising-color);
+                }
+
+                &.down {
+                    color: var(--falling-color);
+                }
+            }
+        }
+    }
+}

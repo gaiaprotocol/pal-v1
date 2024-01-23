@@ -1,0 +1,27 @@
+.title-bar {
+    position        : fixed;
+    left            : calc(50% - @safe-width / 2 + 90px);
+    top             : 0;
+    z-index         : 1;
+    width           : calc(@safe-width - 90px - 1px);
+    height          : 56px;
+    background-color: var(--content-bg-color);
+    border-bottom   : 1px solid var(--line-color);
+    font-size       : 16px;
+    font-weight     : bold;
+    display         : flex;
+    align-items     : center;
+    padding         : 0 20px;
+
+    @container (width < @safe-width) {
+        left : 0;
+        width: 100%;
+    }
+
+    >section.user {
+        margin-left: auto;
+        display    : flex;
+        align-items: center;
+        gap        : 20px;
+    }
+}

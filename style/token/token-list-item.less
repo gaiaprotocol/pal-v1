@@ -1,0 +1,46 @@
+.token-list-item {
+    padding      : 12px 20px;
+    display      : flex;
+    gap          : 12px;
+    align-items  : center;
+    border-bottom: 1px solid var(--line-color);
+
+    >header {
+        display    : flex;
+        align-items: center;
+
+        >.token-image {
+            .avatar();
+            cursor: pointer;
+        }
+    }
+
+    >main {
+        flex-grow     : 1;
+        width         : 0;
+        display       : flex;
+        flex-direction: column;
+        gap           : 4px;
+
+        >.description {
+            >a {
+                color : var(--primary-color);
+                cursor: pointer;
+            }
+        }
+
+        >.info {
+            font-size: 12px;
+
+            >.price {
+                &.up {
+                    color: var(--rising-color);
+                }
+
+                &.down {
+                    color: var(--falling-color);
+                }
+            }
+        }
+    }
+}

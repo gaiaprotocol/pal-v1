@@ -1,0 +1,32 @@
+.chat-room-view {
+    position        : absolute;
+    left            : 410px;
+    top             : 0;
+    width           : calc(100% - 410px);
+    height          : 100%;
+    display         : flex;
+    flex-direction  : column;
+    background-color: var(--content-bg-color);
+
+    @container (width < @safe-width) {
+        position      : fixed;
+        border-radius : 0;
+        left          : 0;
+        top           : 0;
+        width         : 100%;
+        height        : 100%;
+        z-index       : 999991;
+        padding-bottom: env(safe-area-inset-bottom);
+
+        &.mobile-hidden {
+            display: none;
+        }
+    }
+
+    >.chat-message-list {
+        height    : 0px;
+        flex-grow : 1;
+        overflow-y: scroll;
+        padding   : 20px;
+    }
+}
