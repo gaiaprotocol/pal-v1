@@ -900,6 +900,21 @@ end;$$;
 
 ALTER FUNCTION "public"."parse_contract_event"() OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."set_token_last_message"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$begin
+  update tokens
+    set
+        last_message = (SELECT display_name FROM public.users_public WHERE user_id = new.author) || ': ' || new.message,
+        last_message_sent_at = now()
+    where
+        chain = new.chain and
+        token_address = new.token_address;
+  return null;
+end;$$;
+
+ALTER FUNCTION "public"."set_token_last_message"() OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."set_updated_at"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$BEGIN
@@ -959,21 +974,6 @@ end;
 $$;
 
 ALTER FUNCTION "public"."set_user_metadata_to_public"() OWNER TO "postgres";
-
-CREATE OR REPLACE FUNCTION "public"."update_last_message"() RETURNS "trigger"
-    LANGUAGE "plpgsql" SECURITY DEFINER
-    AS $$begin
-  update pal_tokens
-  set
-    last_message = new.author_name || ': ' || new.message,
-    last_message_sent_at = now()
-  where
-    chain = 'base' and
-    token_address = new.token_address;
-  return null;
-end;$$;
-
-ALTER FUNCTION "public"."update_last_message"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."update_price_trend"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -1274,9 +1274,9 @@ ALTER TABLE ONLY "public"."wallets"
 
 CREATE OR REPLACE TRIGGER "parse_contract_event" AFTER INSERT ON "public"."contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."parse_contract_event"();
 
-CREATE OR REPLACE TRIGGER "set_users_public_updated_at" BEFORE UPDATE ON "public"."users_public" FOR EACH ROW EXECUTE FUNCTION "public"."set_updated_at"();
+CREATE OR REPLACE TRIGGER "set_token_last_message" AFTER INSERT ON "public"."token_chat_messages" FOR EACH ROW EXECUTE FUNCTION "public"."set_token_last_message"();
 
-CREATE OR REPLACE TRIGGER "update_last_message" AFTER INSERT ON "public"."token_chat_messages" FOR EACH ROW EXECUTE FUNCTION "public"."update_last_message"();
+CREATE OR REPLACE TRIGGER "set_users_public_updated_at" BEFORE UPDATE ON "public"."users_public" FOR EACH ROW EXECUTE FUNCTION "public"."set_updated_at"();
 
 CREATE OR REPLACE TRIGGER "update_price_trend" BEFORE UPDATE ON "public"."old_pal_tokens" FOR EACH ROW EXECUTE FUNCTION "public"."update_price_trend"();
 
@@ -1470,6 +1470,10 @@ GRANT ALL ON FUNCTION "public"."parse_contract_event"() TO "anon";
 GRANT ALL ON FUNCTION "public"."parse_contract_event"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."parse_contract_event"() TO "service_role";
 
+GRANT ALL ON FUNCTION "public"."set_token_last_message"() TO "anon";
+GRANT ALL ON FUNCTION "public"."set_token_last_message"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."set_token_last_message"() TO "service_role";
+
 GRANT ALL ON FUNCTION "public"."set_updated_at"() TO "anon";
 GRANT ALL ON FUNCTION "public"."set_updated_at"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."set_updated_at"() TO "service_role";
@@ -1477,10 +1481,6 @@ GRANT ALL ON FUNCTION "public"."set_updated_at"() TO "service_role";
 GRANT ALL ON FUNCTION "public"."set_user_metadata_to_public"() TO "anon";
 GRANT ALL ON FUNCTION "public"."set_user_metadata_to_public"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."set_user_metadata_to_public"() TO "service_role";
-
-GRANT ALL ON FUNCTION "public"."update_last_message"() TO "anon";
-GRANT ALL ON FUNCTION "public"."update_last_message"() TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_last_message"() TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."update_price_trend"() TO "anon";
 GRANT ALL ON FUNCTION "public"."update_price_trend"() TO "authenticated";

@@ -643,16 +643,167 @@ button.component > .title {
 .post-thread.social-component > .post-form {
   border-bottom: 1px solid #242424;
 }
+.chat-message-display {
+  border-radius: 6px;
+  background-color: #fff;
+  color: #0A0A0A;
+  padding: 6px 10px;
+}
+.chat-message-display > .message {
+  word-break: break-all;
+}
+.chat-message-display > .rich-display {
+  margin-top: 4px;
+  max-width: 240px;
+  max-height: 240px;
+}
 .chat-message-list {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 .chat-message-list > .message-loading-animation {
   position: absolute;
   left: 10px;
   bottom: 0;
 }
+.chat-message-list-item {
+  display: flex;
+  gap: 6px;
+}
+.chat-message-list-item > .author-avatar {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252527;
+  background-size: cover;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+@container (width < 1280px) {
+  .chat-message-list-item > .author-avatar {
+    width: 34px;
+    height: 34px;
+  }
+}
+.chat-message-list-item > main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: start;
+}
+.chat-message-list-item > main > header {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.chat-message-list-item > main > header > .author {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.chat-message-list-item > main > header > .author > .name {
+  font-size: 12px;
+  font-weight: bold;
+}
+.chat-message-list-item > main > header > .date {
+  color: #595959;
+  font-size: 12px;
+}
+.chat-message-list-item.authored {
+  justify-content: end;
+}
+.chat-message-list-item.authored > .author-avatar {
+  display: none;
+}
+.chat-message-list-item.authored > main {
+  align-items: end;
+}
+.chat-message-list-item.authored > main > header > .author {
+  display: none;
+}
+.chat-message-list-item.authored > main > .chat-message-display {
+  background-color: var(--button-bg-color);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
 .chat-message-form > main {
   border-top: 1px solid var(--line-color);
+  height: 56px;
+  display: flex;
+}
+.chat-message-form > main > section.rich {
+  display: flex;
+  padding: 0 16px;
+  align-items: center;
+}
+.chat-message-form > main > section.rich > button {
+  cursor: pointer;
+}
+.chat-message-form > main > form {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 20px;
+}
+.chat-message-form > main > form > .input-container {
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: text;
+}
+.upload-preview-area {
+  border-top: 1px solid var(--line-color);
+  background-color: var(--content-bg-color);
+  padding: 10px 10px 0 10px;
+}
+.upload-preview-area:empty {
+  display: none;
+}
+.upload-preview-area::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.upload-preview-area > .preview {
+  float: left;
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.upload-preview-area > .preview.image {
+  background-size: cover;
+  background-position: center;
+}
+.upload-preview-area > .preview.file {
+  padding: 10px;
+  display: flex;
+  align-items: end;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.upload-preview-area > .preview > button.x {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 5px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
 }
 :root {
   --wrapper-bg-color: #0A0A0A;
@@ -1115,7 +1266,7 @@ button.component > .title {
   height: 0px;
   flex-grow: 1;
   overflow-y: scroll;
-  padding: 16px;
+  padding: 20px;
 }
 .chat-room-list > main {
   position: relative;

@@ -1,8 +1,8 @@
 import { Rich, UploadManager } from "@common-module/app";
 import { MessageSelectQuery, MessageService } from "@common-module/social";
 import ChatMessage from "@common-module/social/lib/database-interface/ChatMessage.js";
-import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import ChatMessageSource from "../chat/ChatMessageSource.js";
+import PalSignedUserManager from "../user/PalSignedUserManager.js";
 
 class GeneralChatMessageService
   extends MessageService<ChatMessage<ChatMessageSource>> {
@@ -33,7 +33,11 @@ class GeneralChatMessageService
 
   public async sendMessage(message: string, files: File[]) {
     const rich = files.length ? await this.upload(files) : undefined;
-    return await this.safeInsertAndSelect({ message, rich });
+    return await this.safeInsertAndSelect({
+      source: ChatMessageSource.Pal,
+      message,
+      rich,
+    });
   }
 
   public async fetchMessages() {
