@@ -643,6 +643,17 @@ button.component > .title {
 .post-thread.social-component > .post-form {
   border-bottom: 1px solid #242424;
 }
+.chat-message-list {
+  position: relative;
+}
+.chat-message-list > .message-loading-animation {
+  position: absolute;
+  left: 10px;
+  bottom: 0;
+}
+.chat-message-form > main {
+  border-top: 1px solid var(--line-color);
+}
 :root {
   --wrapper-bg-color: #0A0A0A;
   --content-bg-color: #131313;
@@ -659,17 +670,16 @@ button.component > .title {
 }
 .layout {
   height: 100%;
-  overflow-y: auto;
 }
 .layout > main {
   width: 1280px;
-  min-height: 100%;
   margin: 0 auto;
   padding-top: 56px;
   padding-left: 90px;
+  display: flex;
+  height: 100%;
   background-color: var(--content-bg-color);
   border-right: 1px solid var(--line-color);
-  display: flex;
 }
 @container (width < 1280px) {
   .layout > main {
@@ -681,6 +691,7 @@ button.component > .title {
 }
 .layout > main > .content {
   flex-grow: 1;
+  position: relative;
 }
 .layout > main > .sidebar {
   flex-shrink: 0;
@@ -1075,6 +1086,37 @@ button.component > .title {
     border-right: none;
   }
 }
+.chat-room-view {
+  position: absolute;
+  left: 410px;
+  top: 0;
+  width: calc(100% - 410px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--content-bg-color);
+}
+@container (width < 1280px) {
+  .chat-room-view {
+    position: fixed;
+    border-radius: 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999991;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .chat-room-view.mobile-hidden {
+    display: none;
+  }
+}
+.chat-room-view > .chat-message-list {
+  height: 0px;
+  flex-grow: 1;
+  overflow-y: scroll;
+  padding: 16px;
+}
 .chat-room-list > main {
   position: relative;
 }
@@ -1096,6 +1138,29 @@ button.component > .title {
   overflow: hidden;
   width: 0;
   flex-grow: 1;
+}
+.general-chat-room-header {
+  height: 60px;
+  border-bottom: 1px solid var(--line-color);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.general-chat-room-header > button.back {
+  display: none;
+}
+@container (width < 1280px) {
+  .general-chat-room-header > button.back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.general-chat-room-header > h1 {
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: capitalize;
 }
 .general-chat-room-list-item {
   display: flex;
@@ -1154,7 +1219,9 @@ button.component > .title {
   color: #595959;
 }
 .token-chat-room-list-item > main > h3 > .price {
+  flex-shrink: 0;
   margin-left: auto;
+  font-size: 12px;
 }
 .token-chat-room-list-item > main > h3 > .price.up {
   color: var(--rising-color);

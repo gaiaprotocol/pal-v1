@@ -2,7 +2,7 @@ import { Rich, UploadManager } from "@common-module/app";
 import { MessageSelectQuery, MessageService } from "@common-module/social";
 import ChatMessage from "@common-module/social/lib/database-interface/ChatMessage.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
-import ChatMessageSource from "./ChatMessageSource.js";
+import ChatMessageSource from "../chat/ChatMessageSource.js";
 
 class GeneralChatMessageService
   extends MessageService<ChatMessage<ChatMessageSource>> {

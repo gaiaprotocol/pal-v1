@@ -1,0 +1,24 @@
+.general-chat-room-header {
+    height       : 60px;
+    border-bottom: 1px solid var(--line-color);
+    padding      : 0 20px;
+    display      : flex;
+    align-items  : center;
+    gap          : 8px;
+
+    >button.back {
+        display: none;
+
+        @container (width < @safe-width) {
+            display        : flex;
+            align-items    : center;
+            justify-content: center;
+        }
+    }
+
+    >h1 {
+        font-size     : 16px;
+        font-weight   : bold;
+        text-transform: capitalize;
+    }
+}

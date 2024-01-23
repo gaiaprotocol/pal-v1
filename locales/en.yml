@@ -1,3 +1,7 @@
+login-required-title: Login Required
+login-required-message: Login required. Would you like to login?
+login-required-login-button: Login with 𝕏
+
 no-wallet-connected-title: No wallet connected
 no-wallet-connected-message: You need to connect a wallet to perform this action.
 no-wallet-linked-title: No wallet linked
@@ -47,3 +51,5 @@ trending-token-list-empty-message: No trending tokens yet
 held-token-list-empty-message: No held tokens yet
 
 token-holder-list-empty-message: No holders yet
+
+chat-message-list-empty-message: No messages yet

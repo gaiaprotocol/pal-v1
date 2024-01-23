@@ -1,16 +1,15 @@
 .layout {
-    height    : 100%;
-    overflow-y: auto;
+    height: 100%;
 
     >main {
         width           : @safe-width;
-        min-height      : 100%;
         margin          : 0 auto;
         padding-top     : 56px;
         padding-left    : 90px;
+        display         : flex;
+        height          : 100%;
         background-color: var(--content-bg-color);
         border-right    : 1px solid var(--line-color);
-        display         : flex;
 
         @container (width < @safe-width) {
             width         : 100%;
@@ -21,6 +20,7 @@
 
         >.content {
             flex-grow: 1;
+            position : relative;
         }
 
         >.sidebar {

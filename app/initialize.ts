@@ -4,7 +4,7 @@ import {
   MaterialIconSystem,
   msg,
   Router,
-  SplashLoader,
+  SplashLoader
 } from "@common-module/app";
 import {
   AuthUtil,
@@ -21,6 +21,7 @@ import messages_zh_TW from "../locales/zh_TW.yml";
 import ActivityView from "./activity/ActivityView.js";
 import { initBlockchains } from "./blockchain/Blockchains.js";
 import BlockTimeManager from "./BlockTimeManager.js";
+import GeneralChatRoomView from "./chat-general/GeneralChatRoomView.js";
 import ChatsView from "./chat/ChatsView.js";
 import Config from "./Config.js";
 import Env from "./Env.js";
@@ -30,9 +31,6 @@ import Layout from "./layout/Layout.js";
 import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import WalletManager from "./wallet/WalletManager.js";
-import PalContract from "./contracts/PalContract.js";
-import BlockchainType from "./blockchain/BlockchainType.js";
-import PalUserTokenContract from "./contracts/PalUserTokenContract.js";
 
 inject_social_msg();
 msg.setMessages({
@@ -77,7 +75,7 @@ export default async function initialize(config: Config) {
     "{xUsername}/following",
     "{xUsername}/followers",
   ]);
-  //Router.route("general", GeneralChatRoomView);
+  Router.route(["chats", "general"], GeneralChatRoomView);
   /*Router.route("{chain}/{tokenAddress}", TokenChatRoomView, [
     "post/{postId}",
     "{xUsername}/holding",

@@ -2,8 +2,8 @@ import { DomNode, el, ListLoadingBar, Store } from "@common-module/app";
 import Token from "../database-interface/Token.js";
 import TokenService from "../token/TokenService.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
-import GeneralChatRoomListItem from "./GeneralChatRoomListItem.js";
-import TokenChatRoomListItem from "./TokenChatRoomListItem.js";
+import GeneralChatRoomListItem from "../chat-general/GeneralChatRoomListItem.js";
+import TokenChatRoomListItem from "../chat-token/TokenChatRoomListItem.js";
 
 export default class ChatRoomList extends DomNode {
   private store = new Store("chat-room-list");
