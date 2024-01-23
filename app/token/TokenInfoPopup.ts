@@ -147,8 +147,6 @@ export default class TokenInfoPopup extends Popup {
   }
 
   private render(token: Token) {
-    console.log(token);
-
     AvatarUtil.selectLoadable(this.tokenImage, [
       token.image_thumb,
       token.stored_image_thumb,
@@ -191,8 +189,8 @@ export default class TokenInfoPopup extends Popup {
 
     if (typeof token.owner !== "string") {
       AvatarUtil.selectLoadable(avatar, [
-        token.owner?.avatar_thumb,
-        token.owner?.stored_avatar_thumb,
+        token.owner.avatar_thumb,
+        token.owner.stored_avatar_thumb,
       ]);
     }
 

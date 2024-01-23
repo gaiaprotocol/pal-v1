@@ -1321,6 +1321,47 @@ button.component > .title {
 .general-chat-room-list-item > h3 {
   font-weight: bold;
 }
+.token-chat-room-header {
+  height: 60px;
+  border-bottom: 1px solid var(--line-color);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.token-chat-room-header > button.back {
+  display: none;
+}
+@container (width < 1280px) {
+  .token-chat-room-header > button.back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.token-chat-room-header > .token-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252527;
+  background-size: cover;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+@container (width < 1280px) {
+  .token-chat-room-header > .token-image {
+    width: 34px;
+    height: 34px;
+  }
+}
+.token-chat-room-header > h1 {
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: capitalize;
+  cursor: pointer;
+}
 .token-chat-room-list-item {
   display: flex;
   align-items: center;

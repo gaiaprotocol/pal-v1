@@ -4,7 +4,7 @@ import {
   MaterialIconSystem,
   msg,
   Router,
-  SplashLoader
+  SplashLoader,
 } from "@common-module/app";
 import {
   AuthUtil,
@@ -22,6 +22,7 @@ import ActivityView from "./activity/ActivityView.js";
 import { initBlockchains } from "./blockchain/Blockchains.js";
 import BlockTimeManager from "./BlockTimeManager.js";
 import GeneralChatRoomView from "./chat-general/GeneralChatRoomView.js";
+import TokenChatRoomView from "./chat-token/TokenChatRoomView.js";
 import ChatsView from "./chat/ChatsView.js";
 import Config from "./Config.js";
 import Env from "./Env.js";
@@ -76,12 +77,12 @@ export default async function initialize(config: Config) {
     "{xUsername}/followers",
   ]);
   Router.route(["chats", "general"], GeneralChatRoomView);
-  /*Router.route("{chain}/{tokenAddress}", TokenChatRoomView, [
+  Router.route("{chain}/{tokenAddress}", TokenChatRoomView, [
     "post/{postId}",
     "{xUsername}/holding",
     "{xUsername}/following",
     "{xUsername}/followers",
-  ]);*/
+  ]);
 
   Router.route("test/chat", TestChatView);
   Router.route("test/posts", TestPostListView);

@@ -27,7 +27,7 @@ ALTER TABLE ONLY "public"."token_chat_messages"
     ADD CONSTRAINT "chat_messages_pkey" PRIMARY KEY ("id");
 
 ALTER TABLE ONLY "public"."token_chat_messages"
-    ADD CONSTRAINT "token_chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "auth"."users"("id");
+    ADD CONSTRAINT "token_chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "public"."users_public"("user_id");
 
 ALTER TABLE "public"."token_chat_messages" ENABLE ROW LEVEL SECURITY;
 
@@ -47,7 +47,7 @@ CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR
    FROM "public"."tokens"
   WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."view_token_required"
+  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."write_token_required"
    FROM "public"."tokens"
   WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) <= ( SELECT "token_holders"."last_fetched_balance"
    FROM "public"."token_holders"

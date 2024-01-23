@@ -1012,13 +1012,10 @@ CREATE TABLE IF NOT EXISTS "public"."token_chat_messages" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "token_address" "text" NOT NULL,
     "author" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "message_type" smallint NOT NULL,
     "message" "text",
     "rich" "jsonb",
     "translated" "jsonb",
-    "author_name" "text",
-    "author_avatar_url" "text",
-    "chain" "text" DEFAULT 'base'::"text" NOT NULL
+    "chain" "text" NOT NULL
 );
 
 ALTER TABLE "public"."token_chat_messages" OWNER TO "postgres";
@@ -1296,7 +1293,7 @@ ALTER TABLE ONLY "public"."notifications"
     ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users_public"("user_id");
 
 ALTER TABLE ONLY "public"."token_chat_messages"
-    ADD CONSTRAINT "token_chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "auth"."users"("id");
+    ADD CONSTRAINT "token_chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "public"."users_public"("user_id");
 
 ALTER TABLE ONLY "public"."users_public"
     ADD CONSTRAINT "users_public_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
@@ -1380,7 +1377,7 @@ CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR
    FROM "public"."tokens"
   WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."view_token_required"
+  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."write_token_required"
    FROM "public"."tokens"
   WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) <= ( SELECT "token_holders"."last_fetched_balance"
    FROM "public"."token_holders"
