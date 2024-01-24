@@ -242,6 +242,8 @@ export default class TokenInfoPopup extends Popup {
       this.balanceDisplay.text = StringUtil.numberWithCommas(
         ethers.formatEther(balance),
       );
+    } else {
+      this.balanceDisplay.text = "0";
     }
   }
 
