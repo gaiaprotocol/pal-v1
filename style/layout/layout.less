@@ -19,8 +19,13 @@
         }
 
         >.content {
-            flex-grow: 1;
-            position : relative;
+            flex-grow : 1;
+            position  : relative;
+            overflow-y: auto;
+
+            @container (width < @safe-width) {
+                overflow-y: visible;
+            }
         }
 
         >.sidebar {

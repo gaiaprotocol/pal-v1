@@ -837,6 +837,12 @@ button.component > .title {
 .layout > main > .content {
   flex-grow: 1;
   position: relative;
+  overflow-y: auto;
+}
+@container (width < 1280px) {
+  .layout > main > .content {
+    overflow-y: visible;
+  }
 }
 .layout > main > .sidebar {
   flex-shrink: 0;
