@@ -536,6 +536,13 @@ button.component > .title {
   max-height: 320px;
   object-fit: cover;
 }
+.rich-display.component > .image-container > a > img.hidden {
+  display: none;
+}
+.rich-display.component > .image-container > a > .image-loading-animation {
+  border-radius: 12px;
+  overflow: hidden;
+}
 .error-alert.component > main > p {
   word-break: break-all;
 }
@@ -648,6 +655,7 @@ button.component > .title {
 }
 .chat-message-display > .rich-display {
   margin-top: 4px;
+  margin-bottom: 4px;
   max-width: 240px;
   max-height: 240px;
 }
