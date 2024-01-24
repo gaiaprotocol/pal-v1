@@ -17,8 +17,8 @@ class PalPostInteractions implements PostInteractions<PalPost> {
 
   public openOwnerMenu(postId: number, rect: DOMRect) {
     new PostOwnerMenu(postId, {
-      left: rect.right - 160,
-      top: rect.top,
+      left: rect.right - 120,
+      top: rect.top + 30,
     });
   }
 

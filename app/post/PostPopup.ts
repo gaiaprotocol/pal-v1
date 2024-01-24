@@ -1,4 +1,11 @@
-import { Component, el, MaterialIcon, Popup } from "@common-module/app";
+import {
+  Button,
+  ButtonType,
+  Component,
+  el,
+  MaterialIcon,
+  Popup,
+} from "@common-module/app";
 import NewPostForm from "./NewPostForm.js";
 
 export default class PostPopup extends Popup {
@@ -10,7 +17,10 @@ export default class PostPopup extends Popup {
         ".popup.post-popup",
         el(
           "header",
-          el("button.close", new MaterialIcon("close"), {
+          new Button({
+            type: ButtonType.Text,
+            tag: ".close",
+            icon: new MaterialIcon("close"),
             click: () => this.delete(),
           }),
         ),

@@ -1,4 +1,11 @@
-import { Component, el, MaterialIcon, Popup } from "@common-module/app";
+import {
+  Button,
+  ButtonType,
+  Component,
+  el,
+  MaterialIcon,
+  Popup,
+} from "@common-module/app";
 import { Post, PostContentDisplay } from "@common-module/social";
 import PalPostForm from "./PalPostForm.js";
 
@@ -11,7 +18,10 @@ export default class PostCommentPopup extends Popup {
         ".popup.post-comment-popup",
         el(
           "header",
-          el("button.close", new MaterialIcon("close"), {
+          new Button({
+            type: ButtonType.Text,
+            tag: ".close",
+            icon: new MaterialIcon("close"),
             click: () => this.delete(),
           }),
         ),

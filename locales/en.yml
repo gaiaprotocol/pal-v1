@@ -15,6 +15,7 @@ invalid-network-title: Invalid network
 invalid-network-message: You need to be on the {chain} network to perform this action.
 
 title-posts: Posts
+title-post: Post
 title-chats: Chats
 title-activity: Activity
 title-explore: Explore

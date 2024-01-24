@@ -6,7 +6,7 @@ import animationData from "./post-loading-animation.json" assert {
 export default class PostLoadingAnimation extends DomNode {
   constructor() {
     super(".post-loading-animation");
-    this.style({ width: 80, height: 80 });
+    this.style({ width: 200, height: 200 });
     this.append(
       new LottieAnimation(".post-loading-animation", animationData),
     );

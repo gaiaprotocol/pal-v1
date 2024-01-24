@@ -1,4 +1,5 @@
 import {
+  Button,
   el,
   MaterialIcon,
   msg,
@@ -78,7 +79,9 @@ export default class PostsView extends View {
           ),
         ),
         PalSignedUserManager.signed
-          ? el("button.post", new MaterialIcon("add"), {
+          ? new Button({
+            tag: ".post",
+            icon: new MaterialIcon("add"),
             click: () => new PostPopup(),
           })
           : undefined,
