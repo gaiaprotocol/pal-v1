@@ -577,9 +577,6 @@ button.component > .title {
   gap: 10px;
   cursor: pointer;
   padding: 20px;
-  /*@media @phone {
-        gap: 6px;
-    }*/
 }
 .post-display.social-component > main {
   flex-grow: 1;
@@ -640,9 +637,114 @@ button.component > .title {
   cursor: pointer;
   align-items: center;
 }
+.post-display.social-component.in-view {
+  display: block;
+  cursor: inherit;
+}
+.post-display.social-component.in-view > header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 16px;
+}
+.post-display.social-component.in-view > header > .author {
+  padding-top: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+.post-display.social-component.in-view .message {
+  margin-top: 12px;
+  font-size: 16px;
+}
+.post-display.social-component.in-view .actions {
+  margin-top: 20px;
+}
+.post-content-display.social-component {
+  display: flex;
+  gap: 10px;
+}
+.post-content-display.social-component > main {
+  flex-grow: 1;
+}
+.post-content-display.social-component .author-avatar {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252527;
+  background-size: cover;
+  cursor: pointer;
+}
+@container (width < 1280px) {
+  .post-content-display.social-component .author-avatar {
+    width: 34px;
+    height: 34px;
+  }
+}
+.post-content-display.social-component .author {
+  padding-top: 4px;
+  display: flex;
+  gap: 4px;
+}
+.post-content-display.social-component .author > .name {
+  font-weight: 700;
+  cursor: pointer;
+}
+.post-content-display.social-component .author > .x-username {
+  color: #595959;
+  cursor: pointer;
+}
+.post-content-display.social-component .message {
+  margin-top: 6px;
+  word-break: break-all;
+}
 .post-thread.social-component > .post-display,
 .post-thread.social-component > .post-form {
   border-bottom: 1px solid #242424;
+}
+.post-list.social-component.hidden {
+  display: none;
+}
+.post-form.social-component > main {
+  display: flex;
+  gap: 20px;
+}
+.post-form.social-component > main > .author-avatar {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252527;
+  background-size: cover;
+}
+@container (width < 1280px) {
+  .post-form.social-component > main > .author-avatar {
+    width: 34px;
+    height: 34px;
+  }
+}
+.post-form.social-component > main > form {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.post-form.social-component > main > form > .message-input {
+  border: 1px solid var(--line-color);
+  padding: 8px 12px;
+  border-radius: 12px;
+  min-height: 80px;
+}
+.post-form.social-component > footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 70px;
+}
+.post-form.social-component > footer > section.rich > button {
+  padding: 4px;
+  cursor: pointer;
 }
 .chat-message-display {
   border-radius: 6px;
@@ -761,9 +863,7 @@ button.component > .title {
   cursor: text;
 }
 .upload-preview-area {
-  border-top: 1px solid var(--line-color);
   background-color: var(--content-bg-color);
-  padding: 10px 10px 0 10px;
 }
 .upload-preview-area:empty {
   display: none;
@@ -1138,6 +1238,28 @@ button.component > .title {
   flex-direction: column;
   gap: 6px;
 }
+.token-selector.hidden {
+  display: none;
+}
+.token-selector > select {
+  border: 1px solid var(--line-color);
+  border-radius: 16px;
+  padding: 12px 20px;
+  padding-right: 52px;
+  font-weight: 500;
+  text-transform: capitalize;
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, gray, gray);
+  background-position: calc(100% - 20px) calc(1em + 6px), calc(100% - 15px) calc(1em + 6px), calc(100% - 2.5em) calc(0.5em + 4px);
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+}
+.token-selector > select:focus {
+  background-image: linear-gradient(45deg, gray 50%, transparent 50%), linear-gradient(135deg, transparent 50%, gray 50%), linear-gradient(to right, gray, gray);
+  background-position: calc(100% - 15px) calc(1em + 4px), calc(100% - 20px) calc(1em + 4px), calc(100% - 2.5em) calc(0.5em + 4px);
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+}
 .activity-list {
   position: relative;
 }
@@ -1423,5 +1545,98 @@ button.component > .title {
 }
 .token-chat-room-list-item > main > h3 > .price.down {
   color: var(--falling-color);
+}
+.posts-view {
+  position: relative;
+  height: 100%;
+}
+.posts-view > main {
+  height: 100%;
+  overflow-y: auto;
+}
+.posts-view > main > .new-post-form {
+  padding: 20px 20px 0 20px;
+}
+.posts-view > button.post {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 999997;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  opacity: 0.6;
+}
+.posts-view > button.post > .icon {
+  font-size: 30px;
+}
+.posts-view > button.post:hover {
+  opacity: 1;
+}
+.posts-view > button.post:active {
+  opacity: 1;
+}
+.post-view {
+  padding-bottom: 120px;
+}
+.post-view > .post-display > .post-thread > .post-form {
+  padding: 20px;
+}
+.post-target-selector > select {
+  border: 1px solid var(--line-color);
+  border-radius: 16px;
+  padding: 12px 20px;
+  padding-right: 52px;
+  font-weight: 500;
+  text-transform: capitalize;
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, gray, gray);
+  background-position: calc(100% - 20px) calc(1em + 6px), calc(100% - 15px) calc(1em + 6px), calc(100% - 2.5em) calc(0.5em + 4px);
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+}
+.post-target-selector > select:focus {
+  background-image: linear-gradient(45deg, gray 50%, transparent 50%), linear-gradient(135deg, transparent 50%, gray 50%), linear-gradient(to right, gray, gray);
+  background-position: calc(100% - 15px) calc(1em + 4px), calc(100% - 20px) calc(1em + 4px), calc(100% - 2.5em) calc(0.5em + 4px);
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+}
+.new-post-form > header {
+  display: flex;
+  gap: 8px;
+}
+.new-post-form > .post-form {
+  margin-top: 20px;
+}
+.post-loading-animation {
+  margin-top: 12px;
+}
+.post-popup > header {
+  display: flex;
+  gap: 8px;
+}
+.post-popup > header > button.close {
+  margin-left: auto;
+  padding: 4px;
+}
+.post-popup > .new-post-form {
+  margin-top: -80px;
+  padding: 20px;
+}
+.post-comment-popup > header {
+  display: flex;
+  gap: 8px;
+}
+.post-comment-popup > header > button.close {
+  margin-left: auto;
+  padding: 4px;
+}
+.post-comment-popup > .post-content-display {
+  margin-top: -60px;
+  padding: 20px;
+}
+.post-comment-popup > .post-form {
+  padding: 20px;
 }
 
