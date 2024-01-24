@@ -6,13 +6,7 @@ import {
   Router,
   SplashLoader,
 } from "@common-module/app";
-import {
-  AuthUtil,
-  inject_social_msg,
-  TestChatView,
-  TestPostListView,
-  TestPostView,
-} from "@common-module/social";
+import { AuthUtil, inject_social_msg } from "@common-module/social";
 import messages_en from "../locales/en.yml";
 import messages_ja from "../locales/ja.yml";
 import messages_zh from "../locales/zh.yml";
@@ -29,6 +23,8 @@ import Env from "./Env.js";
 import EnvironmentManager from "./EnvironmentManager.js";
 import ExploreView from "./explorer/ExplorerView.js";
 import Layout from "./layout/Layout.js";
+import PostsView from "./post/PostsView.js";
+import PostView from "./post/PostView.js";
 import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import WalletManager from "./wallet/WalletManager.js";
@@ -66,9 +62,13 @@ export default async function initialize(config: Config) {
   ]);
 
   Router.route("**", Layout, ["test/**"]);
+
   Router.route("activity", ActivityView);
   Router.route("explore", ExploreView);
   Router.route("settings", SettingsView);
+
+  Router.route(["", "posts"], PostsView);
+  Router.route("post/{postId}", PostView);
 
   Router.route(["chats", "general", "{chain}/{tokenAddress}"], ChatsView, [
     "post/{postId}",
@@ -83,10 +83,6 @@ export default async function initialize(config: Config) {
     "{xUsername}/following",
     "{xUsername}/followers",
   ]);
-
-  Router.route("test/chat", TestChatView);
-  Router.route("test/posts", TestPostListView);
-  Router.route("test/post", TestPostView);
 
   AuthUtil.checkEmailAccess();
 }

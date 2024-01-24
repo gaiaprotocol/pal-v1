@@ -1,6 +1,6 @@
 import { Confirm, ErrorAlert, msg } from "@common-module/app";
 import { getNetwork, getWalletClient, switchNetwork } from "@wagmi/core";
-import { BaseContract, Interface, InterfaceAbi, ethers } from "ethers";
+import { BaseContract, ethers, Interface, InterfaceAbi } from "ethers";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import Blockchains from "../blockchain/Blockchains.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
@@ -51,7 +51,6 @@ export default abstract class Contract<CT extends BaseContract> {
           title: msg("no-wallet-linked-title"),
           message: msg("no-wallet-linked-message"),
           confirmTitle: msg("no-wallet-linked-confirm"),
-          loadingTitle: msg("no-wallet-linked-linking"),
         }, () => PalSignedUserManager.linkWallet()).wait();
       } catch (e) {
         throw new Error("No wallet linked");

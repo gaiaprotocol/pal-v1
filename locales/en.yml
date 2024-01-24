@@ -7,7 +7,6 @@ no-wallet-connected-message: You need to connect a wallet to perform this action
 no-wallet-linked-title: No wallet linked
 no-wallet-linked-message: You need to link a wallet to perform this action.
 no-wallet-linked-confirm: Link wallet
-no-wallet-linked-linking: Linking...
 
 wallet-address-mismatch-title: Wallet address mismatch
 wallet-address-mismatch-message: The wallet address associated with your account and the current crypto wallet address do not match. Please change the crypto wallet address.
@@ -53,3 +52,20 @@ held-token-list-empty-message: No held tokens yet
 token-holder-list-empty-message: No holders yet
 
 chat-message-list-empty-message: No messages yet
+
+posts-view-global-tab: Global
+posts-view-following-tab: Following
+posts-view-token-held-tab: Held
+
+post-target-everyone: Everyone
+post-target-token-holders: Token holders
+
+post-form-posted-snackbar-message: Your post has been successfully published.
+post-form-posted-snackbar-button: View
+
+token-held-post-list-empty-message: No posts you hold tokens for yet
+
+post-owner-menu-delete-button: Delete
+delete-post-confirm-title: Delete Post
+delete-post-confirm-message: Are you sure you want to delete this post?
+delete-post-confirm-delete-button: Delete
