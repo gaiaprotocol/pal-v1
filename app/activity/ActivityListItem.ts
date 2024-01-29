@@ -1,4 +1,5 @@
 import {
+  AvatarUtil,
   DateUtil,
   DomNode,
   el,
@@ -6,7 +7,6 @@ import {
   Router,
   StringUtil,
 } from "@common-module/app";
-import { AvatarUtil } from "@common-module/social";
 import { ethers } from "ethers";
 import BlockTimeManager from "../BlockTimeManager.js";
 import Activity from "../database-interface/Activity.js";

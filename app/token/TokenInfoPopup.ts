@@ -1,4 +1,5 @@
 import {
+  AvatarUtil,
   Button,
   ButtonType,
   Component,
@@ -13,14 +14,13 @@ import {
   StringUtil,
   Tabs,
 } from "@common-module/app";
-import { AvatarUtil } from "@common-module/social";
 import { ethers } from "ethers";
+import TrackEventManager from "../TrackEventManager.js";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import PalContract from "../contracts/PalContract.js";
 import PalUserTokenContract from "../contracts/PalUserTokenContract.js";
 import PreviewToken from "../database-interface/PreviewToken.js";
 import Token from "../database-interface/Token.js";
-import TrackEventManager from "../TrackEventManager.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TokenActivityList from "./TokenActivityList.js";
 import TokenHolderList from "./TokenHolderList.js";

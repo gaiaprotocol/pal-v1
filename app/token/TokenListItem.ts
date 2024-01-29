@@ -1,5 +1,10 @@
-import { DomNode, el, Router, StringUtil } from "@common-module/app";
-import { AvatarUtil } from "@common-module/social";
+import {
+  AvatarUtil,
+  DomNode,
+  el,
+  Router,
+  StringUtil,
+} from "@common-module/app";
 import { ethers } from "ethers";
 import Token from "../database-interface/Token.js";
 import TokenInfoPopup from "./TokenInfoPopup.js";

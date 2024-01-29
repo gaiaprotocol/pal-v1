@@ -1,5 +1,5 @@
-import { DomNode, el, Router } from "@common-module/app";
-import { AvatarUtil, SocialUserPublic } from "@common-module/social";
+import { AvatarUtil, DomNode, el, Router } from "@common-module/app";
+import { SocialUserPublic } from "@common-module/social";
 
 export default class UserListItem extends DomNode {
   constructor(user: SocialUserPublic) {

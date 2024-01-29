@@ -1,5 +1,4 @@
-import { el, Router, StringUtil } from "@common-module/app";
-import { AvatarUtil } from "@common-module/social";
+import { AvatarUtil, el, Router, StringUtil } from "@common-module/app";
 import { ethers } from "ethers";
 import ChatRoomListItem from "../chat/ChatRoomListItem.js";
 import Token from "../database-interface/Token.js";

@@ -2,7 +2,7 @@ import { Supabase } from "@common-module/app";
 import { SignedUserManager } from "@common-module/social";
 import { getNetwork, getWalletClient } from "@wagmi/core";
 import { BrowserProvider, JsonRpcSigner } from "ethers";
-import EnvironmentManager from "../EnvironmentManager.js";
+import Env from "../Env.js";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import Blockchains from "../blockchain/Blockchains.js";
 import PalUserPublic from "../database-interface/PalUserPublic.js";
@@ -35,7 +35,7 @@ class PalSignedUserManager extends SignedUserManager<PalUserPublic> {
     if (nonceError) throw nonceError;
 
     const signedMessage = await WalletManager.signMessage(
-      `${EnvironmentManager.messageForWalletLinking}\n\nNonce: ${nonceData.nonce}`,
+      `${Env.messageForWalletLinking}\n\nNonce: ${nonceData.nonce}`,
     );
 
     const { error: linkError } = await Supabase.client.functions

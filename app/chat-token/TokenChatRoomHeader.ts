@@ -1,5 +1,4 @@
-import { DomNode, el, MaterialIcon } from "@common-module/app";
-import { AvatarUtil } from "@common-module/social";
+import { AvatarUtil, DomNode, el, MaterialIcon } from "@common-module/app";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import Token from "../database-interface/Token.js";
 import { TokenInfoPopup } from "../index.js";

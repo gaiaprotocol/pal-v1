@@ -121,6 +121,7 @@ meter {
 :root {
   --wrapper-bg-color: #121212;
   --content-bg-color: #141414;
+  --panel-bg-color: #1E1E1E;
   --text-color: #fff;
   --line-color: #252527;
   --primary-color: #C1A87D;
@@ -130,7 +131,7 @@ meter {
   --success-color: #00FF00;
   --popup-bg-color: rgba(0, 0, 0, 0.5);
   --button-bg-color: rgba(193, 168, 125, 0.12);
-  --hover-color: rgba(193, 168, 125, 0.12);
+  --hover-color: rgba(193, 168, 125, 0.2);
   --disable-color: rgba(255, 255, 255, 0.5);
   --loading-bar-bg-color: rgba(193, 168, 125, 0.1);
   --loading-bar-color: rgba(193, 168, 125, 0.5);
@@ -177,6 +178,7 @@ button.component {
   justify-content: center;
   padding: 8px 16px;
   color: var(--primary-color);
+  border-radius: 6px;
   line-height: 1em;
   gap: 8px;
 }
@@ -186,11 +188,13 @@ button.component.disabled {
 }
 button.component.contained {
   border: 1px solid var(--primary-color);
-  border-radius: 6px;
   background-color: var(--button-bg-color);
 }
 button.component > .title {
   text-transform: capitalize;
+}
+button.component:hover {
+  background-color: var(--hover-color);
 }
 .nav-bar.component {
   position: fixed;
@@ -312,6 +316,7 @@ button.component > .title {
   padding: 24px;
   display: flex;
   justify-content: flex-end;
+  gap: 8px;
 }
 @keyframes loading-spinner-animation {
   0% {
@@ -1032,12 +1037,18 @@ button.component > .title {
   position: absolute;
   right: 0;
   top: 0;
-  width: 360px;
+  width: 100%;
+  max-width: 360px;
   height: 100%;
   border-left: 1px solid var(--line-color);
   background-color: var(--content-bg-color);
   overflow-y: auto;
   padding-bottom: 120px;
+}
+@container (width < 1280px) {
+  .side-panel > main {
+    width: 80%;
+  }
 }
 .side-panel > main > header {
   display: flex;
@@ -1559,9 +1570,15 @@ button.component > .title {
 .posts-view > main {
   height: 100%;
   overflow-y: auto;
+  padding-bottom: 120px;
 }
 .posts-view > main > .new-post-form {
   padding: 20px 20px 0 20px;
+}
+@container (width < 1280px) {
+  .posts-view > main > .new-post-form {
+    display: none;
+  }
 }
 .posts-view > button.post {
   position: absolute;
@@ -1616,7 +1633,7 @@ button.component > .title {
   margin-top: 20px;
 }
 .post-loading-animation {
-  margin-top: 12px;
+  margin: 12px 0;
 }
 .post-popup > header {
   display: flex;

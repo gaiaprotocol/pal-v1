@@ -1,12 +1,12 @@
 import {
+  AvatarUtil,
   BodyNode,
   Button,
   DomNode,
-  el,
   MaterialIcon,
   Router,
+  el,
 } from "@common-module/app";
-import { AvatarUtil } from "@common-module/social";
 import CreateTokenPopup from "../token/CreateTokenPopup.js";
 import HeldTokenList from "../token/HeldTokenList.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";

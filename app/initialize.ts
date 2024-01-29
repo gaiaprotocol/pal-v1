@@ -1,12 +1,13 @@
 import {
   AppInitializer,
+  AuthUtil,
   el,
   MaterialIconSystem,
   msg,
   Router,
   SplashLoader,
 } from "@common-module/app";
-import { AuthUtil, inject_social_msg } from "@common-module/social";
+import { inject_social_msg } from "@common-module/social";
 import messages_en from "../locales/en.yml";
 import messages_ja from "../locales/ja.yml";
 import messages_zh from "../locales/zh.yml";
@@ -20,7 +21,6 @@ import TokenChatRoomView from "./chat-token/TokenChatRoomView.js";
 import ChatsView from "./chat/ChatsView.js";
 import Config from "./Config.js";
 import Env from "./Env.js";
-import EnvironmentManager from "./EnvironmentManager.js";
 import ExploreView from "./explorer/ExplorerView.js";
 import Layout from "./layout/Layout.js";
 import PostsView from "./post/PostsView.js";
@@ -43,6 +43,7 @@ MaterialIconSystem.launch();
 export default async function initialize(config: Config) {
   Env.dev = config.dev;
   Env.infuraKey = config.infuraKey;
+  Env.messageForWalletLinking = config.messageForWalletLinking;
 
   initBlockchains();
 
@@ -51,8 +52,6 @@ export default async function initialize(config: Config) {
     config.supabaseAnonKey,
     config.dev,
   );
-
-  EnvironmentManager.messageForWalletLinking = config.messageForWalletLinking;
 
   WalletManager.init(config.walletConnectProjectId);
 

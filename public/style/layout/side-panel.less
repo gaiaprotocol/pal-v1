@@ -11,12 +11,17 @@
         position        : absolute;
         right           : 0;
         top             : 0;
-        width           : 360px;
+        width           : 100%;
+        max-width       : 360px;
         height          : 100%;
         border-left     : 1px solid var(--line-color);
         background-color: var(--content-bg-color);
         overflow-y      : auto;
         padding-bottom  : 120px;
+
+        @container (width < @safe-width) {
+            width: 80%;
+        }
 
         >header {
             display      : flex;
