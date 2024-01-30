@@ -1,8 +1,8 @@
-import { el, msg, Tabs, View } from "@common-module/app";
-import Layout from "../layout/Layout.js";
-import NewTokenList from "../token/NewTokenList.js";
-import TopTokenList from "../token/TopTokenList.js";
-import TrendingTokenList from "../token/TrendingTokenList.js";
+import { el, msg, Tabs, View, ViewParams } from "@common-module/app";
+import Layout from "./layout/Layout.js";
+import NewTokenList from "./token/NewTokenList.js";
+import TopTokenList from "./token/TopTokenList.js";
+import TrendingTokenList from "./token/TrendingTokenList.js";
 
 export default class ExploreView extends View {
   private tabs: Tabs;
@@ -10,7 +10,7 @@ export default class ExploreView extends View {
   private topTokenList: TopTokenList;
   private newTokenList: NewTokenList;
 
-  constructor() {
+  constructor(params: ViewParams) {
     super();
     Layout.append(
       this.container = el(
@@ -43,6 +43,10 @@ export default class ExploreView extends View {
       if (id === "trending") this.trendingTokenList.show();
       else if (id === "top") this.topTokenList.show();
       else if (id === "new") this.newTokenList.show();
-    }).init();
+    }).init(params.type);
+  }
+
+  public changeParams(params: ViewParams) {
+    if (params.type) this.tabs.select(params.type);
   }
 }

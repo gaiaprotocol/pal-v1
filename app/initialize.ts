@@ -21,7 +21,7 @@ import TokenChatRoomView from "./chat-token/TokenChatRoomView.js";
 import ChatsView from "./chat/ChatsView.js";
 import Config from "./Config.js";
 import Env from "./Env.js";
-import ExploreView from "./explorer/ExplorerView.js";
+import ExploreView from "./ExplorerView.js";
 import Layout from "./layout/Layout.js";
 import PostsView from "./post/PostsView.js";
 import PostView from "./post/PostView.js";
@@ -65,7 +65,7 @@ export default async function initialize(config: Config) {
   Router.route("**", Layout, ["test/**"]);
 
   Router.route("activity", ActivityView);
-  Router.route("explore", ExploreView);
+  Router.route(["explore", "explore/{type}"], ExploreView);
   Router.route("profile", ProfileView);
   Router.route("settings", SettingsView);
 
@@ -73,6 +73,7 @@ export default async function initialize(config: Config) {
   Router.route("post/{postId}", PostView);
 
   Router.route(["chats", "general", "{chain}/{tokenAddress}"], ChatsView, [
+    "explore/{type}",
     "post/{postId}",
     "{xUsername}/holding",
     "{xUsername}/following",
@@ -80,6 +81,7 @@ export default async function initialize(config: Config) {
   ]);
   Router.route(["chats", "general"], GeneralChatRoomView);
   Router.route("{chain}/{tokenAddress}", TokenChatRoomView, [
+    "explore/{type}",
     "post/{postId}",
     "{xUsername}/holding",
     "{xUsername}/following",

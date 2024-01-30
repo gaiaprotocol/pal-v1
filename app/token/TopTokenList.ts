@@ -6,7 +6,7 @@ import TokenService from "./TokenService.js";
 export default class TopTokenList extends TokenList {
   private lastRank: number | undefined;
 
-  constructor() {
+  constructor(private maxCount?: number) {
     super(".top-token-list", {
       storeName: "top-tokens",
       emptyMessage: msg("top-token-list-empty-message"),
@@ -14,7 +14,10 @@ export default class TopTokenList extends TokenList {
   }
 
   protected async fetchTokens(): Promise<Token[]> {
-    const tokens = await TokenService.fetchTopTokens(this.lastRank);
+    const tokens = await TokenService.fetchTopTokens(
+      this.lastRank,
+      this.maxCount,
+    );
     this.lastRank = tokens[tokens.length - 1]?.rank;
     return tokens;
   }

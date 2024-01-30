@@ -66,24 +66,30 @@ class TokenService extends SupabaseService<Token> {
     return this.enhanceTokenData(data ?? []);
   }
 
-  public async fetchTopTokens(lastRank: number | undefined) {
+  public async fetchTopTokens(
+    lastRank: number | undefined,
+    maxCount: number = this.fetchLimit,
+  ) {
     const { data, error } = await Supabase.client.rpc(
       "get_top_tokens",
       {
         last_rank: lastRank,
-        max_count: this.fetchLimit,
+        max_count: maxCount,
       },
     );
     if (error) throw error;
     return this.enhanceTokenData(data ?? []);
   }
 
-  public async fetchTrendingTokens(lastPurchasedAt: string | undefined) {
+  public async fetchTrendingTokens(
+    lastPurchasedAt: string | undefined,
+    maxCount: number = this.fetchLimit,
+  ) {
     const { data, error } = await Supabase.client.rpc(
       "get_trending_tokens",
       {
         last_purchased_at: lastPurchasedAt,
-        max_count: this.fetchLimit,
+        max_count: maxCount,
       },
     );
     if (error) throw error;

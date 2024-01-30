@@ -6,7 +6,7 @@ import TokenService from "./TokenService.js";
 export default class TrendingTokenList extends TokenList {
   private lastPurchasedAt: string | undefined;
 
-  constructor() {
+  constructor(private maxCount?: number) {
     super(".trending-token-list", {
       storeName: "trending-tokens",
       emptyMessage: msg("trending-token-list-empty-message"),
@@ -14,7 +14,10 @@ export default class TrendingTokenList extends TokenList {
   }
 
   protected async fetchTokens(): Promise<Token[]> {
-    const tokens = await TokenService.fetchTrendingTokens(this.lastPurchasedAt);
+    const tokens = await TokenService.fetchTrendingTokens(
+      this.lastPurchasedAt,
+      this.maxCount,
+    );
     this.lastPurchasedAt = tokens[tokens.length - 1]?.last_purchased_at;
     return tokens;
   }

@@ -2,9 +2,11 @@ import {
   Button,
   ButtonType,
   Component,
+  Confirm,
   el,
   ErrorAlert,
   Input,
+  MaterialIcon,
   msg,
   Popup,
   Select,
@@ -63,27 +65,34 @@ export default class CreateTokenPopup extends Popup {
           new Button({
             tag: ".create-token",
             title: "Create Token",
-            click: async (event, button) => {
-              button.loading = true;
-              try {
-                const chain = this.chainSelect.value;
-                if (!chain) throw new Error("Please select a blockchain.");
+            click: (event, button) => {
+              new Confirm({
+                icon: new MaterialIcon("warning"),
+                title: "Important Notice",
+                message:
+                  "You can create your own token. However, be cautious, as once a token is recorded on the blockchain, it cannot be deleted permanently. Although, the information of the token can be modified.",
+              }, async () => {
+                button.loading = true;
+                try {
+                  const chain = this.chainSelect.value;
+                  if (!chain) throw new Error("Please select a blockchain.");
 
-                const name = this.nameInput.value;
-                const symbol = this.symbolInput.value;
-                const contract = new PalContract(chain);
-                const tokenAddress = await contract.createToken(name, symbol);
-                console.log(tokenAddress);
+                  const name = this.nameInput.value;
+                  const symbol = this.symbolInput.value;
+                  const contract = new PalContract(chain);
+                  const tokenAddress = await contract.createToken(name, symbol);
+                  console.log(tokenAddress);
 
-                await TrackEventManager.trackEvent(chain);
-                this.delete();
-              } catch (e: any) {
-                new ErrorAlert({
-                  title: "Error",
-                  message: e.message,
-                });
-                button.loading = false;
-              }
+                  await TrackEventManager.trackEvent(chain);
+                  this.delete();
+                } catch (e: any) {
+                  new ErrorAlert({
+                    title: "Error",
+                    message: e.message,
+                  });
+                  button.loading = false;
+                }
+              });
             },
           }),
         ),
