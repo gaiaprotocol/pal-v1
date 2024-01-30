@@ -70,7 +70,7 @@ BEGIN
         u.x_username AS owner_x_username
     FROM 
         public.tokens t
-    JOIN 
+    LEFT JOIN 
         public.token_holders th ON t.token_address = th.token_address AND th.wallet_address = p_wallet_address
     LEFT JOIN 
         "public"."users_public" u ON t.owner = u.wallet_address

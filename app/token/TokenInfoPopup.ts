@@ -23,6 +23,7 @@ import PreviewToken from "../database-interface/PreviewToken.js";
 import Token from "../database-interface/Token.js";
 import TrackEventManager from "../TrackEventManager.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
+import EditTokenInfoPopup from "./EditTokenInfoPopup.js";
 import TokenActivityList from "./TokenActivityList.js";
 import TokenHolderList from "./TokenHolderList.js";
 import TokenService from "./TokenService.js";
@@ -183,7 +184,8 @@ export default class TokenInfoPopup extends Popup {
           type: ButtonType.Text,
           icon: new MaterialIcon("edit"),
           click: () => {
-            //TODO:
+            new EditTokenInfoPopup(token);
+            this.delete();
           },
         }),
       );
@@ -191,7 +193,8 @@ export default class TokenInfoPopup extends Popup {
       new Button({
         title: "Edit",
         click: () => {
-          //TODO:
+          new EditTokenInfoPopup(token);
+          this.delete();
         },
       }).appendTo(this.footer, 0);
     }

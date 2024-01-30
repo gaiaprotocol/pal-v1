@@ -17,4 +17,16 @@ export default class PalUserTokenContract extends Contract<PalUserToken> {
   public async balanceOf(address: string): Promise<bigint> {
     return await this.viewContract.balanceOf(address);
   }
+
+  public async setName(name: string) {
+    const writeContract = await this.getWriteContract();
+    const tx = await writeContract.setName(name);
+    return tx.wait();
+  }
+
+  public async setSymbol(symbol: string) {
+    const writeContract = await this.getWriteContract();
+    const tx = await writeContract.setSymbol(symbol);
+    return tx.wait();
+  }
 }

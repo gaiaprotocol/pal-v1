@@ -1400,6 +1400,7 @@ button.component:hover {
   border-left: 1px solid var(--line-color);
 }
 .user-tweets-tab {
+  position: relative;
   padding: 20px 20px 0 20px;
 }
 .user-tweets-tab.hidden {
