@@ -1215,16 +1215,49 @@ button.component:hover {
     height: 34px;
   }
 }
-.token-info-popup > header > h1 {
-  gap: initial !important;
+@container (width < 1280px) {
+  .token-info-popup > header > .token-image {
+    width: 42px;
+    height: 42px;
+  }
 }
-.token-info-popup > header > h1 > .symbol {
-  margin-left: 16px;
+.token-info-popup > header > .info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+@container (width < 1280px) {
+  .token-info-popup > header > .info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+.token-info-popup > header > .info > h1 {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+@container (width < 1280px) {
+  .token-info-popup > header > .info > h1 {
+    font-size: 16px;
+  }
+}
+.token-info-popup > header > .info > .symbol-and-chain {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.token-info-popup > header > .info > .symbol-and-chain > .symbol {
   color: #595959;
   font-size: 16px;
 }
-.token-info-popup > header > h1 > .chain {
-  margin-left: 16px;
+@container (width < 1280px) {
+  .token-info-popup > header > .info > .symbol-and-chain > .symbol {
+    font-size: 14px;
+  }
+}
+.token-info-popup > header > .info > .symbol-and-chain > .chain {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1235,12 +1268,11 @@ button.component:hover {
   font-size: 12px;
   font-weight: normal;
 }
-.token-info-popup > header > h1 > .chain > .icon {
+.token-info-popup > header > .info > .symbol-and-chain > .chain > .icon {
   width: 16px;
   height: 16px;
 }
-.token-info-popup > header > h1 > button {
-  margin-left: 6px;
+.token-info-popup > header > .edit-button-container > button {
   padding: 0;
   color: #595959;
 }
@@ -1249,6 +1281,9 @@ button.component:hover {
   flex-direction: column;
   gap: 20px;
   padding: 0 20px !important;
+}
+.token-info-popup > main > p.description:empty {
+  display: none;
 }
 .token-info-popup > main section {
   border: 1px solid var(--line-color);
