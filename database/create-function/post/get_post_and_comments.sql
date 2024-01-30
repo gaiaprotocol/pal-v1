@@ -8,6 +8,9 @@ CREATE OR REPLACE FUNCTION "public"."get_post_and_comments"(
         "target" smallint,
         "chain" "text",
         "token_address" "text",
+        "token_name" "text",
+        "token_symbol" "text",
+        "token_image_thumb" "text",
         "author" "uuid",
         "author_display_name" "text",
         "author_avatar" "text",
@@ -36,6 +39,9 @@ WITH RECURSIVE ancestors AS (
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -67,6 +73,8 @@ WITH RECURSIVE ancestors AS (
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         p.id = p_post_id
     UNION
@@ -75,6 +83,9 @@ WITH RECURSIVE ancestors AS (
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -106,6 +117,8 @@ WITH RECURSIVE ancestors AS (
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     JOIN 
         ancestors a ON p.id = a.parent
 ),
@@ -115,6 +128,9 @@ comments AS (
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -146,6 +162,8 @@ comments AS (
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         p.parent = p_post_id AND
         last_comment_id IS NULL OR p.id < last_comment_id

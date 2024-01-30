@@ -7,6 +7,9 @@ CREATE OR REPLACE FUNCTION "public"."get_reposts"(
         "target" smallint,
         "chain" "text",
         "token_address" "text",
+        "token_name" "text",
+        "token_symbol" "text",
+        "token_image_thumb" "text",
         "author" "uuid",
         "author_display_name" "text",
         "author_avatar" "text",
@@ -34,6 +37,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -59,6 +65,8 @@ BEGIN
         posts p ON r.post_id = p.id
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         r.user_id = p_user_id
         AND (last_reposted_at IS NULL OR r.created_at > last_reposted_at)

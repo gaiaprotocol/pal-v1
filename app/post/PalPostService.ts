@@ -10,6 +10,26 @@ class PalPostService extends PostService<PalPost> {
     super("posts", "reposts", "post_likes", PostSelectQuery, 50);
   }
 
+  protected enhancePostData(posts: PalPost[]): {
+    posts: PalPost[];
+    repostedPostIds: number[];
+    likedPostIds: number[];
+  } {
+    const result = super.enhancePostData(posts);
+
+    for (const post of result.posts as any) {
+      if (post.token_name || post.token_symbol || post.token_image_thumb) {
+        post.target_details = {
+          token_name: post.token_name,
+          token_symbol: post.token_symbol,
+          token_image_thumb: post.token_image_thumb,
+        };
+      }
+    }
+
+    return result;
+  }
+
   private async upload(files: File[]): Promise<Rich> {
     const rich: Rich = { files: [] };
     await Promise.all(files.map(async (file) => {

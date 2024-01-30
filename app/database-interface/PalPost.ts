@@ -8,6 +8,11 @@ export enum PostTarget {
 
 export default interface PalPost extends Post {
   target: PostTarget;
+  target_details?: {
+    token_name?: string;
+    token_symbol?: string;
+    token_image_thumb?: string;
+  };
   chain?: BlockchainType;
   token_address?: string;
 }
