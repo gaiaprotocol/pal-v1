@@ -16,6 +16,7 @@ export function initBlockchains() {
   Blockchains[BlockchainType.Ethereum] = {
     chainId: Env.dev ? goerli.id : mainnet.id,
     name: mainnet.name,
+    icon: "/images/chain/ethereum.svg",
     rpc: `https://${
       Env.dev ? "goerli" : "mainnet"
     }.infura.io/v3/${Env.infuraKey}`,
@@ -26,6 +27,7 @@ export function initBlockchains() {
   Blockchains[BlockchainType.Base] = {
     chainId: Env.dev ? baseGoerli.id : base.id,
     name: base.name,
+    icon: "/images/chain/base.svg",
     rpc: (Env.dev ? baseGoerli : base).rpcUrls.default.http[0],
     blockExplorer: (Env.dev ? baseGoerli : base).blockExplorers.default,
     blockTime: 2,
@@ -34,6 +36,7 @@ export function initBlockchains() {
   Blockchains[BlockchainType.Arbitrum] = {
     chainId: Env.dev ? arbitrumGoerli.id : arbitrum.id,
     name: arbitrum.name,
+    icon: "/images/chain/arbitrum.svg",
     rpc: (Env.dev ? arbitrumGoerli : arbitrum).rpcUrls.default.http[0],
     blockExplorer: (Env.dev ? arbitrumGoerli : arbitrum).blockExplorers.default,
     blockTime: 0.26,
@@ -42,6 +45,7 @@ export function initBlockchains() {
   Blockchains[BlockchainType.Optimism] = {
     chainId: Env.dev ? optimismGoerli.id : optimism.id,
     name: optimism.name,
+    icon: "/images/chain/optimism.svg",
     rpc: (Env.dev ? optimismGoerli : optimism).rpcUrls.default.http[0],
     blockExplorer: (Env.dev ? optimismGoerli : optimism).blockExplorers.default,
     blockTime: 2,

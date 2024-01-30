@@ -15,12 +15,13 @@ import {
   Tabs,
 } from "@common-module/app";
 import { ethers } from "ethers";
-import TrackEventManager from "../TrackEventManager.js";
+import Blockchains from "../blockchain/Blockchains.js";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import PalContract from "../contracts/PalContract.js";
 import PalUserTokenContract from "../contracts/PalUserTokenContract.js";
 import PreviewToken from "../database-interface/PreviewToken.js";
 import Token from "../database-interface/Token.js";
+import TrackEventManager from "../TrackEventManager.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TokenActivityList from "./TokenActivityList.js";
 import TokenHolderList from "./TokenHolderList.js";
@@ -129,6 +130,12 @@ export default class TokenInfoPopup extends Popup {
         previewToken.name,
         " ",
         el("span.symbol", previewToken.symbol),
+        " ",
+        el(
+          ".chain",
+          el("img.icon", { src: Blockchains[previewToken.chain].icon }),
+          Blockchains[previewToken.chain].name,
+        ),
       );
     }
 
@@ -156,6 +163,12 @@ export default class TokenInfoPopup extends Popup {
       token.name,
       " ",
       el("span.symbol", token.symbol),
+      " ",
+      el(
+        ".chain",
+        el("img.icon", { src: Blockchains[token.chain].icon }),
+        Blockchains[token.chain].name,
+      ),
     );
 
     if (
