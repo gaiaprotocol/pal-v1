@@ -1,0 +1,45 @@
+.settings-view {
+    padding: 20px;
+
+    >section {
+        border          : 1px solid var(--line-color);
+        border-radius   : 16px;
+        background-color: var(--content-bg-color);
+
+        >header {
+            display    : flex;
+            align-items: center;
+            padding    : 24px;
+
+            >h2 {
+                flex-grow     : 1;
+                display       : flex;
+                align-items   : center;
+                gap           : 8px;
+                font-size     : 18px;
+                font-weight   : bold;
+                text-transform: capitalize;
+            }
+        }
+
+        >main {
+            padding: 0 24px;
+            display: flex;
+
+            >.linked {
+                white-space  : nowrap;
+                text-overflow: ellipsis;
+                overflow     : hidden;
+                width        : 0;
+                flex-grow    : 1;
+            }
+        }
+
+        >footer {
+            padding        : 24px;
+            display        : flex;
+            justify-content: flex-end;
+            gap            : 8px;
+        }
+    }
+}

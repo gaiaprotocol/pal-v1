@@ -483,6 +483,7 @@ button.component:hover {
 .select.component > .option-container > .option {
   padding: 8px 12px;
   text-transform: capitalize;
+  cursor: pointer;
 }
 .select.component > .option-container > .option:hover {
   background-color: var(--primary-color);
@@ -711,6 +712,9 @@ button.component:hover {
 .post-thread.social-component > .post-display,
 .post-thread.social-component > .post-form {
   border-bottom: 1px solid #242424;
+}
+.post-list.social-component {
+  position: relative;
 }
 .post-list.social-component.hidden {
   display: none;
@@ -1163,6 +1167,15 @@ button.component:hover {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+.create-token-popup .option.chain {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.create-token-popup .option.chain > .icon {
+  width: 16px;
+  height: 16px;
 }
 .token-info-popup > header {
   display: flex;
@@ -1648,7 +1661,7 @@ button.component:hover {
   margin-top: 20px;
 }
 .post-loading-animation {
-  margin: 12px 0;
+  padding: 12px 0;
 }
 .post-popup > header {
   display: flex;
@@ -1703,5 +1716,44 @@ button.component:hover {
     width: 34px;
     height: 34px;
   }
+}
+.settings-view {
+  padding: 20px;
+}
+.settings-view > section {
+  border: 1px solid var(--line-color);
+  border-radius: 16px;
+  background-color: var(--content-bg-color);
+}
+.settings-view > section > header {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+}
+.settings-view > section > header > h2 {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.settings-view > section > main {
+  padding: 0 24px;
+  display: flex;
+}
+.settings-view > section > main > .linked {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 0;
+  flex-grow: 1;
+}
+.settings-view > section > footer {
+  padding: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
