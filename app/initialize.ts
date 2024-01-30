@@ -27,6 +27,7 @@ import PostsView from "./post/PostsView.js";
 import PostView from "./post/PostView.js";
 import SettingsView from "./settings/SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
+import UserView from "./user/UserView.js";
 import WalletManager from "./wallet/WalletManager.js";
 
 inject_social_msg();
@@ -81,6 +82,15 @@ export default async function initialize(config: Config) {
     "{xUsername}/holding",
     "{xUsername}/following",
     "{xUsername}/followers",
+  ]);
+
+  Router.route("{xUsername}", UserView, [
+    "activity",
+    "explore",
+    "settings",
+    "posts",
+    "chats",
+    "general",
   ]);
 
   AuthUtil.checkEmailAccess();

@@ -27,7 +27,7 @@ export default class GeneralChatRoomListItem extends ChatRoomListItem {
 
   private async fetchLastMessage() {
     const m = await GeneralChatMessageService.fetchLastMessage();
-    if (m) {
+    if (m && !this.deleted) {
       this.updateLastMessageData({
         last_message: m.message,
         last_message_sent_at: m.created_at,

@@ -49,7 +49,16 @@ export default class TitleBar extends DomNode {
     }
   }
 
-  public changeTitle(uri: string) {
-    this.titleDisplay.text = msg(`title-${uri}`);
+  public set title(title: string) {
+    this.titleDisplay.text = title;
+  }
+
+  public set uri(uri: string) {
+    if (
+      ["activity", "explore", "settings", "posts", "chats"]
+        .includes(uri)
+    ) {
+      this.title = msg(`title-${uri}`);
+    }
   }
 }

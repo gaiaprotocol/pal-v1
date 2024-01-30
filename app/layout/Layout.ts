@@ -18,6 +18,10 @@ export default class Layout extends View {
     Layout.current.content.append(node);
   }
 
+  public static changeTitle(title: string): void {
+    Layout.current.titleBar.title = title;
+  }
+
   private navBar: NavBar;
   private titleBar: TitleBar;
   private content: DomNode;
@@ -89,6 +93,6 @@ export default class Layout extends View {
       : this.sidebar.show();
 
     this.navBar.active(uri);
-    this.titleBar.changeTitle(uri);
+    this.titleBar.uri = uri;
   }
 }
