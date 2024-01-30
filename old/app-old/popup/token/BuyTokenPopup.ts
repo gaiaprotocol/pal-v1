@@ -83,8 +83,7 @@ export default class BuyTokenPopup extends Popup {
                   } ETH to buy this token`,
                 });
               } else {
-                this.buyButton.disable();
-                this.buyButton.title = "Buying...";
+                this.buyButton.loading = true;
 
                 try {
                   await PalContract.buyToken(
@@ -108,8 +107,7 @@ export default class BuyTokenPopup extends Popup {
                 } catch (e) {
                   console.error(e);
 
-                  this.buyButton.enable();
-                  this.buyButton.title = "Buy Token";
+                  this.buyButton.loading = false;
                 }
               }
             },

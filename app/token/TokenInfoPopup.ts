@@ -268,7 +268,7 @@ export default class TokenInfoPopup extends Popup {
   }
 
   private async buyToken() {
-    this.buyButton.title = "Buying...";
+    this.buyButton.loading = true;
     try {
       const contract = new PalContract(this.chain);
       await contract.buyToken(this.tokenAddress, ethers.parseEther("1"));
@@ -277,12 +277,12 @@ export default class TokenInfoPopup extends Popup {
       Router.go(`/${this.chain}/${this.tokenAddress}`);
     } catch (e) {
       console.error(e);
-      this.buyButton.title = "Buy";
+      this.buyButton.loading = false;
     }
   }
 
   private async sellToken() {
-    this.sellButton.title = "Selling...";
+    this.sellButton.loading = true;
     try {
       const contract = new PalContract(this.chain);
       await contract.sellToken(this.tokenAddress, ethers.parseEther("1"));
@@ -290,7 +290,7 @@ export default class TokenInfoPopup extends Popup {
       this.delete();
     } catch (e) {
       console.error(e);
-      this.sellButton.title = "Sell";
+      this.sellButton.loading = false;
     }
   }
 }

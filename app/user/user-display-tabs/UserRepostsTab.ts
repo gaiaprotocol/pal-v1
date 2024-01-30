@@ -6,7 +6,9 @@ import PostLoadingAnimation from "../../post/PostLoadingAnimation.js";
 import PalSignedUserManager from "../PalSignedUserManager.js";
 
 export default class UserRepostsTab extends PostList<PalPost> {
-  constructor(userId: string) {
+  private lastRepostedAt: string | undefined;
+
+  constructor(private userId: string) {
     super(
       ".user-reposts-tab",
       PalPostService,
@@ -29,6 +31,18 @@ export default class UserRepostsTab extends PostList<PalPost> {
       likedPostIds: number[];
     }
   > {
-    throw new Error("Method not implemented.");
+    const result = await PalPostService.fetchReposts(
+      this.userId,
+      this.lastRepostedAt,
+    );
+    this.lastRepostedAt = result.lastRepostedAt;
+    return {
+      fetchedPosts: result.data.posts.map((p) => ({
+        posts: [p],
+        mainPostId: p.id,
+      })),
+      repostedPostIds: result.data.repostedPostIds,
+      likedPostIds: result.data.likedPostIds,
+    };
   }
 }

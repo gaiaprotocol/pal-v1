@@ -3,6 +3,7 @@ import {
   ButtonType,
   Component,
   el,
+  ErrorAlert,
   Input,
   msg,
   Popup,
@@ -35,7 +36,15 @@ export default class EditTokenInfoPopup extends Popup {
               "footer",
               new Button({
                 title: "Save Name",
-                click: () => this.saveName(),
+                click: async (event, button) => {
+                  button.loading = true;
+                  try {
+                    await this.saveName();
+                  } catch (e: any) {
+                    new ErrorAlert({ title: "Error", message: e.message });
+                  }
+                  button.loading = false;
+                },
               }),
             ),
           ),
@@ -52,7 +61,15 @@ export default class EditTokenInfoPopup extends Popup {
               "footer",
               new Button({
                 title: "Save Symbol",
-                click: () => this.saveSymbol(),
+                click: async (event, button) => {
+                  button.loading = true;
+                  try {
+                    await this.saveSymbol();
+                  } catch (e: any) {
+                    new ErrorAlert({ title: "Error", message: e.message });
+                  }
+                  button.loading = false;
+                },
               }),
             ),
           ),

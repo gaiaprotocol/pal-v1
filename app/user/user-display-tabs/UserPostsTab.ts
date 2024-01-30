@@ -6,7 +6,7 @@ import PostLoadingAnimation from "../../post/PostLoadingAnimation.js";
 import PalSignedUserManager from "../PalSignedUserManager.js";
 
 export default class UserPostsTab extends PostList<PalPost> {
-  constructor(userId: string) {
+  constructor(private userId: string) {
     super(
       ".user-posts-tab",
       PalPostService,
@@ -29,6 +29,17 @@ export default class UserPostsTab extends PostList<PalPost> {
       likedPostIds: number[];
     }
   > {
-    throw new Error("Method not implemented.");
+    const result = await PalPostService.fetchUserPosts(
+      this.userId,
+      this.lastPostId,
+    );
+    return {
+      fetchedPosts: result.posts.map((p) => ({
+        posts: [p],
+        mainPostId: p.id,
+      })),
+      repostedPostIds: result.repostedPostIds,
+      likedPostIds: result.likedPostIds,
+    };
   }
 }

@@ -451,7 +451,7 @@ BEGIN
         u.x_username AS owner_x_username
     FROM 
         public.tokens t
-    JOIN 
+    LEFT JOIN 
         public.token_holders th ON t.token_address = th.token_address AND th.wallet_address = p_wallet_address
     LEFT JOIN 
         "public"."users_public" u ON t.owner = u.wallet_address
@@ -466,6 +466,59 @@ END;
 $$;
 
 ALTER FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "token_address" "text", "owner" "text", "name" "text", "symbol" "text", "image" "text", "image_thumb" "text", "image_stored" boolean, "stored_image" "text", "stored_image_thumb" "text", "metadata" "jsonb", "supply" "text", "last_fetched_price" "text", "total_trading_volume" "text", "is_price_up" boolean, "last_message" "text", "last_message_sent_at" timestamp with time zone, "holder_count" integer, "last_purchased_at" timestamp with time zone, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "owner_user_id" "uuid", "owner_wallet_address" "text", "owner_display_name" "text", "owner_avatar" "text", "owner_avatar_thumb" "text", "owner_stored_avatar" "text", "owner_stored_avatar_thumb" "text", "owner_x_username" "text")
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        t.chain,
+        t.token_address,
+        t.owner,
+        t.name,
+        t.symbol,
+        t.image,
+        t.image_thumb,
+        t.image_stored,
+        t.stored_image,
+        t.stored_image_thumb,
+        t.metadata,
+        t.supply::text,
+        t.last_fetched_price::text,
+        t.total_trading_volume::text,
+        t.is_price_up,
+        t.last_message,
+        t.last_message_sent_at,
+        t.holder_count,
+        t.last_purchased_at,
+        t.created_at,
+        t.updated_at,
+        u.user_id AS owner_user_id,
+        u.wallet_address AS owner_wallet_address,
+        u.display_name AS owner_display_name,
+        u.avatar AS owner_avatar,
+        u.avatar_thumb AS owner_avatar_thumb,
+        u.stored_avatar AS owner_stored_avatar,
+        u.stored_avatar_thumb AS owner_stored_avatar_thumb,
+        u.x_username AS owner_x_username
+    FROM 
+        public.tokens t
+    JOIN 
+        public.token_holders th ON t.token_address = th.token_address AND th.wallet_address = p_wallet_address
+    LEFT JOIN 
+        "public"."users_public" u ON t.owner = u.wallet_address
+    WHERE 
+        th.wallet_address = p_wallet_address
+        AND (last_created_at IS NULL OR t.created_at < last_created_at)
+    ORDER BY 
+        t.created_at DESC
+    LIMIT 
+        max_count;
+END;
+$$;
+
+ALTER FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "like_created_at" timestamp with time zone)
     LANGUAGE "plpgsql"
@@ -606,12 +659,11 @@ BEGIN
         u.x_username AS owner_x_username
     FROM 
         public.tokens t
-    JOIN 
-        public.token_holders th ON t.token_address = th.token_address AND th.wallet_address = p_wallet_address
     LEFT JOIN 
         "public"."users_public" u ON t.owner = u.wallet_address
     WHERE 
-        (last_created_at IS NULL OR t.created_at < last_created_at)
+        t.owner = p_wallet_address
+        AND (last_created_at IS NULL OR t.created_at < last_created_at)
     ORDER BY 
         t.created_at DESC
     LIMIT 
@@ -620,6 +672,41 @@ END;
 $$;
 
 ALTER FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") RETURNS "text"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+    portfolio_value numeric := 0;
+    v_holder record;
+    v_token record;
+BEGIN
+    FOR v_holder IN (
+        SELECT 
+            chain,
+            token_address,
+            last_fetched_balance
+        FROM 
+            token_holders 
+        WHERE 
+            wallet_address = p_wallet_address
+    ) LOOP
+        FOR v_token IN (
+            SELECT 
+                last_fetched_price 
+            FROM 
+                tokens
+            WHERE 
+                chain = v_holder.chain AND token_address = v_holder.token_address
+        ) LOOP
+            portfolio_value := portfolio_value + (v_holder.last_fetched_balance::numeric * v_token.last_fetched_price / 10^18);
+        END LOOP;
+    END LOOP;
+    RETURN portfolio_value::text;
+END;
+$$;
+
+ALTER FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint DEFAULT NULL::bigint, "max_comment_count" integer DEFAULT 50, "signed_user_id" "uuid" DEFAULT NULL::"uuid") RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "depth" integer)
     LANGUAGE "sql"
@@ -1472,10 +1559,10 @@ BEGIN
             -- update token info
             update tokens set
                 supply = CASE WHEN new.chain = 'base' AND new.block_number < 8865668 THEN new.args[8]::numeric ELSE new.args[9]::numeric END,
-                last_fetched_key_price = new.args[5]::numeric,
-                total_trading_key_volume = total_trading_key_volume + new.args[5]::numeric,
+                last_fetched_price = new.args[5]::numeric,
+                total_trading_volume = total_trading_volume + new.args[5]::numeric,
                 is_price_up = true,
-                last_key_purchased_at = now()
+                last_purchased_at = now()
             where chain = new.chain and token_address = new.args[2];
 
             -- update token holder info
@@ -1506,8 +1593,8 @@ BEGIN
             -- update token info
             update tokens set
                 supply = CASE WHEN new.chain = 'base' AND new.block_number < 8865668 THEN new.args[8]::numeric ELSE new.args[9]::numeric END,
-                last_fetched_key_price = new.args[5]::numeric,
-                total_trading_key_volume = total_trading_key_volume + new.args[5]::numeric,
+                last_fetched_price = new.args[5]::numeric,
+                total_trading_volume = total_trading_volume + new.args[5]::numeric,
                 is_price_up = false
             where chain = new.chain and token_address = new.args[2];
 
@@ -2202,6 +2289,10 @@ GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "te
 GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
 
+GRANT ALL ON FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+
 GRANT ALL ON FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone, "max_count" integer) TO "anon";
 GRANT ALL ON FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone, "max_count" integer) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone, "max_count" integer) TO "service_role";
@@ -2213,6 +2304,10 @@ GRANT ALL ON FUNCTION "public"."get_new_tokens"("last_created_at" timestamp with
 GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
 GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+
+GRANT ALL ON FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint, "max_comment_count" integer, "signed_user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint, "max_comment_count" integer, "signed_user_id" "uuid") TO "authenticated";

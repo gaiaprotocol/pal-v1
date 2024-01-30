@@ -1,12 +1,15 @@
 import Token from "../../database-interface/Token.js";
 import HorizontalTokenListItem from "../../token/HorizontalTokenListItem.js";
 import TokenList from "../../token/TokenList.js";
+import TokenService from "../../token/TokenService.js";
 import PalSignedUserManager from "../PalSignedUserManager.js";
 
 export default class UserOwnedTokensTab extends TokenList {
-  constructor(userId: string) {
+  private lastCreatedAt: string | undefined;
+
+  constructor(private walletAddress: string) {
     super(".user-owned-tokens-tab", {
-      storeName: userId === PalSignedUserManager.user?.user_id
+      storeName: walletAddress === PalSignedUserManager.user?.wallet_address
         ? "signed-user-owned-tokens"
         : undefined,
       emptyMessage: "This user does not own any tokens.",
@@ -17,7 +20,12 @@ export default class UserOwnedTokensTab extends TokenList {
     new HorizontalTokenListItem(token).appendTo(this);
   }
 
-  protected fetchTokens(): Promise<Token[]> {
-    throw new Error("Method not implemented.");
+  protected async fetchTokens(): Promise<Token[]> {
+    const tokens = await TokenService.fetchOwnedTokens(
+      this.walletAddress,
+      this.lastCreatedAt,
+    );
+    this.lastCreatedAt = tokens[tokens.length - 1]?.created_at;
+    return tokens;
   }
 }

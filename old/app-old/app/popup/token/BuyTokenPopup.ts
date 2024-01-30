@@ -84,7 +84,7 @@ export default class BuyTokenPopup extends Popup {
                 });
               } else {
                 this.buyButton.disable();
-                this.buyButton.title = "Buying...";
+                this.buyButton.loading = true;
 
                 try {
                   await PalContract.buyToken(
@@ -109,7 +109,7 @@ export default class BuyTokenPopup extends Popup {
                   console.error(e);
 
                   this.buyButton.enable();
-                  this.buyButton.title = "Buy Token";
+                  this.buyButton.loading = false;
                 }
               }
             },
@@ -142,8 +142,7 @@ export default class BuyTokenPopup extends Popup {
 
   private async displayTotalPrice() {
     this.totalPriceDisplay.text = "Calculating...";
-    this.buyButton.disable();
-    this.buyButton.title = "Calculating...";
+    this.buyButton.loading = true;
 
     const amount = this.amountInput.value;
     if (amount) {
@@ -163,7 +162,6 @@ export default class BuyTokenPopup extends Popup {
       this.totalPriceDisplay.text = "";
     }
 
-    this.buyButton.enable();
-    this.buyButton.title = "Buy Token";
+    this.buyButton.loading = false;
   }
 }

@@ -71,10 +71,10 @@ BEGIN
             -- update token info
             update tokens set
                 supply = CASE WHEN new.chain = 'base' AND new.block_number < 8865668 THEN new.args[8]::numeric ELSE new.args[9]::numeric END,
-                last_fetched_key_price = new.args[5]::numeric,
-                total_trading_key_volume = total_trading_key_volume + new.args[5]::numeric,
+                last_fetched_price = new.args[5]::numeric,
+                total_trading_volume = total_trading_volume + new.args[5]::numeric,
                 is_price_up = true,
-                last_key_purchased_at = now()
+                last_purchased_at = now()
             where chain = new.chain and token_address = new.args[2];
 
             -- update token holder info
@@ -105,8 +105,8 @@ BEGIN
             -- update token info
             update tokens set
                 supply = CASE WHEN new.chain = 'base' AND new.block_number < 8865668 THEN new.args[8]::numeric ELSE new.args[9]::numeric END,
-                last_fetched_key_price = new.args[5]::numeric,
-                total_trading_key_volume = total_trading_key_volume + new.args[5]::numeric,
+                last_fetched_price = new.args[5]::numeric,
+                total_trading_volume = total_trading_volume + new.args[5]::numeric,
                 is_price_up = false
             where chain = new.chain and token_address = new.args[2];
 

@@ -13,6 +13,7 @@ import UserProfile from "./UserProfile.js";
 
 export default class UserDisplay extends DomNode {
   private userId: string | undefined;
+  private userWalletAddress: string | undefined;
   private userBio: string | undefined;
 
   private userProfile: UserProfile;
@@ -54,6 +55,7 @@ export default class UserDisplay extends DomNode {
 
       if (user.user_id !== this.userId) {
         this.userId = user.user_id;
+        this.userWalletAddress = user.wallet_address;
         this.userBio = user.metadata?.bio;
         this.renderTabs();
       }
@@ -89,27 +91,31 @@ export default class UserDisplay extends DomNode {
       tweetsTab,
     );
 
-    const ownedTokensTab = new UserOwnedTokensTab(this.userId!);
-    const holdingTokensTab = new UserHoldingTokensTab(this.userId!);
-    const tokenTabs = new Tabs("token-tabs", [{
-      id: "user-owned-tokens",
-      label: "Owned Tokens",
-    }, {
-      id: "user-holding-tokens",
-      label: "Holding Tokens",
-    }]).on(
-      "select",
-      (id: string) => {
-        [ownedTokensTab, holdingTokensTab].forEach((tab) => tab.hide());
-        if (id === "user-owned-tokens") ownedTokensTab.show();
-        else if (id === "user-holding-tokens") holdingTokensTab.show();
-      },
-    ).init();
-    this.tokenTabContainer.empty().append(
-      tokenTabs,
-      ownedTokensTab,
-      holdingTokensTab,
-    );
+    if (!this.userWalletAddress) {
+      this.tokenTabContainer.empty();
+    } else {
+      const ownedTokensTab = new UserOwnedTokensTab(this.userWalletAddress);
+      const holdingTokensTab = new UserHoldingTokensTab(this.userWalletAddress);
+      const tokenTabs = new Tabs("token-tabs", [{
+        id: "user-owned-tokens",
+        label: "Owned Tokens",
+      }, {
+        id: "user-holding-tokens",
+        label: "Holding Tokens",
+      }]).on(
+        "select",
+        (id: string) => {
+          [ownedTokensTab, holdingTokensTab].forEach((tab) => tab.hide());
+          if (id === "user-owned-tokens") ownedTokensTab.show();
+          else if (id === "user-holding-tokens") holdingTokensTab.show();
+        },
+      ).init();
+      this.tokenTabContainer.empty().append(
+        tokenTabs,
+        ownedTokensTab,
+        holdingTokensTab,
+      );
+    }
 
     const postsTab = new UserPostsTab(this.userId!);
     const commentsTab = new UserCommentsTab(this.userId!);

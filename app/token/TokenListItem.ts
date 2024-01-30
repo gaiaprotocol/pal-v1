@@ -7,6 +7,7 @@ import {
 } from "@common-module/app";
 import { ethers } from "ethers";
 import Token from "../database-interface/Token.js";
+import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TokenInfoPopup from "./TokenInfoPopup.js";
 
 export default class TokenListItem extends DomNode {
@@ -53,7 +54,17 @@ export default class TokenListItem extends DomNode {
       el("header", tokenImage),
       el(
         "main",
-        el("p.description", owner, "'s token ", tokenName, symbol),
+        el(
+          "p.description",
+          ...((typeof token.owner === "string"
+              ? token.owner
+              : token.owner.wallet_address) ===
+              PalSignedUserManager.user?.wallet_address
+            ? ["Your token "]
+            : [owner, "'s token "]),
+          tokenName,
+          symbol,
+        ),
         el(
           ".info",
           holderCount,

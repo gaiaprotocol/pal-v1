@@ -1,12 +1,15 @@
 import Token from "../../database-interface/Token.js";
 import HorizontalTokenListItem from "../../token/HorizontalTokenListItem.js";
 import TokenList from "../../token/TokenList.js";
+import TokenService from "../../token/TokenService.js";
 import PalSignedUserManager from "../PalSignedUserManager.js";
 
 export default class UserHoldingTokensTab extends TokenList {
-  constructor(userId: string) {
+  private lastCreatedAt: string | undefined;
+
+  constructor(private walletAddress: string) {
     super(".user-holding-tokens-tab", {
-      storeName: userId === PalSignedUserManager.user?.user_id
+      storeName: walletAddress === PalSignedUserManager.user?.wallet_address
         ? "signed-user-holding-tokens"
         : undefined,
       emptyMessage: "This user does not hold any tokens.",
@@ -17,7 +20,12 @@ export default class UserHoldingTokensTab extends TokenList {
     new HorizontalTokenListItem(token).appendTo(this);
   }
 
-  protected fetchTokens(): Promise<Token[]> {
-    throw new Error("Method not implemented.");
+  protected async fetchTokens(): Promise<Token[]> {
+    const tokens = await TokenService.fetchHeldTokens(
+      this.walletAddress,
+      this.lastCreatedAt,
+    );
+    this.lastCreatedAt = tokens[tokens.length - 1]?.created_at;
+    return tokens;
   }
 }

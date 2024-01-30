@@ -6,7 +6,9 @@ import PostLoadingAnimation from "../../post/PostLoadingAnimation.js";
 import PalSignedUserManager from "../PalSignedUserManager.js";
 
 export default class UserLikedPostsTab extends PostList<PalPost> {
-  constructor(userId: string) {
+  private lastLikedAt: string | undefined;
+
+  constructor(private userId: string) {
     super(
       ".user-liked-posts-tab",
       PalPostService,
@@ -29,6 +31,18 @@ export default class UserLikedPostsTab extends PostList<PalPost> {
       likedPostIds: number[];
     }
   > {
-    throw new Error("Method not implemented.");
+    const result = await PalPostService.fetchLikedPosts(
+      this.userId,
+      this.lastLikedAt,
+    );
+    this.lastLikedAt = result.lastLikedAt;
+    return {
+      fetchedPosts: result.data.posts.map((p) => ({
+        posts: [p],
+        mainPostId: p.id,
+      })),
+      repostedPostIds: result.data.repostedPostIds,
+      likedPostIds: result.data.likedPostIds,
+    };
   }
 }

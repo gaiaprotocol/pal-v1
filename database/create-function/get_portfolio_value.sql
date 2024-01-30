@@ -18,13 +18,13 @@ BEGIN
     ) LOOP
         FOR v_token IN (
             SELECT 
-                last_fetched_key_price 
+                last_fetched_price 
             FROM 
                 tokens
             WHERE 
                 chain = v_holder.chain AND token_address = v_holder.token_address
         ) LOOP
-            portfolio_value := portfolio_value + (v_holder.last_fetched_balance::numeric * v_token.last_fetched_key_price);
+            portfolio_value := portfolio_value + (v_holder.last_fetched_balance::numeric * v_token.last_fetched_price / 10^18);
         END LOOP;
     END LOOP;
     RETURN portfolio_value::text;

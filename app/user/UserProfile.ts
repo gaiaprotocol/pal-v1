@@ -1,5 +1,7 @@
 import {
   AvatarUtil,
+  Button,
+  ButtonType,
   Constants,
   DateUtil,
   DomNode,
@@ -26,11 +28,10 @@ export default class UserProfile extends DomNode {
     this.append(
       this.infoContainer = el(".info-container"),
       el(
-        ".metrics-container",
-        el("h2", msg("user-profile-metrics-title")),
+        ".metrics",
         el(
           "section.earned",
-          el(".icon-container", new MaterialIcon("savings")),
+          new MaterialIcon("savings"),
           el(
             ".metric",
             el("h3", msg("user-profile-metrics-fees-earned-title")),
@@ -39,7 +40,7 @@ export default class UserProfile extends DomNode {
         ),
         el(
           "section.portfolio-value",
-          el(".icon-container", new MaterialIcon("account_balance")),
+          new MaterialIcon("account_balance"),
           el(
             ".metric",
             el("h3", msg("user-profile-metrics-portfolio-value-title")),
@@ -67,19 +68,19 @@ export default class UserProfile extends DomNode {
   }
 
   private renderUserInfo(user: PreviewUserPublic & { created_at?: string }) {
-    const avatar = el(".trader-avatar");
+    const avatar = el(".avatar");
 
     AvatarUtil.selectLoadable(avatar, [
-      user.avatar_thumb,
-      user.stored_avatar_thumb,
+      user.avatar,
+      user.stored_avatar,
     ]);
 
     this.infoContainer.append(
       avatar,
       el(
         ".info",
-        el("h2", user.display_name),
-        el("h3", `@${user.x_username}`, {
+        el("h2.name", user.display_name),
+        el("a.x-username", `@${user.x_username}`, {
           href: `https://x.com/${user.x_username}`,
           target: "_blank",
         }),
@@ -96,7 +97,7 @@ export default class UserProfile extends DomNode {
           }),
         ),
         el(
-          "p",
+          ".join-date",
           msg("user-profile-joined", {
             date: DateUtil.format(
               user.created_at ?? Constants.NEGATIVE_INFINITY,
@@ -105,9 +106,9 @@ export default class UserProfile extends DomNode {
         ),
         el(
           ".actions",
-          el("a", "𝕏", {
+          new Button({
+            title: "𝕏",
             href: `https://twitter.com/${user.x_username}`,
-            target: "_blank",
           }),
         ),
       ),
@@ -122,13 +123,14 @@ export default class UserProfile extends DomNode {
       : undefined;
     this.feesEarnedDisplay.text = ethers.formatEther(
       walletData ? walletData.total_earned_trading_fees : "0",
-    );
+    ) + " ETH";
   }
 
   private async fetchPortfolioValue() {
     const portfolioValue = this.userWalletAddress
       ? await PalUserService.fetchPortfolioValue(this.userWalletAddress)
       : "0";
-    this.portfolioValueDisplay.text = ethers.formatEther(portfolioValue);
+    this.portfolioValueDisplay.text = ethers.formatEther(portfolioValue) +
+      " ETH";
   }
 }

@@ -923,6 +923,10 @@ button.component:hover {
   height: 32px;
   border-radius: 16px;
 }
+@font-face {
+  font-family: 'Mona-Sans-ExtraBoldWide';
+  src: url('/fonts/Mona-Sans-ExtraBoldWide.ttf') format('woff2');
+}
 :root {
   --wrapper-bg-color: #0A0A0A;
   --content-bg-color: #131313;
@@ -1370,6 +1374,55 @@ button.component:hover {
   background-size: 5px 5px, 5px 5px, 1px 1.5em;
   background-repeat: no-repeat;
 }
+.horizontal-token-list-item {
+  border: 1px solid var(--line-color);
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  cursor: pointer;
+}
+.horizontal-token-list-item > header {
+  display: flex;
+  align-items: center;
+}
+.horizontal-token-list-item > header > .token-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252527;
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+}
+@container (width < 1280px) {
+  .horizontal-token-list-item > header > .token-image {
+    width: 34px;
+    height: 34px;
+  }
+}
+.horizontal-token-list-item > main {
+  flex-grow: 1;
+  width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.horizontal-token-list-item > main > .description > a {
+  color: var(--primary-color);
+  cursor: pointer;
+}
+.horizontal-token-list-item > main > .info {
+  font-size: 12px;
+}
+.horizontal-token-list-item > main > .info > .price.up {
+  color: var(--rising-color);
+}
+.horizontal-token-list-item > main > .info > .price.down {
+  color: var(--falling-color);
+}
 .activity-list {
   position: relative;
 }
@@ -1428,8 +1481,122 @@ button.component:hover {
 .activity-list-item > main > .info > .price.down {
   color: var(--falling-color);
 }
+.user-view {
+  padding-bottom: 120px;
+}
 .user-display > .user-profile {
   padding: 20px 20px 0 20px;
+}
+.user-profile > .info-container {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+@container (width < 1280px) {
+  .user-profile > .info-container {
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 16px;
+  }
+}
+.user-profile > .info-container > .avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 24px;
+}
+@container (width < 1280px) {
+  .user-profile > .info-container > .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 16px;
+  }
+}
+.user-profile > .info-container > .info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+@container (width < 1280px) {
+  .user-profile > .info-container > .info {
+    align-items: center;
+  }
+}
+.user-profile > .info-container > .info > .name {
+  font-family: 'Mona-Sans-ExtraBoldWide';
+  font-size: 28px;
+}
+@container (width < 1280px) {
+  .user-profile > .info-container > .info > .name {
+    font-size: 20px;
+  }
+}
+.user-profile > .info-container > .info > .x-username {
+  color: #595959;
+}
+@container (width < 1280px) {
+  .user-profile > .info-container > .info > .x-username {
+    font-size: 12px;
+  }
+}
+.user-profile > .info-container > .info > .link {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border: 1px solid var(--line-color);
+  border-radius: 8px;
+  padding: 4px 4px 4px 8px;
+  background-color: var(--content-bg-color);
+}
+.user-profile > .info-container > .info > .link > button.copy {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-profile > .info-container > .info .join-date {
+  color: #595959;
+  font-size: 12px;
+}
+.user-profile > .info-container > .info > footer {
+  display: flex;
+  gap: 8px;
+}
+.user-profile > .metrics {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@container (width < 1280px) {
+  .user-profile > .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.user-profile > .metrics > section {
+  border: 1px solid var(--line-color);
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-profile > .metrics > section > .metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.user-profile > .metrics > section > .metric > h3 {
+  color: #595959;
+  font-size: 12px;
+}
+.user-profile > .metrics > section > .metric > .value {
+  font-size: 16px;
+}
+@container (width < 1280px) {
+  .user-profile > .metrics > section > .metric > .value {
+    font-size: 12px;
+  }
 }
 .user-list {
   position: relative;
@@ -1464,6 +1631,28 @@ button.component:hover {
 }
 .user-tweets-tab.hidden {
   display: none;
+}
+.user-owned-tokens-tab {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@container (width < 1280px) {
+  .user-owned-tokens-tab {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.user-holding-tokens-tab {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@container (width < 1280px) {
+  .user-holding-tokens-tab {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 .chats-view {
   width: 410px;
@@ -1796,6 +1985,9 @@ button.component:hover {
     width: 34px;
     height: 34px;
   }
+}
+.profile-view {
+  padding-bottom: 120px;
 }
 .settings-view {
   padding: 20px;

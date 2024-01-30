@@ -1,0 +1,120 @@
+.user-profile {
+
+    >.info-container {
+        display    : flex;
+        align-items: center;
+        gap        : 24px;
+
+        @container (width < @safe-width) {
+            flex-direction: column;
+            gap           : 16px;
+            padding-top   : 16px;
+        }
+
+        >.avatar {
+            width        : 180px;
+            height       : 180px;
+            border-radius: 24px;
+
+            @container (width < @safe-width) {
+                width        : 100px;
+                height       : 100px;
+                border-radius: 16px;
+            }
+        }
+
+        >.info {
+            display       : flex;
+            flex-direction: column;
+            gap           : 10px;
+            align-items   : flex-start;
+
+            @container (width < @safe-width) {
+                align-items: center;
+            }
+
+            >.name {
+                font-family: 'Mona-Sans-ExtraBoldWide';
+                font-size  : 28px;
+
+                @container (width < @safe-width) {
+                    font-size: 20px;
+                }
+            }
+
+            >.x-username {
+                color: #595959;
+
+                @container (width < @safe-width) {
+                    font-size: 12px;
+                }
+            }
+
+            >.link {
+                display         : flex;
+                gap             : 4px;
+                align-items     : center;
+                border          : 1px solid var(--line-color);
+                border-radius   : 8px;
+                padding         : 4px 4px 4px 8px;
+                background-color: var(--content-bg-color);
+
+                >button.copy {
+                    cursor         : pointer;
+                    display        : flex;
+                    align-items    : center;
+                    justify-content: center;
+                }
+            }
+
+            .join-date {
+                color    : #595959;
+                font-size: 12px;
+            }
+
+            >footer {
+                display: flex;
+                gap    : 8px;
+            }
+        }
+    }
+
+    >.metrics {
+        margin-top           : 20px;
+        display              : grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap                  : 16px;
+
+        @container (width < @safe-width) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        >section {
+            border       : 1px solid var(--line-color);
+            border-radius: 4px;
+            padding      : 12px;
+            display      : flex;
+            align-items  : center;
+            gap          : 12px;
+
+            >.metric {
+                display       : flex;
+                flex-direction: column;
+                gap           : 4px;
+
+                >h3 {
+                    color    : #595959;
+                    font-size: 12px;
+                }
+
+                >.value {
+                    font-size: 16px;
+
+                    @container (width < @safe-width) {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+    }
+}
