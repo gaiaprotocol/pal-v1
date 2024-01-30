@@ -1,7 +1,7 @@
 import { DomNode } from "@common-module/app";
 
 export default class UserBioTab extends DomNode {
-  constructor() {
+  constructor(bio: string | undefined) {
     super(".user-bio-tab");
   }
 

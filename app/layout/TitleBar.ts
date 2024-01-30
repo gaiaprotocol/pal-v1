@@ -1,4 +1,4 @@
-import { Button, DomNode, el, MaterialIcon, msg } from "@common-module/app";
+import { Button, DomNode, el, msg } from "@common-module/app";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TitleBarUserDisplay from "./title-bar/TitleBarUserDisplay.js";
 
@@ -55,7 +55,7 @@ export default class TitleBar extends DomNode {
 
   public set uri(uri: string) {
     if (
-      ["activity", "explore", "settings", "posts", "chats"]
+      ["activity", "explore", "profile", "settings", "posts", "chats"]
         .includes(uri)
     ) {
       this.title = msg(`title-${uri}`);

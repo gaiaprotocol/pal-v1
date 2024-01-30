@@ -6,12 +6,14 @@ import PostLoadingAnimation from "../../post/PostLoadingAnimation.js";
 import PalSignedUserManager from "../PalSignedUserManager.js";
 
 export default class UserCommentsTab extends PostList<PalPost> {
-  constructor(storeName?: string) {
+  constructor(userId: string) {
     super(
       ".user-comments-tab",
       PalPostService,
       {
-        storeName,
+        storeName: userId === PalSignedUserManager.user?.user_id
+          ? "signed-user-comments"
+          : undefined,
         signedUserId: PalSignedUserManager.user?.user_id,
         emptyMessage: "This user has not commented anything yet.",
       },

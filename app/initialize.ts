@@ -25,7 +25,8 @@ import ExploreView from "./explorer/ExplorerView.js";
 import Layout from "./layout/Layout.js";
 import PostsView from "./post/PostsView.js";
 import PostView from "./post/PostView.js";
-import SettingsView from "./settings/SettingsView.js";
+import ProfileView from "./ProfileView.js";
+import SettingsView from "./SettingsView.js";
 import PalSignedUserManager from "./user/PalSignedUserManager.js";
 import UserView from "./user/UserView.js";
 import WalletManager from "./wallet/WalletManager.js";
@@ -65,6 +66,7 @@ export default async function initialize(config: Config) {
 
   Router.route("activity", ActivityView);
   Router.route("explore", ExploreView);
+  Router.route("profile", ProfileView);
   Router.route("settings", SettingsView);
 
   Router.route(["", "posts"], PostsView);
@@ -87,6 +89,7 @@ export default async function initialize(config: Config) {
   Router.route("{xUsername}", UserView, [
     "activity",
     "explore",
+    "profile",
     "settings",
     "posts",
     "chats",

@@ -1,11 +1,14 @@
 import Token from "../../database-interface/Token.js";
 import HorizontalTokenListItem from "../../token/HorizontalTokenListItem.js";
 import TokenList from "../../token/TokenList.js";
+import PalSignedUserManager from "../PalSignedUserManager.js";
 
 export default class UserHoldingTokensTab extends TokenList {
-  constructor(storeName?: string) {
+  constructor(userId: string) {
     super(".user-holding-tokens-tab", {
-      storeName,
+      storeName: userId === PalSignedUserManager.user?.user_id
+        ? "signed-user-holding-tokens"
+        : undefined,
       emptyMessage: "This user does not hold any tokens.",
     });
   }

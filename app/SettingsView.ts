@@ -1,6 +1,14 @@
-import { Button, DomNode, el, msg, View, ViewParams } from "@common-module/app";
-import Layout from "../layout/Layout.js";
-import PalSignedUserManager from "../user/PalSignedUserManager.js";
+import {
+  Button,
+  DomNode,
+  el,
+  LoadingSpinner,
+  msg,
+  View,
+  ViewParams,
+} from "@common-module/app";
+import Layout from "./layout/Layout.js";
+import PalSignedUserManager from "./user/PalSignedUserManager.js";
 
 export default class SettingsView extends View {
   private linkWalletSection: DomNode | undefined;
@@ -10,13 +18,9 @@ export default class SettingsView extends View {
     Layout.append(
       this.container = el(
         ".settings-view",
-        el("h1", msg("settings-view-title")),
-        el(
-          "main",
-          !PalSignedUserManager.signed
-            ? undefined
-            : this.linkWalletSection = el("section.link-wallet"),
-        ),
+        !PalSignedUserManager.signed
+          ? undefined
+          : this.linkWalletSection = el("section.link-wallet"),
       ),
     );
 
@@ -30,14 +34,18 @@ export default class SettingsView extends View {
 
   private renderLinkWalletSection() {
     this.linkWalletSection?.empty().append(
-      el("h2", msg("settings-view-link-wallet-section-title")),
+      el("header", el("h2", msg("settings-view-link-wallet-section-title"))),
       el(
         "main",
         PalSignedUserManager.walletLinked
           ? el(
             "p.linked",
             msg("settings-view-link-wallet-section-linked").trim() + " ",
-            el("a", PalSignedUserManager.user?.wallet_address),
+            el("a", PalSignedUserManager.user?.wallet_address, {
+              href:
+                `https://etherscan.io/address/${PalSignedUserManager.user?.wallet_address}`,
+              target: "_blank",
+            }),
           )
           : el("p", msg("settings-view-link-wallet-section-description")),
       ),
@@ -47,7 +55,7 @@ export default class SettingsView extends View {
           title: msg("settings-view-link-wallet-button"),
           click: async (event, button) => {
             button.domElement.setAttribute("disabled", "disabled");
-            button.text = msg("no-wallet-linked-linking");
+            button.title = new LoadingSpinner();
             try {
               await PalSignedUserManager.linkWallet();
               this.renderLinkWalletSection();

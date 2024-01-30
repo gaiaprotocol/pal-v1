@@ -6,12 +6,14 @@ import PostLoadingAnimation from "../../post/PostLoadingAnimation.js";
 import PalSignedUserManager from "../PalSignedUserManager.js";
 
 export default class UserLikedPostsTab extends PostList<PalPost> {
-  constructor(storeName?: string) {
+  constructor(userId: string) {
     super(
       ".user-liked-posts-tab",
       PalPostService,
       {
-        storeName,
+        storeName: userId === PalSignedUserManager.user?.user_id
+          ? "signed-user-liked-posts"
+          : undefined,
         signedUserId: PalSignedUserManager.user?.user_id,
         emptyMessage: "This user has not liked anything yet.",
       },

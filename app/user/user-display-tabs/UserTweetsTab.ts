@@ -1,7 +1,7 @@
 import { DomNode } from "@common-module/app";
 
 export default class UserTweetsTab extends DomNode {
-  constructor() {
+  constructor(xUsername: string) {
     super(".user-tweets-tab");
   }
 
