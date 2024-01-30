@@ -846,7 +846,7 @@ button.component:hover {
 }
 .chat-message-form > main {
   border-top: 1px solid var(--line-color);
-  height: 56px;
+  min-height: 56px;
   display: flex;
 }
 .chat-message-form > main > section.rich {
@@ -1191,6 +1191,22 @@ button.component:hover {
   margin-left: 16px;
   color: #595959;
   font-size: 16px;
+}
+.token-info-popup > header > h1 > .chain {
+  margin-left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--primary-color);
+  background-color: var(--button-bg-color);
+  padding: 4px 8px 4px 4px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: normal;
+}
+.token-info-popup > header > h1 > .chain > .icon {
+  width: 16px;
+  height: 16px;
 }
 .token-info-popup > header > h1 > button {
   margin-left: 6px;
