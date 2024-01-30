@@ -5,7 +5,6 @@ import {
   el,
   ErrorAlert,
   Input,
-  LoadingSpinner,
   msg,
   Popup,
   Select,
@@ -65,7 +64,7 @@ export default class CreateTokenPopup extends Popup {
             tag: ".create-token",
             title: "Create Token",
             click: async (event, button) => {
-              button.disable().title = new LoadingSpinner();
+              button.loading = true;
               try {
                 const chain = this.chainSelect.value;
                 if (!chain) throw new Error("Please select a blockchain.");
@@ -83,7 +82,7 @@ export default class CreateTokenPopup extends Popup {
                   title: "Error",
                   message: e.message,
                 });
-                button.enable().title = "Create Token";
+                button.loading = false;
               }
             },
           }),

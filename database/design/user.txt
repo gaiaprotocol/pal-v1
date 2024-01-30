@@ -15,7 +15,7 @@ users_public
 	created_at - timestampz - now()
 	updated_at - timestampz - nullable
 
-wallets
+user_wallets
 	wallet_address - text - pk
 	total_key_balance - numeric - 0
 	total_earned_trading_fees - numeric - 0

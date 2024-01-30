@@ -73,3 +73,8 @@ post-owner-menu-delete-button: Delete
 delete-post-confirm-title: Delete Post
 delete-post-confirm-message: Are you sure you want to delete this post?
 delete-post-confirm-delete-button: Delete
+
+user-profile-joined: Joined {date}
+user-profile-metrics-title: Metrics
+user-profile-metrics-fees-earned-title: Fees Earned
+user-profile-metrics-portfolio-value-title: Portfolio Value

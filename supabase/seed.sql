@@ -1494,12 +1494,12 @@ BEGIN
             END IF;
             
             -- update wallet's total key balance
-            insert into wallets (
+            insert into user_wallets (
                 wallet_address, total_key_balance
             ) values (
                 new.args[1], new.args[4]::numeric
             ) on conflict (wallet_address) do update
-                set total_key_balance = wallets.total_key_balance + new.args[4]::numeric;
+                set total_key_balance = user_wallets.total_key_balance + new.args[4]::numeric;
 
         -- sell
         ELSE
@@ -1533,7 +1533,7 @@ BEGIN
             END IF;
             
             -- update wallet's total key balance
-            update wallets set
+            update user_wallets set
                 total_key_balance = total_key_balance - new.args[4]::numeric
             where wallet_address = new.args[1];
         END IF;
@@ -1868,6 +1868,16 @@ CREATE TABLE IF NOT EXISTS "public"."tracked_event_blocks" (
 
 ALTER TABLE "public"."tracked_event_blocks" OWNER TO "postgres";
 
+CREATE TABLE IF NOT EXISTS "public"."user_wallets" (
+    "wallet_address" "text" NOT NULL,
+    "total_key_balance" numeric DEFAULT '0'::numeric NOT NULL,
+    "total_earned_trading_fees" numeric DEFAULT '0'::numeric NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone
+);
+
+ALTER TABLE "public"."user_wallets" OWNER TO "postgres";
+
 CREATE TABLE IF NOT EXISTS "public"."users_public" (
     "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -1897,16 +1907,6 @@ CREATE TABLE IF NOT EXISTS "public"."wallet_linking_nonces" (
 );
 
 ALTER TABLE "public"."wallet_linking_nonces" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."wallets" (
-    "wallet_address" "text" NOT NULL,
-    "total_key_balance" numeric DEFAULT '0'::numeric NOT NULL,
-    "total_earned_trading_fees" numeric DEFAULT '0'::numeric NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "updated_at" timestamp with time zone
-);
-
-ALTER TABLE "public"."wallets" OWNER TO "postgres";
 
 ALTER TABLE ONLY "public"."activities"
     ADD CONSTRAINT "activities_pkey" PRIMARY KEY ("chain", "block_number", "log_index");
@@ -1962,7 +1962,7 @@ ALTER TABLE ONLY "public"."users_public"
 ALTER TABLE ONLY "public"."wallet_linking_nonces"
     ADD CONSTRAINT "wallet_linking_nonces_pkey" PRIMARY KEY ("user_id");
 
-ALTER TABLE ONLY "public"."wallets"
+ALTER TABLE ONLY "public"."user_wallets"
     ADD CONSTRAINT "wallets_pkey" PRIMARY KEY ("wallet_address");
 
 CREATE OR REPLACE TRIGGER "decrease_post_comment_count" AFTER DELETE ON "public"."posts" FOR EACH ROW EXECUTE FUNCTION "public"."decrease_post_comment_count"();
@@ -2088,6 +2088,8 @@ CREATE POLICY "update pal token's metadata" ON "public"."old_pal_tokens" FOR UPD
    FROM "public"."users_public"
   WHERE ("users_public"."user_id" = "auth"."uid"()))));
 
+ALTER TABLE "public"."user_wallets" ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE "public"."users_public" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "view everyone" ON "public"."activities" FOR SELECT USING (true);
@@ -2104,9 +2106,9 @@ CREATE POLICY "view everyone" ON "public"."token_holders" FOR SELECT USING (true
 
 CREATE POLICY "view everyone" ON "public"."tokens" FOR SELECT USING (true);
 
-CREATE POLICY "view everyone" ON "public"."users_public" FOR SELECT USING (true);
+CREATE POLICY "view everyone" ON "public"."user_wallets" FOR SELECT USING (true);
 
-CREATE POLICY "view everyone" ON "public"."wallets" FOR SELECT USING (true);
+CREATE POLICY "view everyone" ON "public"."users_public" FOR SELECT USING (true);
 
 CREATE POLICY "view everyone or only token holders" ON "public"."posts" FOR SELECT USING ((("target" = 0) OR ("author" = "auth"."uid"()) OR ("chain" IS NULL) OR ("token_address" IS NULL) OR ((( SELECT "tokens"."owner"
    FROM "public"."tokens"
@@ -2133,8 +2135,6 @@ CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR 
           WHERE ("users_public"."user_id" = "auth"."uid"()))))))));
 
 ALTER TABLE "public"."wallet_linking_nonces" ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE "public"."wallets" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((((("message" <> ''::"text") AND ("length"("message") < 1000)) OR ("rich" IS NOT NULL)) AND ("author" = "auth"."uid"()) AND ((( SELECT "tokens"."owner"
    FROM "public"."tokens"
@@ -2378,6 +2378,10 @@ GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "anon";
 GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "authenticated";
 GRANT ALL ON TABLE "public"."tracked_event_blocks" TO "service_role";
 
+GRANT ALL ON TABLE "public"."user_wallets" TO "anon";
+GRANT ALL ON TABLE "public"."user_wallets" TO "authenticated";
+GRANT ALL ON TABLE "public"."user_wallets" TO "service_role";
+
 GRANT ALL ON TABLE "public"."users_public" TO "anon";
 GRANT ALL ON TABLE "public"."users_public" TO "authenticated";
 GRANT ALL ON TABLE "public"."users_public" TO "service_role";
@@ -2385,10 +2389,6 @@ GRANT ALL ON TABLE "public"."users_public" TO "service_role";
 GRANT ALL ON TABLE "public"."wallet_linking_nonces" TO "anon";
 GRANT ALL ON TABLE "public"."wallet_linking_nonces" TO "authenticated";
 GRANT ALL ON TABLE "public"."wallet_linking_nonces" TO "service_role";
-
-GRANT ALL ON TABLE "public"."wallets" TO "anon";
-GRANT ALL ON TABLE "public"."wallets" TO "authenticated";
-GRANT ALL ON TABLE "public"."wallets" TO "service_role";
 
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "postgres";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "anon";

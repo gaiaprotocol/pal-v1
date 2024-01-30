@@ -12,10 +12,10 @@ import UserTweetsTab from "./user-display-tabs/UserTweetsTab.js";
 import UserProfile from "./UserProfile.js";
 
 export default class UserDisplay extends DomNode {
-  private currentUserId: string | undefined;
-  private currentUserBio: string | undefined;
+  private userId: string | undefined;
+  private userBio: string | undefined;
 
-  private userProfileContainer: DomNode;
+  private userProfile: UserProfile;
   private bioAndTweetTabContainer: DomNode;
   private tokenTabContainer: DomNode;
   private postAndFollowerTabContainer: DomNode;
@@ -29,46 +29,45 @@ export default class UserDisplay extends DomNode {
     super(".user-display");
 
     this.append(
-      this.userProfileContainer = el(".user-profile-container"),
+      this.userProfile = new UserProfile(xUsername, previewUser),
       this.bioAndTweetTabContainer = el(".bio-and-tweet-tab-container"),
       this.tokenTabContainer = el(".token-tab-container"),
       this.postAndFollowerTabContainer = el(".post-and-follower-tab-container"),
     );
 
     if (previewUser) {
-      this.currentUserId = previewUser.user_id;
+      this.userId = previewUser.user_id;
       this.renderTabs();
     }
   }
 
   public set user(user: PalUserPublic | undefined) {
-    this.userProfileContainer.empty();
-
     if (!user) {
+      this.userProfile.user = undefined;
       [
         this.bioAndTweetTabContainer,
         this.tokenTabContainer,
         this.postAndFollowerTabContainer,
       ].forEach((container) => container.empty());
     } else {
-      this.userProfileContainer.append(new UserProfile());
+      this.userProfile.user = user;
 
-      if (user.user_id !== this.currentUserId) {
-        this.currentUserId = user.user_id;
-        this.currentUserBio = user.metadata?.bio;
+      if (user.user_id !== this.userId) {
+        this.userId = user.user_id;
+        this.userBio = user.metadata?.bio;
         this.renderTabs();
       }
     }
 
     if (this.bioAndTweetTabs && !this.bioAndTweetTabs.deleted) {
       this.bioAndTweetTabs.select(
-        this.currentUserBio ? "user-bio" : "user-tweets",
+        this.userBio ? "user-bio" : "user-tweets",
       );
     }
   }
 
   private renderTabs() {
-    const bioTab = new UserBioTab(this.currentUserBio);
+    const bioTab = new UserBioTab(this.userBio);
     const tweetsTab = new UserTweetsTab(this.xUsername);
     this.bioAndTweetTabs = new Tabs("bio-and-tweet-tabs", [{
       id: "user-bio",
@@ -90,8 +89,8 @@ export default class UserDisplay extends DomNode {
       tweetsTab,
     );
 
-    const ownedTokensTab = new UserOwnedTokensTab(this.currentUserId!);
-    const holdingTokensTab = new UserHoldingTokensTab(this.currentUserId!);
+    const ownedTokensTab = new UserOwnedTokensTab(this.userId!);
+    const holdingTokensTab = new UserHoldingTokensTab(this.userId!);
     const tokenTabs = new Tabs("token-tabs", [{
       id: "user-owned-tokens",
       label: "Owned Tokens",
@@ -112,10 +111,10 @@ export default class UserDisplay extends DomNode {
       holdingTokensTab,
     );
 
-    const postsTab = new UserPostsTab(this.currentUserId!);
-    const commentsTab = new UserCommentsTab(this.currentUserId!);
-    const repostsTab = new UserRepostsTab(this.currentUserId!);
-    const likedPostsTab = new UserLikedPostsTab(this.currentUserId!);
+    const postsTab = new UserPostsTab(this.userId!);
+    const commentsTab = new UserCommentsTab(this.userId!);
+    const repostsTab = new UserRepostsTab(this.userId!);
+    const likedPostsTab = new UserLikedPostsTab(this.userId!);
     const postAndFollowerTabs = new Tabs("post-and-follower-tabs", [{
       id: "user-posts",
       label: "Posts",

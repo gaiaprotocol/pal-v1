@@ -19,6 +19,7 @@ import { arbitrum, base, linea, optimism, scroll, zkSync } from "viem/chains";
 class WalletManager extends EventContainer {
   private web3modal!: Web3Modal;
   private _resolveConnection?: () => void;
+  private _rejectConnection?: (error: Error) => void;
 
   public connected = false;
 
@@ -56,6 +57,14 @@ class WalletManager extends EventContainer {
       },
     }, ethereumClient);
 
+    this.web3modal.subscribeModal((newState) => {
+      if (newState.open === false && this._rejectConnection) {
+        this._rejectConnection(new Error("User closed wallet modal"));
+        this._rejectConnection = undefined;
+        this._resolveConnection = undefined;
+      }
+    });
+
     this.connected = this.address !== undefined;
 
     let cachedAddress = this.address;
@@ -63,6 +72,8 @@ class WalletManager extends EventContainer {
       this.connected = account.address !== undefined;
       if (this.connected && this._resolveConnection) {
         this._resolveConnection();
+        this._resolveConnection = undefined;
+        this._rejectConnection = undefined;
       }
       if (cachedAddress !== account.address) {
         this.fireEvent("accountChanged");
@@ -81,8 +92,9 @@ class WalletManager extends EventContainer {
       this.connected = true;
       this.fireEvent("accountChanged");
     }
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       this._resolveConnection = resolve;
+      this._rejectConnection = reject;
       this.web3modal.openModal();
     });
   }

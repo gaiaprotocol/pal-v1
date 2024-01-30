@@ -54,15 +54,13 @@ export default class SettingsView extends View {
         new Button({
           title: msg("settings-view-link-wallet-button"),
           click: async (event, button) => {
-            button.domElement.setAttribute("disabled", "disabled");
-            button.title = new LoadingSpinner();
+            button.loading = true;
             try {
               await PalSignedUserManager.linkWallet();
               this.renderLinkWalletSection();
             } catch (e) {
               console.error(e);
-              button.domElement.removeAttribute("disabled");
-              button.text = msg("settings-view-link-wallet-button");
+              button.loading = false;
             }
           },
         }),

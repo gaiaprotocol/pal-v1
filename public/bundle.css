@@ -1,3 +1,6 @@
+/*!***********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../app-module/style/reset.css ***!
+  \***********************************************************************************************************/
 /***
     The new CSS reset - version 1.8.4 (last updated 14.2.2023)
     GitHub page: https://github.com/elad2412/the-new-css-reset
@@ -98,6 +101,9 @@ meter {
 :where(dialog:modal) {
     all: revert;
 }
+/*!*********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/less-loader/dist/cjs.js!./public/style/main.less ***!
+  \*********************************************************************************************************************************************/
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
@@ -1363,6 +1369,9 @@ button.component:hover {
 .activity-list-item > main > .info > .price.down {
   color: var(--falling-color);
 }
+.user-display > .user-profile {
+  padding: 20px 20px 0 20px;
+}
 .user-list {
   position: relative;
 }
@@ -1389,6 +1398,12 @@ button.component:hover {
   margin-left: 8px;
   padding-left: 8px;
   border-left: 1px solid var(--line-color);
+}
+.user-tweets-tab {
+  padding: 20px 20px 0 20px;
+}
+.user-tweets-tab.hidden {
+  display: none;
 }
 .chats-view {
   width: 410px;
