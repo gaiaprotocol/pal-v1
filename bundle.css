@@ -586,6 +586,11 @@ button.component:hover {
 .post-display.social-component > main {
   flex-grow: 1;
 }
+.post-display.social-component > main > header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 .post-display.social-component .author-avatar {
   flex-shrink: 0;
   width: 50px;
@@ -602,8 +607,8 @@ button.component:hover {
   }
 }
 .post-display.social-component .author {
-  padding-top: 4px;
   display: flex;
+  align-items: center;
   gap: 4px;
 }
 .post-display.social-component .author > .name {
@@ -1305,7 +1310,7 @@ button.component:hover {
     height: 34px;
   }
 }
-.activity-list-item > header > .trader-avatarf {
+.activity-list-item > header > .trader-avatar {
   margin-right: -8px;
 }
 .activity-list-item > main {
@@ -1655,5 +1660,32 @@ button.component:hover {
 }
 .post-comment-popup > .post-form {
   padding: 20px;
+}
+.post-display.social-component .target-token {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  border: 1px solid var(--primary-color);
+  background-color: var(--button-bg-color);
+  padding: 4px 8px 4px 4px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+.post-display.social-component .target-token > .token-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252527;
+  background-size: cover;
+  width: 16px;
+  height: 16px;
+}
+@container (width < 1280px) {
+  .post-display.social-component .target-token > .token-image {
+    width: 34px;
+    height: 34px;
+  }
 }
 
