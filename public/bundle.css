@@ -1,3 +1,6 @@
+/*!***********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../app-module/style/reset.css ***!
+  \***********************************************************************************************************/
 /***
     The new CSS reset - version 1.8.4 (last updated 14.2.2023)
     GitHub page: https://github.com/elad2412/the-new-css-reset
@@ -98,6 +101,9 @@ meter {
 :where(dialog:modal) {
     all: revert;
 }
+/*!*********************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/less-loader/dist/cjs.js!./public/style/main.less ***!
+  \*********************************************************************************************************************************************/
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
@@ -483,6 +489,7 @@ button.component:hover {
 .select.component > .option-container > .option {
   padding: 8px 12px;
   text-transform: capitalize;
+  cursor: pointer;
 }
 .select.component > .option-container > .option:hover {
   background-color: var(--primary-color);
@@ -1164,6 +1171,15 @@ button.component:hover {
   flex-direction: column;
   gap: 16px;
 }
+.create-token-popup .option.chain {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.create-token-popup .option.chain > .icon {
+  width: 16px;
+  height: 16px;
+}
 .token-info-popup > header {
   display: flex;
   gap: 12px;
@@ -1349,6 +1365,9 @@ button.component:hover {
 }
 .activity-list-item > main > .info > .price.down {
   color: var(--falling-color);
+}
+.user-view {
+  padding: 20px;
 }
 .user-list {
   position: relative;

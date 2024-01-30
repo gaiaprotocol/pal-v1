@@ -1,5 +1,5 @@
 import { DomNode, ListLoadingBar, Store } from "@common-module/app";
-import PalUserPublic from "../../database-interface/PalUserPublic.js";
+import PalUserPublic from "../database-interface/PalUserPublic.js";
 
 export interface UserListOptions {
   storeName?: string;

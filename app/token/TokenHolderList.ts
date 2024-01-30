@@ -2,7 +2,7 @@ import { msg } from "@common-module/app";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import PalUserPublic from "../database-interface/PalUserPublic.js";
 import PalUserService from "../user/PalUserService.js";
-import UserList from "../user/user-list/UserList.js";
+import UserList from "../user/UserList.js";
 import TokenHolderListItem from "./TokenHolderListItem.js";
 
 export default class TokenHolderList

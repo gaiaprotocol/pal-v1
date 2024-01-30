@@ -20,10 +20,14 @@ export default abstract class TokenList extends DomNode {
       const cached = this.store.get<Token[]>("cached-tokens");
       if (cached) {
         for (const token of cached) {
-          new TokenListItem(token).appendTo(this);
+          this.addItem(token);
         }
       }
     }
+  }
+
+  protected addItem(token: Token) {
+    new TokenListItem(token).appendTo(this);
   }
 
   protected abstract fetchTokens(): Promise<Token[]>;
@@ -37,7 +41,7 @@ export default abstract class TokenList extends DomNode {
     if (!this.deleted) {
       this.empty();
       for (const token of tokens) {
-        new TokenListItem(token).appendTo(this);
+        this.addItem(token);
       }
       this.refreshed = true;
     }

@@ -10,6 +10,7 @@ import {
   Popup,
   Select,
 } from "@common-module/app";
+import Blockchains from "../blockchain/Blockchains.js";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import PalContract, {
   getDeployedBlockchainsForPal,
@@ -33,7 +34,11 @@ export default class CreateTokenPopup extends Popup {
             label: "Blockchain",
             placeholder: "Select a blockchain",
             options: getDeployedBlockchainsForPal().map((chain) => ({
-              dom: el(".option", chain),
+              dom: el(
+                ".option.chain",
+                el("img.icon", { src: Blockchains[chain].icon }),
+                Blockchains[chain].name,
+              ),
               value: chain,
             })),
           }),

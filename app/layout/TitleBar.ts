@@ -43,7 +43,7 @@ export default class TitleBar extends DomNode {
       );
     } else {
       this.userSection.append(
-        el("button.noti", new MaterialIcon("notifications"), {}),
+        //el("button.noti", new MaterialIcon("notifications"), {}),
         new TitleBarUserDisplay(PalSignedUserManager.user!),
       );
     }

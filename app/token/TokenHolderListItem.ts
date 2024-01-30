@@ -1,7 +1,7 @@
 import { DomNode, el, StringUtil } from "@common-module/app";
 import { ethers } from "ethers";
 import PalUserPublic from "../database-interface/PalUserPublic.js";
-import UserListItem from "../user/user-list/UserListItem.js";
+import UserListItem from "../user/UserListItem.js";
 
 export default class TokenHolderListItem extends UserListItem {
   private balanceDisplay: DomNode;
