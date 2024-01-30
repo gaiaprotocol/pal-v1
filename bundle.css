@@ -1018,6 +1018,7 @@ button.component:hover {
   top: 0;
   z-index: 1;
   border-left: 1px solid var(--line-color);
+  padding-bottom: 120px;
 }
 @container (width < 1280px) {
   .sidebar {
@@ -1026,6 +1027,23 @@ button.component:hover {
 }
 .sidebar.hidden {
   display: none;
+}
+.sidebar > section {
+  border-bottom: 1px solid var(--line-color);
+}
+.sidebar > section > header {
+  padding: 0 20px;
+  border-bottom: 1px solid var(--line-color);
+  height: 59px;
+  display: flex;
+  align-items: center;
+}
+.sidebar > section > header > h2 {
+  font-size: 16px;
+  font-weight: bold;
+}
+.sidebar > section > footer {
+  padding: 12px;
 }
 .side-panel {
   position: fixed;
@@ -1394,6 +1412,7 @@ button.component:hover {
   border-left: 1px solid var(--line-color);
 }
 .user-tweets-tab {
+  position: relative;
   padding: 20px 20px 0 20px;
 }
 .user-tweets-tab.hidden {

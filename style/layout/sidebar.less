@@ -1,10 +1,11 @@
 .sidebar {
-    width      : 380px;
-    overflow-y : auto;
-    position   : sticky;
-    top        : 0;
-    z-index    : 1;
-    border-left: 1px solid var(--line-color);
+    width         : 380px;
+    overflow-y    : auto;
+    position      : sticky;
+    top           : 0;
+    z-index       : 1;
+    border-left   : 1px solid var(--line-color);
+    padding-bottom: 120px;
 
     @container (width < @safe-width) {
         display: none;
@@ -12,5 +13,26 @@
 
     &.hidden {
         display: none;
+    }
+
+    >section {
+        border-bottom: 1px solid var(--line-color);
+
+        >header {
+            padding      : 0 20px;
+            border-bottom: 1px solid var(--line-color);
+            height       : 59px;
+            display      : flex;
+            align-items  : center;
+
+            >h2 {
+                font-size  : 16px;
+                font-weight: bold;
+            }
+        }
+
+        >footer {
+            padding: 12px;
+        }
     }
 }
