@@ -1679,8 +1679,8 @@ button.component:hover {
   border-radius: 50%;
   background-color: #252527;
   background-size: cover;
-  width: 16px;
-  height: 16px;
+  width: 16px !important;
+  height: 16px !important;
 }
 @container (width < 1280px) {
   .post-display.social-component .target-token > .token-image {
