@@ -1,4 +1,10 @@
-import { Rich, Supabase, UploadManager } from "@common-module/app";
+import {
+  ErrorAlert,
+  msg,
+  Rich,
+  Supabase,
+  UploadManager,
+} from "@common-module/app";
 import { PostSelectQuery, PostService } from "@common-module/social";
 import BlockchainType from "../blockchain/BlockchainType.js";
 import PalPost, { PostTarget } from "../database-interface/PalPost.js";
@@ -34,18 +40,30 @@ class PalPostService extends PostService<PalPost> {
     const rich: Rich = { files: [] };
     await Promise.all(files.map(async (file) => {
       if (PalSignedUserManager.user) {
-        const url = await UploadManager.uploadAttachment(
-          "post_upload_files",
-          PalSignedUserManager.user.user_id,
-          file,
-          60 * 60 * 24 * 30,
-        );
-        rich.files?.push({
-          url,
-          fileName: file.name,
-          fileType: file.type,
-          fileSize: file.size,
-        });
+        try {
+          const url = await UploadManager.uploadAttachment(
+            "post_upload_files",
+            PalSignedUserManager.user.user_id,
+            file,
+            60 * 60 * 24 * 30,
+          );
+          rich.files?.push({
+            url,
+            fileName: file.name,
+            fileType: file.type,
+            fileSize: file.size,
+          });
+        } catch (e: any) {
+          if (e.error === "Payload too large") {
+            new ErrorAlert({
+              title: msg("file-too-large-alert-title"),
+              message: msg("file-too-large-alert-message", {
+                maxFileSize: "1 MB",
+              }),
+            });
+          }
+          throw e;
+        }
       }
     }));
     return rich;

@@ -8,6 +8,9 @@ no-wallet-linked-title: No wallet linked
 no-wallet-linked-message: You need to link a wallet to perform this action.
 no-wallet-linked-confirm: Link wallet
 
+file-too-large-alert-title: File Too Large
+file-too-large-alert-message: Sorry, your file is too large to upload. Our maximum file size limit is {maxFileSize}. Please select a smaller file.
+
 wallet-address-mismatch-title: Wallet address mismatch
 wallet-address-mismatch-message: The wallet address associated with your account and the current crypto wallet address do not match. Please change the crypto wallet address.
 

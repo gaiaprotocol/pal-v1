@@ -165,7 +165,7 @@ end;$$;
 
 ALTER FUNCTION "public"."decrement_token_favorite_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."find_posts"("p_user_id" "uuid", "search_string" "text", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."find_posts"("p_user_id" "uuid", "search_string" "text", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -175,6 +175,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -197,6 +200,8 @@ BEGIN
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         POSITION(lower(search_string) IN lower(p.message)) > 0
         AND (last_post_id IS NULL OR p.id < last_post_id)
@@ -209,7 +214,7 @@ $$;
 
 ALTER FUNCTION "public"."find_posts"("p_user_id" "uuid", "search_string" "text", "last_post_id" bigint, "max_count" integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_following_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_following_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -219,6 +224,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -243,6 +251,8 @@ BEGIN
         users_public u ON p.author = u.user_id
     INNER JOIN 
         follows f ON p.author = f.followee_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         f.follower_id = p_user_id
         AND (last_post_id IS NULL OR p.id < last_post_id)
@@ -347,7 +357,7 @@ $$;
 
 ALTER FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_global_posts"("last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50, "signed_user_id" "uuid" DEFAULT NULL::"uuid") RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_global_posts"("last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50, "signed_user_id" "uuid" DEFAULT NULL::"uuid") RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -357,6 +367,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -387,6 +400,8 @@ BEGIN
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         p.parent IS NULL AND
         last_post_id IS NULL OR p.id < last_post_id
@@ -452,7 +467,7 @@ $$;
 
 ALTER FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "like_created_at" timestamp with time zone)
+CREATE OR REPLACE FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "like_created_at" timestamp with time zone)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -462,6 +477,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -487,6 +505,8 @@ BEGIN
         posts p ON pl.post_id = p.id
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         pl.user_id = p_user_id
         AND (last_liked_at IS NULL OR pl.created_at > last_liked_at)
@@ -601,7 +621,7 @@ $$;
 
 ALTER FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint DEFAULT NULL::bigint, "max_comment_count" integer DEFAULT 50, "signed_user_id" "uuid" DEFAULT NULL::"uuid") RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "depth" integer)
+CREATE OR REPLACE FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint DEFAULT NULL::bigint, "max_comment_count" integer DEFAULT 50, "signed_user_id" "uuid" DEFAULT NULL::"uuid") RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "depth" integer)
     LANGUAGE "sql"
     AS $$
 WITH RECURSIVE ancestors AS (
@@ -610,6 +630,9 @@ WITH RECURSIVE ancestors AS (
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -641,6 +664,8 @@ WITH RECURSIVE ancestors AS (
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         p.id = p_post_id
     UNION
@@ -649,6 +674,9 @@ WITH RECURSIVE ancestors AS (
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -680,6 +708,8 @@ WITH RECURSIVE ancestors AS (
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     JOIN 
         ancestors a ON p.id = a.parent
 ),
@@ -689,6 +719,9 @@ comments AS (
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -720,6 +753,8 @@ comments AS (
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         p.parent = p_post_id AND
         last_comment_id IS NULL OR p.id < last_comment_id
@@ -734,7 +769,7 @@ $$;
 
 ALTER FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint, "max_comment_count" integer, "signed_user_id" "uuid") OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_reposts"("p_user_id" "uuid", "last_reposted_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "repost_created_at" timestamp with time zone)
+CREATE OR REPLACE FUNCTION "public"."get_reposts"("p_user_id" "uuid", "last_reposted_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "repost_created_at" timestamp with time zone)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -744,6 +779,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -769,6 +807,8 @@ BEGIN
         posts p ON r.post_id = p.id
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         r.user_id = p_user_id
         AND (last_reposted_at IS NULL OR r.created_at > last_reposted_at)
@@ -973,7 +1013,7 @@ $$;
 
 ALTER FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_token_held_posts"("p_user_id" "uuid", "p_wallet_address" "text", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_token_held_posts"("p_user_id" "uuid", "p_wallet_address" "text", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -983,6 +1023,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -1007,6 +1050,8 @@ BEGIN
         users_public u ON p.author = u.user_id
     INNER JOIN 
         token_holders th ON p.chain = th.chain AND p.token_address = th.token_address AND u.wallet_address = th.wallet_address
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         th.wallet_address = p_wallet_address
         AND th.last_fetched_balance > 0
@@ -1164,7 +1209,7 @@ $$;
 
 ALTER FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_user_comment_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_user_comment_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1174,6 +1219,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -1196,6 +1244,8 @@ BEGIN
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         p.author = p_user_id
         AND p.parent IS NOT NULL
@@ -1209,7 +1259,7 @@ $$;
 
 ALTER FUNCTION "public"."get_user_comment_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_user_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_user_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1219,6 +1269,9 @@ BEGIN
         p.target,
         p.chain,
         p.token_address,
+        t.name,
+        t.symbol,
+        t.image_thumb,
         p.author,
         u.display_name,
         u.avatar,
@@ -1241,6 +1294,8 @@ BEGIN
         posts p
     INNER JOIN 
         users_public u ON p.author = u.user_id
+    LEFT JOIN 
+        tokens t ON p.chain = t.chain AND p.token_address = t.token_address
     WHERE 
         p.author = p_user_id
         AND p.parent IS NULL
