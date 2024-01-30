@@ -31,10 +31,13 @@ export default class EditTokenInfoPopup extends Popup {
               value: token.name,
               required: true,
             }),
-            new Button({
-              title: "Save Name",
-              click: () => this.saveName(),
-            }),
+            el(
+              "footer",
+              new Button({
+                title: "Save Name",
+                click: () => this.saveName(),
+              }),
+            ),
           ),
           el(
             "form.name-form",
@@ -45,10 +48,13 @@ export default class EditTokenInfoPopup extends Popup {
               value: token.symbol,
               required: true,
             }),
-            new Button({
-              title: "Save Symbol",
-              click: () => this.saveSymbol(),
-            }),
+            el(
+              "footer",
+              new Button({
+                title: "Save Symbol",
+                click: () => this.saveSymbol(),
+              }),
+            ),
           ),
         ),
         el(
