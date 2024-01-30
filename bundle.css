@@ -1363,6 +1363,9 @@ button.component:hover {
 .activity-list-item > main > .info > .price.down {
   color: var(--falling-color);
 }
+.user-display > .user-profile {
+  padding: 20px 20px 0 20px;
+}
 .user-list {
   position: relative;
 }
@@ -1389,6 +1392,12 @@ button.component:hover {
   margin-left: 8px;
   padding-left: 8px;
   border-left: 1px solid var(--line-color);
+}
+.user-tweets-tab {
+  padding: 20px 20px 0 20px;
+}
+.user-tweets-tab.hidden {
+  display: none;
 }
 .chats-view {
   width: 410px;
