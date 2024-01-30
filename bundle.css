@@ -415,6 +415,8 @@ button.component:hover {
   display: flex;
   gap: 40px;
   padding: 10px 20px 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 .tabs.component > .tab {
   cursor: pointer;
@@ -1195,6 +1197,16 @@ button.component:hover {
   width: 16px;
   height: 16px;
 }
+.edit-token-info-popup > main {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.edit-token-info-popup > main > form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 .token-info-popup > header {
   display: flex;
   gap: 12px;
@@ -1681,6 +1693,11 @@ button.component:hover {
   border-radius: 50%;
   box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
   opacity: 0.6;
+}
+@container (width < 1280px) {
+  .posts-view > button.post {
+    opacity: 1;
+  }
 }
 .posts-view > button.post > .icon {
   font-size: 30px;
