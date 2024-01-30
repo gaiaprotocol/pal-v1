@@ -29,8 +29,10 @@ import TokenHolderList from "./TokenHolderList.js";
 import TokenService from "./TokenService.js";
 
 export default class TokenInfoPopup extends Popup {
-  private tokenImage: DomNode;
-  private tokenName: DomNode;
+  private tokenImageDisplay: DomNode;
+  private tokenNameDisplay: DomNode;
+  private symbolAndChainDisplay: DomNode;
+  private editButtonContainer: DomNode;
   private descriptionDisplay: DomNode;
   private ownerDisplay: DomNode;
 
@@ -59,8 +61,13 @@ export default class TokenInfoPopup extends Popup {
         ".token-info-popup.popup",
         el(
           "header",
-          this.tokenImage = el(".token-image"),
-          this.tokenName = el("h1", new LoadingSpinner()),
+          this.tokenImageDisplay = el(".token-image"),
+          el(
+            ".info",
+            this.tokenNameDisplay = el("h1", new LoadingSpinner()),
+            this.symbolAndChainDisplay = el(".symbol-and-chain"),
+          ),
+          this.editButtonContainer = el(".edit-button-container"),
         ),
         el(
           "main",
@@ -123,15 +130,13 @@ export default class TokenInfoPopup extends Popup {
     );
 
     if (previewToken) {
-      AvatarUtil.selectLoadable(this.tokenImage, [
+      AvatarUtil.selectLoadable(this.tokenImageDisplay, [
         previewToken.image_thumb,
         previewToken.stored_image_thumb,
       ]);
-      this.tokenName.empty().append(
-        previewToken.name,
-        " ",
-        el("span.symbol", previewToken.symbol),
-        " ",
+      this.tokenNameDisplay.empty().append(previewToken.name);
+      this.symbolAndChainDisplay.empty().append(
+        el(".symbol", previewToken.symbol),
         el(
           ".chain",
           el("img.icon", { src: Blockchains[previewToken.chain].icon }),
@@ -155,22 +160,21 @@ export default class TokenInfoPopup extends Popup {
   }
 
   private render(token: Token) {
-    AvatarUtil.selectLoadable(this.tokenImage, [
+    AvatarUtil.selectLoadable(this.tokenImageDisplay, [
       token.image_thumb,
       token.stored_image_thumb,
     ]);
 
-    this.tokenName.empty().append(
-      token.name,
-      " ",
-      el("span.symbol", token.symbol),
-      " ",
+    this.tokenNameDisplay.empty().append(token.name);
+    this.symbolAndChainDisplay.empty().append(
+      el(".symbol", token.symbol),
       el(
         ".chain",
         el("img.icon", { src: Blockchains[token.chain].icon }),
         Blockchains[token.chain].name,
       ),
     );
+    this.editButtonContainer.empty();
 
     if (
       (typeof token.owner === "string" &&
@@ -179,7 +183,7 @@ export default class TokenInfoPopup extends Popup {
         token.owner.wallet_address ===
           PalSignedUserManager.user?.wallet_address)
     ) {
-      this.tokenName.append(
+      this.editButtonContainer.append(
         new Button({
           type: ButtonType.Text,
           icon: new MaterialIcon("edit"),
