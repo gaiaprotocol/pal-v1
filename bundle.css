@@ -550,6 +550,7 @@ button.component:hover {
 .rich-display.component > .image-container > a > .image-loading-animation {
   border-radius: 12px;
   overflow: hidden;
+  max-height: 320px;
 }
 .error-alert.component > main > p {
   word-break: break-all;
@@ -1931,7 +1932,6 @@ button.component:hover {
 }
 .post-loading-animation {
   padding: 12px 0;
-  max-width: 320px;
 }
 .post-popup > header {
   display: flex;
