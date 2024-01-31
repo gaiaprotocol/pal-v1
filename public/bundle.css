@@ -1931,6 +1931,7 @@ button.component:hover {
 }
 .post-loading-animation {
   padding: 12px 0;
+  max-width: 320px;
 }
 .post-popup > header {
   display: flex;

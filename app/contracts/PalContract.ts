@@ -13,7 +13,7 @@ const testnetAddresses: { [chain: string]: string } = {
 
 const addresses: { [chain: string]: string } = {
   [BlockchainType.Base]: "0x6489f919432741965831f731Fa203553eA790614",
-  [BlockchainType.Arbitrum]: "0xECFFc91149b8B702dEa6905Ae304A9D36527060F",
+  //[BlockchainType.Arbitrum]: "0xECFFc91149b8B702dEa6905Ae304A9D36527060F",
   //[BlockchainType.Optimism]: "0x1640C880E14F8913bA71644F6812eE58EAeF412F",
 };
 
