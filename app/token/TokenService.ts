@@ -26,7 +26,10 @@ class TokenService extends SupabaseService<Token> {
     return _tokens;
   }
 
-  public async fetchToken(chain: BlockchainType, tokenAddress: string) {
+  public async fetchToken(
+    chain: BlockchainType,
+    tokenAddress: string,
+  ): Promise<Token | undefined> {
     const { data, error } = await Supabase.client.rpc(
       "get_token",
       {
@@ -39,13 +42,13 @@ class TokenService extends SupabaseService<Token> {
   }
 
   public async fetchOwnedTokens(
-    owner: string,
+    walletAddress: string,
     lastCreatedAt: string | undefined,
   ) {
     const { data, error } = await Supabase.client.rpc(
       "get_owned_tokens",
       {
-        p_wallet_address: owner,
+        p_wallet_address: walletAddress,
         last_created_at: lastCreatedAt,
         max_count: this.fetchLimit,
       },
@@ -55,13 +58,13 @@ class TokenService extends SupabaseService<Token> {
   }
 
   public async fetchHeldTokens(
-    owner: string,
+    walletAddress: string,
     lastCreatedAt: string | undefined,
   ) {
     const { data, error } = await Supabase.client.rpc(
       "get_held_tokens",
       {
-        p_wallet_address: owner,
+        p_wallet_address: walletAddress,
         last_created_at: lastCreatedAt,
         max_count: this.fetchLimit,
       },
@@ -71,13 +74,13 @@ class TokenService extends SupabaseService<Token> {
   }
 
   public async fetchHeldOrOwnedTokens(
-    owner: string,
+    walletAddress: string,
     lastCreatedAt: string | undefined,
   ) {
     const { data, error } = await Supabase.client.rpc(
       "get_held_or_owned_tokens",
       {
-        p_wallet_address: owner,
+        p_wallet_address: walletAddress,
         last_created_at: lastCreatedAt,
         max_count: this.fetchLimit,
       },

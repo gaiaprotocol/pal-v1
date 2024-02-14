@@ -29,9 +29,12 @@ export default class HorizontalTokenListItem extends DomNode {
         el(
           ".info",
           holderCount,
-          " holders, ",
+          token.holder_count === 1 ? " holder, " : " holders, ",
           el(
-            "span.price" + (token.is_price_up ? ".up" : ".down"),
+            "span.price" +
+              (token.is_price_up === undefined
+                ? ""
+                : (token.is_price_up ? ".up" : ".down")),
             price,
             " ETH.",
           ),

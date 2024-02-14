@@ -88,17 +88,17 @@ BEGIN
             -- if token holder is new, add to token holder count
             IF NOT FOUND THEN
                 update tokens set
-                    holders = holders + 1
+                    holder_count = holder_count + 1
                 where chain = new.chain and token_address = new.args[2];
             END IF;
             
             -- update wallet's total key balance
             insert into user_wallets (
-                wallet_address, total_key_balance
+                wallet_address, total_token_balance
             ) values (
                 new.args[1], new.args[4]::numeric
             ) on conflict (wallet_address) do update
-                set total_key_balance = user_wallets.total_key_balance + new.args[4]::numeric;
+                set total_token_balance = user_wallets.total_token_balance + new.args[4]::numeric;
 
         -- sell
         ELSE
@@ -127,13 +127,13 @@ BEGIN
             -- if token holder is gone, subtract from token holder count
             IF FOUND THEN
                 update tokens set
-                    holders = holders - 1
+                    holder_count = holder_count - 1
                 where chain = new.chain and token_address = new.args[2];
             END IF;
             
             -- update wallet's total key balance
             update user_wallets set
-                total_key_balance = total_key_balance - new.args[4]::numeric
+                total_token_balance = total_token_balance - new.args[4]::numeric
             where wallet_address = new.args[1];
         END IF;
     END IF;

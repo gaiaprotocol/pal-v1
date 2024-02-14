@@ -109,6 +109,7 @@ export default class UserProfile extends DomNode {
           new Button({
             title: "𝕏",
             href: `https://twitter.com/${user.x_username}`,
+            target: "_blank",
           }),
         ),
       ),

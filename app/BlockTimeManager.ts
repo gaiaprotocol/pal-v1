@@ -5,7 +5,7 @@ class BlockTimeManager {
   private info: {
     [chain: string]: {
       blockNumber: number;
-      blockTime: number;
+      initBlockTime: number;
     };
   } = {};
 
@@ -18,7 +18,7 @@ class BlockTimeManager {
         const block = await provider.getBlock("latest");
         this.info[chain] = {
           blockNumber: block!.number,
-          blockTime: block!.timestamp * 1000,
+          initBlockTime: block!.timestamp * 1000,
         };
       }),
     );
@@ -27,7 +27,7 @@ class BlockTimeManager {
   public blockToTime(chain: string, blockNumber: number): number {
     if (!this.info[chain]) throw new Error("Unknown chain");
     const blockTime = Blockchains[chain].blockTime;
-    return this.info[chain].blockTime +
+    return this.info[chain].initBlockTime +
       (blockNumber - this.info[chain].blockNumber) * blockTime * 1000;
   }
 }

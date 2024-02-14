@@ -23,7 +23,7 @@ import Config from "./Config.js";
 import Env from "./Env.js";
 import ExploreView from "./ExplorerView.js";
 import Layout from "./layout/Layout.js";
-import PostsView from "./post/PostsView.js";
+import FeedView from "./post/FeedView.js";
 import PostView from "./post/PostView.js";
 import ProfileView from "./ProfileView.js";
 import SettingsView from "./SettingsView.js";
@@ -58,18 +58,18 @@ export default async function initialize(config: Config) {
   WalletManager.init(config.walletConnectProjectId);
 
   await SplashLoader.load(el("img", { src: "/images/logo-transparent.png" }), [
-    PalSignedUserManager.fetchUserOnInit(),
+    PalSignedUserManager.fetchUserAndFollowsOnInit(),
     BlockTimeManager.init(),
   ]);
 
   Router.route("**", Layout, ["test/**"]);
 
-  Router.route("activity", ActivityView);
   Router.route(["explore", "explore/{type}"], ExploreView);
+  Router.route("activity", ActivityView);
   Router.route("profile", ProfileView);
   Router.route("settings", SettingsView);
 
-  Router.route(["", "posts"], PostsView);
+  Router.route(["", "posts"], FeedView);
   Router.route("post/{postId}", PostView);
 
   Router.route(["chats", "general", "{chain}/{tokenAddress}"], ChatsView, [
@@ -89,8 +89,8 @@ export default async function initialize(config: Config) {
   ]);
 
   Router.route("{xUsername}", UserView, [
-    "activity",
     "explore",
+    "activity",
     "profile",
     "settings",
     "posts",

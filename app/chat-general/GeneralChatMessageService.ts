@@ -1,4 +1,4 @@
-import { Rich, UploadManager } from "@common-module/app";
+import { ErrorAlert, msg, Rich, UploadManager } from "@common-module/app";
 import { MessageSelectQuery, MessageService } from "@common-module/social";
 import ChatMessage from "@common-module/social/lib/database-interface/ChatMessage.js";
 import ChatMessageSource from "../chat/ChatMessageSource.js";
@@ -14,18 +14,30 @@ class GeneralChatMessageService
     const rich: Rich = { files: [] };
     await Promise.all(files.map(async (file) => {
       if (PalSignedUserManager.user) {
-        const url = await UploadManager.uploadAttachment(
-          "general_chat_upload_files",
-          PalSignedUserManager.user.user_id,
-          file,
-          60 * 60 * 24 * 30,
-        );
-        rich.files?.push({
-          url,
-          fileName: file.name,
-          fileType: file.type,
-          fileSize: file.size,
-        });
+        try {
+          const url = await UploadManager.uploadAttachment(
+            "general_chat_upload_files",
+            PalSignedUserManager.user.user_id,
+            file,
+            60 * 60 * 24 * 30,
+          );
+          rich.files?.push({
+            url,
+            fileName: file.name,
+            fileType: file.type,
+            fileSize: file.size,
+          });
+        } catch (e: any) {
+          if (e.error === "Payload too large") {
+            new ErrorAlert({
+              title: msg("file-too-large-alert-title"),
+              message: msg("file-too-large-alert-message", {
+                maxFileSize: "1 MB",
+              }),
+            });
+          }
+          throw e;
+        }
       }
     }));
     return rich;

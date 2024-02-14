@@ -37,11 +37,12 @@ export default class Layout extends View {
         this.navBar = new NavBar({
           logo: el("img", { src: "/images/logo-transparent.png" }),
           menu: [
+            //TODO: about
             {
-              id: "posts",
+              id: "feed",
               icon: new MaterialIcon("post"),
-              title: msg("nav-bar-menu-posts"),
-              uri: "/posts",
+              title: msg("nav-bar-menu-feed"),
+              uri: "/feed",
             },
             {
               id: "chats",
@@ -50,17 +51,18 @@ export default class Layout extends View {
               uri: "/chats",
             },
             {
-              id: "activity",
-              icon: new MaterialIcon("browse_activity"),
-              title: msg("nav-bar-menu-activity"),
-              uri: "/activity",
-            },
-            {
               id: "explore",
               icon: new MaterialIcon("explore"),
               title: msg("nav-bar-menu-explore"),
               uri: "/explore",
             },
+            {
+              id: "activity",
+              icon: new MaterialIcon("browse_activity"),
+              title: msg("nav-bar-menu-activity"),
+              uri: "/activity",
+            },
+            //TODO: points
           ],
         }),
         el(

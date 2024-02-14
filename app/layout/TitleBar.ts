@@ -55,7 +55,7 @@ export default class TitleBar extends DomNode {
 
   public set uri(uri: string) {
     if (
-      ["activity", "explore", "profile", "settings", "posts", "chats"]
+      ["posts", "chats", "explore", "activity", "profile", "settings"]
         .includes(uri)
     ) {
       this.title = msg(`title-${uri}`);

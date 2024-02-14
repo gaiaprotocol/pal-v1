@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "public"."user_wallets" (
     "wallet_address" "text" NOT NULL,
-    "total_key_balance" numeric DEFAULT '0'::numeric NOT NULL,
+    "total_token_balance" numeric DEFAULT '0'::numeric NOT NULL,
     "total_earned_trading_fees" numeric DEFAULT '0'::numeric NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "updated_at" timestamp with time zone

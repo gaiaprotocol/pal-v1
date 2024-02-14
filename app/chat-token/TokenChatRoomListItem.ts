@@ -29,7 +29,10 @@ export default class TokenChatRoomListItem extends ChatRoomListItem {
               : token.owner.display_name,
           ),
           el(
-            "span.price" + (token.is_price_up ? ".up" : ".down"),
+            "span.price" +
+              (token.is_price_up === undefined
+                ? ""
+                : (token.is_price_up ? ".up" : ".down")),
             StringUtil.numberWithCommas(
               ethers.formatEther(token.last_fetched_price),
             ),

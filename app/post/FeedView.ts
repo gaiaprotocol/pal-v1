@@ -18,7 +18,7 @@ import PostLoadingAnimation from "./PostLoadingAnimation.js";
 import PostPopup from "./PostPopup.js";
 import TokenHeldPostList from "./TokenHeldPostList.js";
 
-export default class PostsView extends View {
+export default class FeedView extends View {
   private tabs: Tabs | undefined;
   private globalPostList: GlobalPostList<PalPost>;
   private followingPostList: FollowingPostList<PalPost> | undefined;

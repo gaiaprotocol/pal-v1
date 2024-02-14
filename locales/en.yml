@@ -2,14 +2,15 @@ login-required-title: Login Required
 login-required-message: Login required. Would you like to login?
 login-required-login-button: Login with 𝕏
 
+not-signed-in-title: Not signed in
+not-signed-in-message: You need to sign in to perform this action.
+not-signed-in-confirm: Sign in
+
 no-wallet-connected-title: No wallet connected
 no-wallet-connected-message: You need to connect a wallet to perform this action.
 no-wallet-linked-title: No wallet linked
 no-wallet-linked-message: You need to link a wallet to perform this action.
 no-wallet-linked-confirm: Link wallet
-
-file-too-large-alert-title: File Too Large
-file-too-large-alert-message: Sorry, your file is too large to upload. Our maximum file size limit is {maxFileSize}. Please select a smaller file.
 
 wallet-address-mismatch-title: Wallet address mismatch
 wallet-address-mismatch-message: The wallet address associated with your account and the current crypto wallet address do not match. Please change the crypto wallet address.
@@ -17,18 +18,21 @@ wallet-address-mismatch-message: The wallet address associated with your account
 invalid-network-title: Invalid network
 invalid-network-message: You need to be on the {chain} network to perform this action.
 
-title-posts: Posts
+file-too-large-alert-title: File Too Large
+file-too-large-alert-message: Sorry, your file is too large to upload. Our maximum file size limit is {maxFileSize}. Please select a smaller file.
+
+title-feed: Feed
 title-post: Post
 title-chats: Chats
-title-activity: Activity
 title-explore: Explore
+title-activity: Activity
 title-profile: Profile
 title-settings: Settings
 
-nav-bar-menu-posts: Posts
+nav-bar-menu-feed: Feed
 nav-bar-menu-chats: Chats
-nav-bar-menu-activity: Activity
 nav-bar-menu-explore: Explore
+nav-bar-menu-activity: Activity
 
 settings-view-link-wallet-section-title: Link Wallet
 settings-view-link-wallet-section-linked: >
@@ -57,9 +61,9 @@ token-holder-list-empty-message: No holders yet
 
 chat-message-list-empty-message: No messages yet
 
-posts-view-global-tab: Global
-posts-view-following-tab: Following
-posts-view-token-held-tab: Held
+feed-view-global-tab: Global
+feed-view-following-tab: Following
+feed-view-token-held-tab: Held
 
 post-target-everyone: Everyone
 post-target-token-holders: Token holders
