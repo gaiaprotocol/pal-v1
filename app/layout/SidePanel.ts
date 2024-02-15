@@ -3,9 +3,9 @@ import {
   BodyNode,
   Button,
   DomNode,
+  el,
   MaterialIcon,
   Router,
-  el,
 } from "@common-module/app";
 import CreateTokenPopup from "../token/CreateTokenPopup.js";
 import HeldTokenList from "../token/HeldTokenList.js";
@@ -58,6 +58,15 @@ export default class SidePanel extends DomNode {
           el("a", "Profile", {
             click: () => {
               Router.go("/profile");
+              this.delete();
+            },
+          }),
+        ),
+        el(
+          "li",
+          el("a", "Bridges", {
+            click: () => {
+              Router.go("/bridges");
               this.delete();
             },
           }),

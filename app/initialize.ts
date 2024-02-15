@@ -16,6 +16,7 @@ import messages_zh_TW from "../locales/zh_TW.yml";
 import ActivityView from "./activity/ActivityView.js";
 import { initBlockchains } from "./blockchain/Blockchains.js";
 import BlockTimeManager from "./BlockTimeManager.js";
+import BridgesView from "./BridgesView.js";
 import GeneralChatRoomView from "./chat-general/GeneralChatRoomView.js";
 import TokenChatRoomView from "./chat-token/TokenChatRoomView.js";
 import ChatsView from "./chat/ChatsView.js";
@@ -67,6 +68,7 @@ export default async function initialize(config: Config) {
   Router.route(["explore", "explore/{type}"], ExploreView);
   Router.route("activity", ActivityView);
   Router.route("profile", ProfileView);
+  Router.route("bridges", BridgesView);
   Router.route("settings", SettingsView);
 
   Router.route(["", "posts"], FeedView);
@@ -92,6 +94,7 @@ export default async function initialize(config: Config) {
     "explore",
     "activity",
     "profile",
+    "bridges",
     "settings",
     "posts",
     "chats",

@@ -17,6 +17,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@coinbase/cbpay-js": "^1.10.0",
     "@common-module/social": "^0.0.1",
     "@wagmi/core": "^1.3.8",
     "@web3modal/ethereum": "^2.7.1",
