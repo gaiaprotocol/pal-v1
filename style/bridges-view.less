@@ -1,0 +1,40 @@
+.bridges-view {
+    padding              : 16px;
+    display              : grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap                  : 16px;
+
+    @container (width < @safe-width) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    >.bridge {
+        border        : 1px solid var(--line-color);
+        border-radius : 8px;
+        padding-bottom: 8px;
+
+        >header {
+            display        : flex;
+            justify-content: space-between;
+            border-radius  : 8px 8px 0 0;
+            margin-bottom  : 20px;
+            padding        : 8px 8px 0 8px;
+
+            >img.logo {
+                width        : 80px;
+                height       : 80px;
+                margin-bottom: -20px;
+            }
+        }
+
+        >h2 {
+            padding  : 8px;
+            font-size: 18px;
+        }
+
+        >.url {
+            padding: 0 8px;
+            color  : var(--disable-color);
+        }
+    }
+}

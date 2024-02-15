@@ -113,25 +113,27 @@ meter {
   src: url(https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmWUlvAw.ttf) format('truetype');
 }
 :root {
-  --wrapper-bg-color: #121212;
+  --document-bg-color: #121212;
   --content-bg-color: #141414;
   --panel-bg-color: #1E1E1E;
+  --popup-bg-color: rgba(0, 0, 0, 0.5);
+  --button-bg-color: rgba(193, 168, 125, 0.12);
   --text-color: #fff;
   --line-color: #252527;
   --primary-color: #C1A87D;
+  --secondary-color: #fff;
   --error-color: #FF0000;
   --warning-color: #FFA500;
   --warning-bg-color: rgba(255, 165, 0, 0.12);
   --success-color: #00FF00;
-  --popup-bg-color: rgba(0, 0, 0, 0.5);
-  --button-bg-color: rgba(193, 168, 125, 0.12);
+  --empty-message-color: #b4c2d3;
   --hover-color: rgba(193, 168, 125, 0.2);
   --disable-color: rgba(255, 255, 255, 0.5);
   --loading-bar-bg-color: rgba(193, 168, 125, 0.1);
   --loading-bar-color: rgba(193, 168, 125, 0.5);
   width: 100%;
   height: 100%;
-  background-color: var(--wrapper-bg-color);
+  background-color: var(--document-bg-color);
   color: var(--text-color);
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
@@ -165,6 +167,14 @@ button {
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 0, 'opsz' 24;
 }
+.avatar {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252527;
+  background-size: cover;
+}
 button.component {
   cursor: pointer;
   display: flex;
@@ -197,7 +207,6 @@ button.component:hover {
   z-index: 999990;
   width: 90px;
   height: 100%;
-  background-color: var(--wrapper-bg-color);
   border-right: 1px solid var(--line-color);
   display: flex;
   flex-direction: column;
@@ -212,19 +221,19 @@ button.component:hover {
     top: auto;
     bottom: 0;
     width: 100%;
-    height: calc(90px + env(safe-area-inset-bottom));
-    padding-bottom: calc(6px + env(safe-area-inset-bottom));
+    height: calc(80px + env(safe-area-inset-bottom));
+    padding-bottom: calc(4px + env(safe-area-inset-bottom));
     border-top: 1px solid var(--line-color);
     border-right: none;
     flex-direction: row;
     justify-content: space-between;
     gap: 0;
-    padding-bottom: 0;
     overflow-y: visible;
   }
   .nav-bar.component::before,
   .nav-bar.component::after {
     content: '';
+    margin: 0 -1%;
   }
 }
 .nav-bar.component > h1.logo {
@@ -245,9 +254,15 @@ button.component:hover {
   gap: 4px;
   align-items: center;
   font-size: 12px;
+  color: var(--secondary-color);
 }
 .nav-bar.component > a.menu > .icon {
   font-size: 42px;
+}
+@container (width < 1280px) {
+  .nav-bar.component > a.menu > .icon {
+    font-size: 36px;
+  }
 }
 .nav-bar.component > a.menu.active {
   color: var(--primary-color);
@@ -311,6 +326,84 @@ button.component:hover {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+}
+.adaptive-modal-background {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999998;
+  width: 100%;
+  height: 100%;
+  background-color: var(--popup-bg-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 20px 0;
+}
+@container (width < 1280px) {
+  .adaptive-modal-background {
+    padding: 0;
+  }
+}
+.adaptive-modal.component {
+  max-width: 614px;
+  width: 90%;
+  margin: auto;
+  border: 1px solid var(--line-color);
+  border-radius: 16px;
+  background-color: var(--content-bg-color);
+}
+@container (width < 1280px) {
+  .adaptive-modal.component {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+}
+.adaptive-modal.component > header {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+}
+@container (width < 1280px) {
+  .adaptive-modal.component > header {
+    padding: 16px 12px;
+    border-bottom: 1px solid var(--line-color);
+  }
+}
+.adaptive-modal.component > header > button.back {
+  display: none;
+}
+.adaptive-modal.component > header > h1 {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+@container (width < 1280px) {
+  .adaptive-modal.component > header > button.back {
+    display: block;
+  }
+  .adaptive-modal.component > header > button.close {
+    display: none;
+  }
+}
+.adaptive-modal.component > main {
+  padding: 0 24px;
+}
+.adaptive-modal.component > footer {
+  padding: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+@container (width < 1280px) {
+  .adaptive-modal.component > footer {
+    display: none;
+  }
 }
 @keyframes loading-spinner-animation {
   0% {
@@ -417,6 +510,10 @@ button.component:hover {
   padding: 10px 20px 0;
   max-width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tabs.component::-webkit-scrollbar {
+  display: none;
 }
 .tabs.component > .tab {
   cursor: pointer;
@@ -425,6 +522,7 @@ button.component:hover {
   align-items: center;
   border-bottom: 3px solid transparent;
   padding: 0 10px;
+  white-space: nowrap;
 }
 .tabs.component > .tab:hover {
   color: var(--primary-color);
@@ -497,11 +595,16 @@ button.component:hover {
   display: block;
 }
 .checkbox.component {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.checkbox.component > .checkmark-container {
   position: relative;
   height: 27px;
   width: 27px;
 }
-.checkbox.component > .checkmark {
+.checkbox.component > .checkmark-container > .checkmark {
   position: absolute;
   top: 0;
   left: 0;
@@ -510,7 +613,7 @@ button.component:hover {
   border: 1px solid var(--primary-color);
   border-radius: 50%;
 }
-.checkbox.component > .checkmark:after {
+.checkbox.component > .checkmark-container > .checkmark:after {
   display: none;
   content: "";
   position: absolute;
@@ -524,11 +627,14 @@ button.component:hover {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-.checkbox.component > input:checked ~ .checkmark {
+.checkbox.component > .checkmark-container > input:checked ~ .checkmark {
   background-color: #fff;
 }
-.checkbox.component > input:checked ~ .checkmark:after {
+.checkbox.component > .checkmark-container > input:checked ~ .checkmark:after {
   display: block;
+}
+.checkbox.component > label {
+  cursor: default;
 }
 .file-drop-area.component.highlight {
   outline: 2px dotted var(--primary-color);
@@ -566,19 +672,8 @@ button.component:hover {
 .warning-message-box.component > i {
   font-size: 24px;
 }
-.avatar {
-  flex-shrink: 0;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #252527;
-  background-size: cover;
-}
-@container (width < 1280px) {
-  .avatar {
-    width: 34px;
-    height: 34px;
-  }
+.warning-message-box.component > p > a {
+  text-decoration: underline;
 }
 .post-display.social-component {
   position: relative;
@@ -929,7 +1024,7 @@ button.component:hover {
   src: url('/fonts/Mona-Sans-ExtraBoldWide.ttf') format('woff2');
 }
 :root {
-  --wrapper-bg-color: #0A0A0A;
+  --document-bg-color: #0A0A0A;
   --content-bg-color: #131313;
   --text-color: #fff;
   --line-color: #242424;
@@ -941,6 +1036,12 @@ button.component:hover {
   --loading-bar-color: rgba(155, 76, 255, 0.5);
   --rising-color: #00A67E;
   --falling-color: #FB6565;
+}
+@container (width < 1280px) {
+  .avatar {
+    width: 34px;
+    height: 34px;
+  }
 }
 .layout {
   height: 100%;
@@ -1989,6 +2090,42 @@ button.component:hover {
 }
 .profile-view {
   padding-bottom: 120px;
+}
+.bridges-view {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@container (width < 1280px) {
+  .bridges-view {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.bridges-view > .bridge {
+  border: 1px solid var(--line-color);
+  border-radius: 8px;
+  padding-bottom: 8px;
+}
+.bridges-view > .bridge > header {
+  display: flex;
+  justify-content: space-between;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 20px;
+  padding: 8px 8px 0 8px;
+}
+.bridges-view > .bridge > header > img.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: -20px;
+}
+.bridges-view > .bridge > h2 {
+  padding: 8px;
+  font-size: 18px;
+}
+.bridges-view > .bridge > .url {
+  padding: 0 8px;
+  color: var(--disable-color);
 }
 .settings-view {
   padding: 20px;
