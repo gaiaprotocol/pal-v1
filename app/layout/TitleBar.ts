@@ -1,4 +1,4 @@
-import { Button, DomNode, el, msg } from "@common-module/app";
+import { Button, ButtonType, DomNode, el, msg } from "@common-module/app";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TitleBarUserDisplay from "./title-bar/TitleBarUserDisplay.js";
 
@@ -28,6 +28,7 @@ export default class TitleBar extends DomNode {
     if (!PalSignedUserManager.signed) {
       this.userSection.append(
         new Button({
+          type: ButtonType.Contained,
           tag: ".sign-in",
           title: "Sign in with 𝕏",
           click: () => PalSignedUserManager.signIn(),
@@ -36,6 +37,7 @@ export default class TitleBar extends DomNode {
     } else if (!PalSignedUserManager.walletLinked) {
       this.userSection.append(
         new Button({
+          type: ButtonType.Contained,
           tag: ".link-wallet",
           title: "Link wallet",
           click: () => PalSignedUserManager.linkWallet(),

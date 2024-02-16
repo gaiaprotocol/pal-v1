@@ -2,7 +2,7 @@ import {
   arbitrum,
   arbitrumGoerli,
   base,
-  baseGoerli,
+  baseSepolia,
   optimism,
   optimismGoerli,
 } from "npm:viem/chains";
@@ -19,7 +19,7 @@ export const rpcs: { [chain: string]: string } = {
   [BlockchainType.Ethereum]: `https://${
     isDevMode ? "goerli" : "mainnet"
   }.infura.io/v3/${Deno.env.get("INFURA_KEY")}`,
-  [BlockchainType.Base]: (isDevMode ? baseGoerli : base).rpcUrls.default
+  [BlockchainType.Base]: (isDevMode ? baseSepolia : base).rpcUrls.default
     .http[0],
   [BlockchainType.Arbitrum]:
     (isDevMode ? arbitrumGoerli : arbitrum).rpcUrls.default.http[0],

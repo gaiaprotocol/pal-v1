@@ -2,7 +2,7 @@ import {
   arbitrum,
   arbitrumGoerli,
   base,
-  baseGoerli,
+  baseSepolia,
   goerli,
   mainnet,
   optimism,
@@ -25,11 +25,11 @@ export function initBlockchains() {
   };
 
   Blockchains[BlockchainType.Base] = {
-    chainId: Env.dev ? baseGoerli.id : base.id,
+    chainId: Env.dev ? baseSepolia.id : base.id,
     name: base.name,
     icon: "/images/chain/base.svg",
-    rpc: (Env.dev ? baseGoerli : base).rpcUrls.default.http[0],
-    blockExplorer: (Env.dev ? baseGoerli : base).blockExplorers.default,
+    rpc: (Env.dev ? baseSepolia : base).rpcUrls.default.http[0],
+    blockExplorer: (Env.dev ? baseSepolia : base).blockExplorers.default,
     blockTime: 2,
   };
 

@@ -42,6 +42,8 @@ export default class ChatRoomList extends DomNode {
         }
         this.lastCreatedAt = tokens[tokens.length - 1]?.created_at;
       }
+    } else {
+      this.list.empty();
     }
   }
 }

@@ -10,27 +10,11 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-CREATE EXTENSION IF NOT EXISTS "pg_cron" WITH SCHEMA "extensions";
+CREATE SCHEMA IF NOT EXISTS "public";
 
-CREATE EXTENSION IF NOT EXISTS "pg_net" WITH SCHEMA "extensions";
+ALTER SCHEMA "public" OWNER TO "pg_database_owner";
 
-CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
-
-CREATE EXTENSION IF NOT EXISTS "http" WITH SCHEMA "extensions";
-
-CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
-
-CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
-
-CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
-
-CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
-
-CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
-
-CREATE OR REPLACE FUNCTION "public"."check_view_granted"("parameter_token_address" "text") RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."check_view_granted"(parameter_token_address text) RETURNS boolean
     LANGUAGE "plpgsql"
     AS $$begin return auth.role() = 'authenticated'::text
 and (
@@ -68,9 +52,9 @@ and (
 );
 end;$$;
 
-ALTER FUNCTION "public"."check_view_granted"("parameter_token_address" "text") OWNER TO "postgres";
+ALTER FUNCTION "public"."check_view_granted"(parameter_token_address text) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."check_write_granted"("parameter_token_address" "text") RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."check_write_granted"(parameter_token_address text) RETURNS boolean
     LANGUAGE "plpgsql"
     AS $$begin return auth.role() = 'authenticated'::text
 and (
@@ -108,9 +92,9 @@ and (
 );
 end;$$;
 
-ALTER FUNCTION "public"."check_write_granted"("parameter_token_address" "text") OWNER TO "postgres";
+ALTER FUNCTION "public"."check_write_granted"(parameter_token_address text) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."decrease_post_comment_count"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."decrease_post_comment_count"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   IF old.parent IS NOT NULL THEN
@@ -125,7 +109,7 @@ end;$$;
 
 ALTER FUNCTION "public"."decrease_post_comment_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."decrease_post_like_count"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."decrease_post_like_count"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   update posts
@@ -138,7 +122,7 @@ end;$$;
 
 ALTER FUNCTION "public"."decrease_post_like_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."decrease_repost_count"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."decrease_repost_count"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   update posts
@@ -151,7 +135,7 @@ end;$$;
 
 ALTER FUNCTION "public"."decrease_repost_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."decrement_token_favorite_count"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."decrement_token_favorite_count"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   update pal_tokens
@@ -165,7 +149,7 @@ end;$$;
 
 ALTER FUNCTION "public"."decrement_token_favorite_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."find_posts"("p_user_id" "uuid", "search_string" "text", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."find_posts"(p_user_id uuid, search_string text, last_post_id bigint DEFAULT NULL::bigint, max_count integer DEFAULT 50) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -212,9 +196,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."find_posts"("p_user_id" "uuid", "search_string" "text", "last_post_id" bigint, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."find_posts"(p_user_id uuid, search_string text, last_post_id bigint, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_following_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_following_posts"(p_user_id uuid, last_post_id bigint DEFAULT NULL::bigint, max_count integer DEFAULT 50) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -263,9 +247,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_following_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_following_posts"(p_user_id uuid, last_post_id bigint, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_global_activities"("last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text", "token_image_thumb" "text", "token_image_stored" boolean, "token_stored_image" "text", "token_stored_image_thumb" "text")
+CREATE OR REPLACE FUNCTION "public"."get_global_activities"(last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 100) RETURNS TABLE(chain text, block_number bigint, log_index bigint, tx text, wallet_address text, token_address text, activity_name text, args text[], created_at timestamp with time zone, user_id uuid, user_display_name text, user_avatar text, user_avatar_thumb text, user_stored_avatar text, user_stored_avatar_thumb text, user_x_username text, token_name text, token_symbol text, token_image text, token_image_thumb text, token_image_stored boolean, token_stored_image text, token_stored_image_thumb text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -309,9 +293,9 @@ BEGIN
 END
 $$;
 
-ALTER FUNCTION "public"."get_global_activities"("last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_global_activities"(last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text", "token_image_thumb" "text", "token_image_stored" boolean, "token_stored_image" "text", "token_stored_image_thumb" "text")
+CREATE OR REPLACE FUNCTION "public"."get_global_activities_with_users"(last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 100) RETURNS TABLE(chain text, block_number bigint, log_index bigint, tx text, wallet_address text, token_address text, activity_name text, args text[], created_at timestamp with time zone, user_id uuid, user_display_name text, user_avatar text, user_avatar_thumb text, user_stored_avatar text, user_stored_avatar_thumb text, user_x_username text, token_name text, token_symbol text, token_image text, token_image_thumb text, token_image_stored boolean, token_stored_image text, token_stored_image_thumb text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -355,9 +339,9 @@ BEGIN
 END
 $$;
 
-ALTER FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_global_activities_with_users"(last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_global_posts"("last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50, "signed_user_id" "uuid" DEFAULT NULL::"uuid") RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_global_posts"(last_post_id bigint DEFAULT NULL::bigint, max_count integer DEFAULT 50, signed_user_id uuid DEFAULT NULL::uuid) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -412,9 +396,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_global_posts"("last_post_id" bigint, "max_count" integer, "signed_user_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."get_global_posts"(last_post_id bigint, max_count integer, signed_user_id uuid) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "token_address" "text", "owner" "text", "name" "text", "symbol" "text", "image" "text", "image_thumb" "text", "image_stored" boolean, "stored_image" "text", "stored_image_thumb" "text", "metadata" "jsonb", "supply" "text", "last_fetched_price" "text", "total_trading_volume" "text", "is_price_up" boolean, "last_message" "text", "last_message_sent_at" timestamp with time zone, "holder_count" integer, "last_purchased_at" timestamp with time zone, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "owner_user_id" "uuid", "owner_wallet_address" "text", "owner_display_name" "text", "owner_avatar" "text", "owner_avatar_thumb" "text", "owner_stored_avatar" "text", "owner_stored_avatar_thumb" "text", "owner_x_username" "text")
+CREATE OR REPLACE FUNCTION "public"."get_held_or_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 100) RETURNS TABLE(chain text, token_address text, owner text, name text, symbol text, image text, image_thumb text, image_stored boolean, stored_image text, stored_image_thumb text, metadata jsonb, supply text, last_fetched_price text, total_trading_volume text, is_price_up boolean, last_message text, last_message_sent_at timestamp with time zone, holder_count integer, last_purchased_at timestamp with time zone, created_at timestamp with time zone, updated_at timestamp with time zone, owner_user_id uuid, owner_wallet_address text, owner_display_name text, owner_avatar text, owner_avatar_thumb text, owner_stored_avatar text, owner_stored_avatar_thumb text, owner_x_username text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -452,7 +436,7 @@ BEGIN
     FROM 
         public.tokens t
     LEFT JOIN 
-        public.token_holders th ON t.token_address = th.token_address AND th.wallet_address = p_wallet_address
+        public.token_holders th ON t.chain = th.chain AND t.token_address = th.token_address AND th.wallet_address = p_wallet_address
     LEFT JOIN 
         "public"."users_public" u ON t.owner = u.wallet_address
     WHERE 
@@ -465,9 +449,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_held_or_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "token_address" "text", "owner" "text", "name" "text", "symbol" "text", "image" "text", "image_thumb" "text", "image_stored" boolean, "stored_image" "text", "stored_image_thumb" "text", "metadata" "jsonb", "supply" "text", "last_fetched_price" "text", "total_trading_volume" "text", "is_price_up" boolean, "last_message" "text", "last_message_sent_at" timestamp with time zone, "holder_count" integer, "last_purchased_at" timestamp with time zone, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "owner_user_id" "uuid", "owner_wallet_address" "text", "owner_display_name" "text", "owner_avatar" "text", "owner_avatar_thumb" "text", "owner_stored_avatar" "text", "owner_stored_avatar_thumb" "text", "owner_x_username" "text")
+CREATE OR REPLACE FUNCTION "public"."get_held_tokens"(p_wallet_address text, last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 100) RETURNS TABLE(chain text, token_address text, owner text, name text, symbol text, image text, image_thumb text, image_stored boolean, stored_image text, stored_image_thumb text, metadata jsonb, supply text, last_fetched_price text, total_trading_volume text, is_price_up boolean, last_message text, last_message_sent_at timestamp with time zone, holder_count integer, last_purchased_at timestamp with time zone, created_at timestamp with time zone, updated_at timestamp with time zone, owner_user_id uuid, owner_wallet_address text, owner_display_name text, owner_avatar text, owner_avatar_thumb text, owner_stored_avatar text, owner_stored_avatar_thumb text, owner_x_username text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -518,9 +502,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_held_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "like_created_at" timestamp with time zone)
+CREATE OR REPLACE FUNCTION "public"."get_liked_posts"(p_user_id uuid, last_liked_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 50) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean, like_created_at timestamp with time zone)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -570,9 +554,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_liked_posts"(p_user_id uuid, last_liked_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_new_tokens"("last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 1000) RETURNS TABLE("chain" "text", "token_address" "text", "owner" "text", "name" "text", "symbol" "text", "image" "text", "image_thumb" "text", "image_stored" boolean, "stored_image" "text", "stored_image_thumb" "text", "metadata" "jsonb", "supply" "text", "last_fetched_price" "text", "total_trading_volume" "text", "is_price_up" boolean, "last_message" "text", "last_message_sent_at" timestamp with time zone, "holder_count" integer, "last_purchased_at" timestamp with time zone, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "owner_user_id" "uuid", "owner_wallet_address" "text", "owner_display_name" "text", "owner_avatar" "text", "owner_avatar_thumb" "text", "owner_stored_avatar" "text", "owner_stored_avatar_thumb" "text", "owner_x_username" "text")
+CREATE OR REPLACE FUNCTION "public"."get_new_tokens"(last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 1000) RETURNS TABLE(chain text, token_address text, owner text, name text, symbol text, image text, image_thumb text, image_stored boolean, stored_image text, stored_image_thumb text, metadata jsonb, supply text, last_fetched_price text, total_trading_volume text, is_price_up boolean, last_message text, last_message_sent_at timestamp with time zone, holder_count integer, last_purchased_at timestamp with time zone, created_at timestamp with time zone, updated_at timestamp with time zone, owner_user_id uuid, owner_wallet_address text, owner_display_name text, owner_avatar text, owner_avatar_thumb text, owner_stored_avatar text, owner_stored_avatar_thumb text, owner_x_username text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -620,9 +604,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_new_tokens"("last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_new_tokens"(last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 1000) RETURNS TABLE("chain" "text", "token_address" "text", "owner" "text", "name" "text", "symbol" "text", "image" "text", "image_thumb" "text", "image_stored" boolean, "stored_image" "text", "stored_image_thumb" "text", "metadata" "jsonb", "supply" "text", "last_fetched_price" "text", "total_trading_volume" "text", "is_price_up" boolean, "last_message" "text", "last_message_sent_at" timestamp with time zone, "holder_count" integer, "last_purchased_at" timestamp with time zone, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "owner_user_id" "uuid", "owner_wallet_address" "text", "owner_display_name" "text", "owner_avatar" "text", "owner_avatar_thumb" "text", "owner_stored_avatar" "text", "owner_stored_avatar_thumb" "text", "owner_x_username" "text")
+CREATE OR REPLACE FUNCTION "public"."get_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 1000) RETURNS TABLE(chain text, token_address text, owner text, name text, symbol text, image text, image_thumb text, image_stored boolean, stored_image text, stored_image_thumb text, metadata jsonb, supply text, last_fetched_price text, total_trading_volume text, is_price_up boolean, last_message text, last_message_sent_at timestamp with time zone, holder_count integer, last_purchased_at timestamp with time zone, created_at timestamp with time zone, updated_at timestamp with time zone, owner_user_id uuid, owner_wallet_address text, owner_display_name text, owner_avatar text, owner_avatar_thumb text, owner_stored_avatar text, owner_stored_avatar_thumb text, owner_x_username text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -671,9 +655,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") RETURNS "text"
+CREATE OR REPLACE FUNCTION "public"."get_portfolio_value"(p_wallet_address text) RETURNS text
     LANGUAGE "plpgsql"
     AS $$
 DECLARE
@@ -706,9 +690,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") OWNER TO "postgres";
+ALTER FUNCTION "public"."get_portfolio_value"(p_wallet_address text) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint DEFAULT NULL::bigint, "max_comment_count" integer DEFAULT 50, "signed_user_id" "uuid" DEFAULT NULL::"uuid") RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "depth" integer)
+CREATE OR REPLACE FUNCTION "public"."get_post_and_comments"(p_post_id bigint, last_comment_id bigint DEFAULT NULL::bigint, max_comment_count integer DEFAULT 50, signed_user_id uuid DEFAULT NULL::uuid) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean, depth integer)
     LANGUAGE "sql"
     AS $$
 WITH RECURSIVE ancestors AS (
@@ -854,9 +838,9 @@ SELECT * FROM comments
 ORDER BY depth, id;
 $$;
 
-ALTER FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint, "max_comment_count" integer, "signed_user_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."get_post_and_comments"(p_post_id bigint, last_comment_id bigint, max_comment_count integer, signed_user_id uuid) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_reposts"("p_user_id" "uuid", "last_reposted_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean, "repost_created_at" timestamp with time zone)
+CREATE OR REPLACE FUNCTION "public"."get_reposts"(p_user_id uuid, last_reposted_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 50) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean, repost_created_at timestamp with time zone)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -906,9 +890,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_reposts"("p_user_id" "uuid", "last_reposted_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_reposts"(p_user_id uuid, last_reposted_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_token"("p_chain" "text", "p_token_address" "text") RETURNS TABLE("chain" "text", "token_address" "text", "owner" "text", "name" "text", "symbol" "text", "image" "text", "image_thumb" "text", "image_stored" boolean, "stored_image" "text", "stored_image_thumb" "text", "metadata" "jsonb", "supply" "text", "last_fetched_price" "text", "total_trading_volume" "text", "is_price_up" boolean, "last_message" "text", "last_message_sent_at" timestamp with time zone, "holder_count" integer, "last_purchased_at" timestamp with time zone, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "owner_user_id" "uuid", "owner_display_name" "text", "owner_avatar" "text", "owner_avatar_thumb" "text", "owner_stored_avatar" "text", "owner_stored_avatar_thumb" "text", "owner_x_username" "text")
+CREATE OR REPLACE FUNCTION "public"."get_token"(p_chain text, p_token_address text) RETURNS TABLE(chain text, token_address text, owner text, name text, symbol text, image text, image_thumb text, image_stored boolean, stored_image text, stored_image_thumb text, metadata jsonb, supply text, last_fetched_price text, total_trading_volume text, is_price_up boolean, last_message text, last_message_sent_at timestamp with time zone, holder_count integer, last_purchased_at timestamp with time zone, created_at timestamp with time zone, updated_at timestamp with time zone, owner_user_id uuid, owner_display_name text, owner_avatar text, owner_avatar_thumb text, owner_stored_avatar text, owner_stored_avatar_thumb text, owner_x_username text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -951,9 +935,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_token"("p_chain" "text", "p_token_address" "text") OWNER TO "postgres";
+ALTER FUNCTION "public"."get_token"(p_chain text, p_token_address text) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_token_activities"("p_chain" "text", "p_token_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text", "token_image_thumb" "text", "token_image_stored" boolean, "token_stored_image" "text", "token_stored_image_thumb" "text")
+CREATE OR REPLACE FUNCTION "public"."get_token_activities"(p_chain text, p_token_address text, last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 100) RETURNS TABLE(chain text, block_number bigint, log_index bigint, tx text, wallet_address text, activity_name text, args text[], created_at timestamp with time zone, user_id uuid, user_display_name text, user_avatar text, user_avatar_thumb text, user_stored_avatar text, user_stored_avatar_thumb text, user_x_username text, token_name text, token_symbol text, token_image text, token_image_thumb text, token_image_stored boolean, token_stored_image text, token_stored_image_thumb text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -998,9 +982,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_token_activities"("p_chain" "text", "p_token_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_token_activities"(p_chain text, p_token_address text, last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_token_held_activities"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text", "token_image_thumb" "text", "token_image_stored" boolean, "token_stored_image" "text", "token_stored_image_thumb" "text")
+CREATE OR REPLACE FUNCTION "public"."get_token_held_activities"(p_wallet_address text, last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 100) RETURNS TABLE(chain text, block_number bigint, log_index bigint, tx text, wallet_address text, token_address text, activity_name text, args text[], created_at timestamp with time zone, user_id uuid, user_display_name text, user_avatar text, user_avatar_thumb text, user_stored_avatar text, user_stored_avatar_thumb text, user_x_username text, token_name text, token_symbol text, token_image text, token_image_thumb text, token_image_stored boolean, token_stored_image text, token_stored_image_thumb text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1048,9 +1032,9 @@ BEGIN
 END
 $$;
 
-ALTER FUNCTION "public"."get_token_held_activities"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_token_held_activities"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 100) RETURNS TABLE("chain" "text", "block_number" bigint, "log_index" bigint, "tx" "text", "wallet_address" "text", "token_address" "text", "activity_name" "text", "args" "text"[], "created_at" timestamp with time zone, "user_id" "uuid", "user_display_name" "text", "user_avatar" "text", "user_avatar_thumb" "text", "user_stored_avatar" "text", "user_stored_avatar_thumb" "text", "user_x_username" "text", "token_name" "text", "token_symbol" "text", "token_image" "text", "token_image_thumb" "text", "token_image_stored" boolean, "token_stored_image" "text", "token_stored_image_thumb" "text")
+CREATE OR REPLACE FUNCTION "public"."get_token_held_activities_with_users"(p_wallet_address text, last_created_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 100) RETURNS TABLE(chain text, block_number bigint, log_index bigint, tx text, wallet_address text, token_address text, activity_name text, args text[], created_at timestamp with time zone, user_id uuid, user_display_name text, user_avatar text, user_avatar_thumb text, user_stored_avatar text, user_stored_avatar_thumb text, user_x_username text, token_name text, token_symbol text, token_image text, token_image_thumb text, token_image_stored boolean, token_stored_image text, token_stored_image_thumb text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1098,9 +1082,9 @@ BEGIN
 END
 $$;
 
-ALTER FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_token_held_activities_with_users"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_token_held_posts"("p_user_id" "uuid", "p_wallet_address" "text", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_token_held_posts"(p_user_id uuid, p_wallet_address text, last_post_id bigint DEFAULT NULL::bigint, max_count integer DEFAULT 50) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1150,9 +1134,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_token_held_posts"("p_user_id" "uuid", "p_wallet_address" "text", "last_post_id" bigint, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_token_held_posts"(p_user_id uuid, p_wallet_address text, last_post_id bigint, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_token_holders"("p_chain" "text", "p_token_address" "text", "last_balance" numeric DEFAULT NULL::numeric, "max_count" integer DEFAULT 50) RETURNS TABLE("user_id" "uuid", "wallet_address" "text", "total_earned_trading_fees" numeric, "display_name" "text", "avatar" "text", "avatar_thumb" "text", "avatar_stored" boolean, "stored_avatar" "text", "stored_avatar_thumb" "text", "x_username" "text", "metadata" "jsonb", "follower_count" integer, "following_count" integer, "blocked" boolean, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "balance" "text")
+CREATE OR REPLACE FUNCTION "public"."get_token_holders"(p_chain text, p_token_address text, last_balance numeric DEFAULT NULL::numeric, max_count integer DEFAULT 50) RETURNS TABLE(user_id uuid, wallet_address text, total_earned_trading_fees numeric, display_name text, avatar text, avatar_thumb text, avatar_stored boolean, stored_avatar text, stored_avatar_thumb text, x_username text, metadata jsonb, follower_count integer, following_count integer, blocked boolean, created_at timestamp with time zone, updated_at timestamp with time zone, balance text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1190,9 +1174,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_token_holders"("p_chain" "text", "p_token_address" "text", "last_balance" numeric, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_token_holders"(p_chain text, p_token_address text, last_balance numeric, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_top_tokens"("last_rank" integer DEFAULT NULL::integer, "max_count" integer DEFAULT 10) RETURNS TABLE("rank" integer, "chain" "text", "token_address" "text", "owner" "text", "name" "text", "symbol" "text", "image" "text", "image_thumb" "text", "image_stored" boolean, "stored_image" "text", "stored_image_thumb" "text", "metadata" "jsonb", "supply" "text", "last_fetched_price" "text", "total_trading_volume" "text", "is_price_up" boolean, "last_message" "text", "last_message_sent_at" timestamp with time zone, "holder_count" integer, "last_purchased_at" timestamp with time zone, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "owner_user_id" "uuid", "owner_wallet_address" "text", "owner_display_name" "text", "owner_avatar" "text", "owner_avatar_thumb" "text", "owner_stored_avatar" "text", "owner_stored_avatar_thumb" "text", "owner_x_username" "text")
+CREATE OR REPLACE FUNCTION "public"."get_top_tokens"(last_rank integer DEFAULT NULL::integer, max_count integer DEFAULT 10) RETURNS TABLE(rank integer, chain text, token_address text, owner text, name text, symbol text, image text, image_thumb text, image_stored boolean, stored_image text, stored_image_thumb text, metadata jsonb, supply text, last_fetched_price text, total_trading_volume text, is_price_up boolean, last_message text, last_message_sent_at timestamp with time zone, holder_count integer, last_purchased_at timestamp with time zone, created_at timestamp with time zone, updated_at timestamp with time zone, owner_user_id uuid, owner_wallet_address text, owner_display_name text, owner_avatar text, owner_avatar_thumb text, owner_stored_avatar text, owner_stored_avatar_thumb text, owner_x_username text)
     LANGUAGE "plpgsql"
     AS $$
 DECLARE
@@ -1244,9 +1228,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_top_tokens"("last_rank" integer, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_top_tokens"(last_rank integer, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone DEFAULT NULL::timestamp with time zone, "max_count" integer DEFAULT 1000) RETURNS TABLE("chain" "text", "token_address" "text", "owner" "text", "name" "text", "symbol" "text", "image" "text", "image_thumb" "text", "image_stored" boolean, "stored_image" "text", "stored_image_thumb" "text", "metadata" "jsonb", "supply" "text", "last_fetched_price" "text", "total_trading_volume" "text", "is_price_up" boolean, "last_message" "text", "last_message_sent_at" timestamp with time zone, "holder_count" integer, "last_purchased_at" timestamp with time zone, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "owner_user_id" "uuid", "owner_wallet_address" "text", "owner_display_name" "text", "owner_avatar" "text", "owner_avatar_thumb" "text", "owner_stored_avatar" "text", "owner_stored_avatar_thumb" "text", "owner_x_username" "text")
+CREATE OR REPLACE FUNCTION "public"."get_trending_tokens"(p_last_purchased_at timestamp with time zone DEFAULT NULL::timestamp with time zone, max_count integer DEFAULT 1000) RETURNS TABLE(chain text, token_address text, owner text, name text, symbol text, image text, image_thumb text, image_stored boolean, stored_image text, stored_image_thumb text, metadata jsonb, supply text, last_fetched_price text, total_trading_volume text, is_price_up boolean, last_message text, last_message_sent_at timestamp with time zone, holder_count integer, last_purchased_at timestamp with time zone, created_at timestamp with time zone, updated_at timestamp with time zone, owner_user_id uuid, owner_wallet_address text, owner_display_name text, owner_avatar text, owner_avatar_thumb text, owner_stored_avatar text, owner_stored_avatar_thumb text, owner_x_username text)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1294,9 +1278,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_trending_tokens"(p_last_purchased_at timestamp with time zone, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_user_comment_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_user_comment_posts"(p_user_id uuid, last_post_id bigint DEFAULT NULL::bigint, max_count integer DEFAULT 50) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1344,9 +1328,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_user_comment_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_user_comment_posts"(p_user_id uuid, last_post_id bigint, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_user_posts"("p_user_id" "uuid", "last_post_id" bigint DEFAULT NULL::bigint, "max_count" integer DEFAULT 50) RETURNS TABLE("id" bigint, "target" smallint, "chain" "text", "token_address" "text", "token_name" "text", "token_symbol" "text", "token_image_thumb" "text", "author" "uuid", "author_display_name" "text", "author_avatar" "text", "author_avatar_thumb" "text", "author_stored_avatar" "text", "author_stored_avatar_thumb" "text", "author_x_username" "text", "message" "text", "translated" "jsonb", "rich" "jsonb", "parent" bigint, "comment_count" integer, "repost_count" integer, "like_count" integer, "created_at" timestamp with time zone, "updated_at" timestamp with time zone, "liked" boolean, "reposted" boolean)
+CREATE OR REPLACE FUNCTION "public"."get_user_posts"(p_user_id uuid, last_post_id bigint DEFAULT NULL::bigint, max_count integer DEFAULT 50) RETURNS TABLE(id bigint, target smallint, chain text, token_address text, token_name text, token_symbol text, token_image_thumb text, author uuid, author_display_name text, author_avatar text, author_avatar_thumb text, author_stored_avatar text, author_stored_avatar_thumb text, author_x_username text, message text, translated jsonb, rich jsonb, parent bigint, comment_count integer, repost_count integer, like_count integer, created_at timestamp with time zone, updated_at timestamp with time zone, liked boolean, reposted boolean)
     LANGUAGE "plpgsql"
     AS $$
 BEGIN
@@ -1394,9 +1378,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."get_user_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) OWNER TO "postgres";
+ALTER FUNCTION "public"."get_user_posts"(p_user_id uuid, last_post_id bigint, max_count integer) OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."increase_post_comment_count"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."increase_post_comment_count"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   IF new.parent IS NOT NULL THEN
@@ -1411,7 +1395,7 @@ end;$$;
 
 ALTER FUNCTION "public"."increase_post_comment_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."increase_post_like_count"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."increase_post_like_count"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   update posts
@@ -1424,7 +1408,7 @@ end;$$;
 
 ALTER FUNCTION "public"."increase_post_like_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."increase_repost_count"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."increase_repost_count"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   update posts
@@ -1437,7 +1421,7 @@ end;$$;
 
 ALTER FUNCTION "public"."increase_repost_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."increment_token_favorite_count"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."increment_token_favorite_count"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   update pal_tokens
@@ -1451,7 +1435,7 @@ end;$$;
 
 ALTER FUNCTION "public"."increment_token_favorite_count"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."increment_trading_fees_earned"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."increment_trading_fees_earned"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   IF new.event_type = 1 THEN
@@ -1472,7 +1456,7 @@ end;$$;
 
 ALTER FUNCTION "public"."increment_trading_fees_earned"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."new_pal_token"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."new_pal_token"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   IF new.event_type = 0 THEN
@@ -1486,7 +1470,7 @@ end;$$;
 
 ALTER FUNCTION "public"."new_pal_token"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."parse_contract_event"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."parse_contract_event"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$DECLARE
     v_receiver UUID;
@@ -1576,17 +1560,17 @@ BEGIN
             -- if token holder is new, add to token holder count
             IF NOT FOUND THEN
                 update tokens set
-                    holders = holders + 1
+                    holder_count = holder_count + 1
                 where chain = new.chain and token_address = new.args[2];
             END IF;
             
             -- update wallet's total key balance
             insert into user_wallets (
-                wallet_address, total_key_balance
+                wallet_address, total_token_balance
             ) values (
                 new.args[1], new.args[4]::numeric
             ) on conflict (wallet_address) do update
-                set total_key_balance = user_wallets.total_key_balance + new.args[4]::numeric;
+                set total_token_balance = user_wallets.total_token_balance + new.args[4]::numeric;
 
         -- sell
         ELSE
@@ -1615,13 +1599,13 @@ BEGIN
             -- if token holder is gone, subtract from token holder count
             IF FOUND THEN
                 update tokens set
-                    holders = holders - 1
+                    holder_count = holder_count - 1
                 where chain = new.chain and token_address = new.args[2];
             END IF;
             
             -- update wallet's total key balance
             update user_wallets set
-                total_key_balance = total_key_balance - new.args[4]::numeric
+                total_token_balance = total_token_balance - new.args[4]::numeric
             where wallet_address = new.args[1];
         END IF;
     END IF;
@@ -1630,7 +1614,7 @@ end;$$;
 
 ALTER FUNCTION "public"."parse_contract_event"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."set_token_last_message"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."set_token_last_message"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$begin
   update tokens
@@ -1645,7 +1629,7 @@ end;$$;
 
 ALTER FUNCTION "public"."set_token_last_message"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."set_updated_at"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."set_updated_at"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$BEGIN
   new.updated_at := now();
@@ -1654,7 +1638,7 @@ END;$$;
 
 ALTER FUNCTION "public"."set_updated_at"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."set_user_metadata_to_public"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."set_user_metadata_to_public"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     SET "search_path" TO 'public'
     AS $$
@@ -1705,7 +1689,7 @@ $$;
 
 ALTER FUNCTION "public"."set_user_metadata_to_public"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."update_price_trend"() RETURNS "trigger"
+CREATE OR REPLACE FUNCTION "public"."update_price_trend"() RETURNS trigger
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$BEGIN
   IF NEW.last_fetched_price > OLD.last_fetched_price THEN
@@ -1724,28 +1708,28 @@ SET default_tablespace = '';
 SET default_table_access_method = "heap";
 
 CREATE TABLE IF NOT EXISTS "public"."activities" (
-    "chain" "text" NOT NULL,
+    "chain" text NOT NULL,
     "block_number" bigint NOT NULL,
     "log_index" bigint NOT NULL,
-    "tx" "text" NOT NULL,
-    "wallet_address" "text" NOT NULL,
-    "token_address" "text" NOT NULL,
-    "activity_name" "text" NOT NULL,
-    "args" "text"[],
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "tx" text NOT NULL,
+    "wallet_address" text NOT NULL,
+    "token_address" text NOT NULL,
+    "activity_name" text NOT NULL,
+    "args" text[],
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."activities" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."token_chat_messages" (
     "id" bigint NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "token_address" "text" NOT NULL,
-    "author" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "message" "text",
-    "rich" "jsonb",
-    "translated" "jsonb",
-    "chain" "text" NOT NULL
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+    "token_address" text NOT NULL,
+    "author" uuid DEFAULT auth.uid() NOT NULL,
+    "message" text,
+    "rich" jsonb,
+    "translated" jsonb,
+    "chain" text NOT NULL
 );
 
 ALTER TABLE "public"."token_chat_messages" OWNER TO "postgres";
@@ -1760,39 +1744,39 @@ ALTER TABLE "public"."token_chat_messages" ALTER COLUMN "id" ADD GENERATED BY DE
 );
 
 CREATE TABLE IF NOT EXISTS "public"."contract_events" (
-    "chain" "text" NOT NULL,
+    "chain" text NOT NULL,
     "block_number" bigint NOT NULL,
     "log_index" bigint NOT NULL,
-    "tx" "text" NOT NULL,
-    "event_name" "text" NOT NULL,
-    "args" "text"[],
-    "wallet_address" "text",
-    "token_address" "text",
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "tx" text NOT NULL,
+    "event_name" text NOT NULL,
+    "args" text[],
+    "wallet_address" text,
+    "token_address" text,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."contract_events" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."follows" (
-    "follower_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "followee_id" "uuid" NOT NULL,
-    "followed_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "follower_id" uuid DEFAULT auth.uid() NOT NULL,
+    "followee_id" uuid NOT NULL,
+    "followed_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."follows" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."general_chat_messages" (
     "id" bigint NOT NULL,
-    "source" "text" NOT NULL,
-    "author" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "external_author_id" "text",
-    "external_author_name" "text",
-    "external_author_avatar" "text",
-    "message" "text",
-    "external_message_id" "text",
-    "translated" "jsonb",
-    "rich" "jsonb",
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "source" text NOT NULL,
+    "author" uuid DEFAULT auth.uid() NOT NULL,
+    "external_author_id" text,
+    "external_author_name" text,
+    "external_author_avatar" text,
+    "message" text,
+    "external_message_id" text,
+    "translated" jsonb,
+    "rich" jsonb,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."general_chat_messages" OWNER TO "postgres";
@@ -1808,17 +1792,17 @@ ALTER TABLE "public"."general_chat_messages" ALTER COLUMN "id" ADD GENERATED BY 
 
 CREATE TABLE IF NOT EXISTS "public"."notifications" (
     "id" bigint NOT NULL,
-    "user_id" "uuid" NOT NULL,
-    "triggerer" "uuid",
+    "user_id" uuid NOT NULL,
+    "triggerer" uuid,
     "type" smallint NOT NULL,
-    "chain" "text",
-    "token_address" "text",
+    "chain" text,
+    "token_address" text,
     "amount" numeric,
     "post_id" bigint,
-    "post_message" "text",
+    "post_message" text,
     "read" boolean DEFAULT false NOT NULL,
     "read_at" timestamp with time zone,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."notifications" OWNER TO "postgres";
@@ -1833,32 +1817,32 @@ ALTER TABLE "public"."notifications" ALTER COLUMN "id" ADD GENERATED BY DEFAULT 
 );
 
 CREATE TABLE IF NOT EXISTS "public"."old_pal_token_balances" (
-    "token_address" "text" NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "wallet_address" "text" NOT NULL,
+    "token_address" text NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+    "wallet_address" text NOT NULL,
     "last_fetched_balance" numeric DEFAULT '0'::numeric NOT NULL,
-    "chain" "text" DEFAULT 'base'::"text" NOT NULL
+    "chain" text DEFAULT 'base'::text NOT NULL
 );
 
 ALTER TABLE "public"."old_pal_token_balances" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."old_pal_tokens" (
-    "token_address" "text" NOT NULL,
-    "owner" "text" NOT NULL,
-    "name" "text" NOT NULL,
-    "symbol" "text" NOT NULL,
-    "metadata" "jsonb" DEFAULT '{}'::"jsonb" NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "token_address" text NOT NULL,
+    "owner" text NOT NULL,
+    "name" text NOT NULL,
+    "symbol" text NOT NULL,
+    "metadata" jsonb DEFAULT '{}'::jsonb NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL,
     "view_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "last_fetched_price" numeric DEFAULT '68750000000000'::numeric NOT NULL,
     "last_message_sent_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
     "hiding" boolean DEFAULT false NOT NULL,
     "trading_fees_earned" numeric DEFAULT '0'::numeric NOT NULL,
-    "last_message" "text",
+    "last_message" text,
     "is_price_up" boolean,
     "favorite_count" integer DEFAULT 0 NOT NULL,
-    "chain" "text" DEFAULT 'base'::"text" NOT NULL,
+    "chain" text DEFAULT 'base'::text NOT NULL,
     "trading_volume" numeric DEFAULT '0'::numeric NOT NULL
 );
 
@@ -1866,8 +1850,8 @@ ALTER TABLE "public"."old_pal_tokens" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."post_likes" (
     "post_id" bigint NOT NULL,
-    "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "user_id" uuid DEFAULT auth.uid() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."post_likes" OWNER TO "postgres";
@@ -1875,17 +1859,17 @@ ALTER TABLE "public"."post_likes" OWNER TO "postgres";
 CREATE TABLE IF NOT EXISTS "public"."posts" (
     "id" bigint NOT NULL,
     "target" smallint,
-    "chain" "text",
-    "token_address" "text",
-    "author" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "message" "text" NOT NULL,
-    "translated" "jsonb",
-    "rich" "jsonb",
+    "chain" text,
+    "token_address" text,
+    "author" uuid DEFAULT auth.uid() NOT NULL,
+    "message" text NOT NULL,
+    "translated" jsonb,
+    "rich" jsonb,
     "parent" bigint,
     "comment_count" integer DEFAULT 0 NOT NULL,
     "repost_count" integer DEFAULT 0 NOT NULL,
     "like_count" integer DEFAULT 0 NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL,
     "updated_at" timestamp with time zone
 );
 
@@ -1902,45 +1886,45 @@ ALTER TABLE "public"."posts" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENT
 
 CREATE TABLE IF NOT EXISTS "public"."reposts" (
     "post_id" bigint NOT NULL,
-    "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "user_id" uuid DEFAULT auth.uid() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."reposts" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."token_holders" (
-    "chain" "text" NOT NULL,
-    "token_address" "text" NOT NULL,
-    "wallet_address" "text" NOT NULL,
+    "chain" text NOT NULL,
+    "token_address" text NOT NULL,
+    "wallet_address" text NOT NULL,
     "last_fetched_balance" numeric DEFAULT '0'::numeric NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL,
     "updated_at" timestamp with time zone
 );
 
 ALTER TABLE "public"."token_holders" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."tokens" (
-    "chain" "text" NOT NULL,
-    "token_address" "text" NOT NULL,
-    "owner" "text" NOT NULL,
-    "name" "text" NOT NULL,
-    "symbol" "text" NOT NULL,
-    "image" "text",
-    "metadata" "jsonb",
+    "chain" text NOT NULL,
+    "token_address" text NOT NULL,
+    "owner" text NOT NULL,
+    "name" text NOT NULL,
+    "symbol" text NOT NULL,
+    "image" text,
+    "metadata" jsonb,
     "supply" numeric DEFAULT '0'::numeric NOT NULL,
     "last_fetched_price" numeric DEFAULT '68750000000000'::numeric NOT NULL,
     "total_trading_volume" numeric DEFAULT '0'::numeric NOT NULL,
     "is_price_up" boolean,
-    "last_message" "text",
+    "last_message" text,
     "last_message_sent_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
     "holder_count" integer DEFAULT 0 NOT NULL,
     "last_purchased_at" timestamp with time zone DEFAULT '-infinity'::timestamp with time zone NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL,
     "updated_at" timestamp with time zone,
-    "image_thumb" "text",
+    "image_thumb" text,
     "image_stored" boolean DEFAULT false NOT NULL,
-    "stored_image" "text",
-    "stored_image_thumb" "text",
+    "stored_image" text,
+    "stored_image_thumb" text,
     "view_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL,
     "write_token_required" numeric DEFAULT '1000000000000000000'::numeric NOT NULL
 );
@@ -1948,36 +1932,36 @@ CREATE TABLE IF NOT EXISTS "public"."tokens" (
 ALTER TABLE "public"."tokens" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."tracked_event_blocks" (
-    "chain" "text" NOT NULL,
+    "chain" text NOT NULL,
     "block_number" bigint NOT NULL,
-    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."tracked_event_blocks" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."user_wallets" (
-    "wallet_address" "text" NOT NULL,
-    "total_key_balance" numeric DEFAULT '0'::numeric NOT NULL,
+    "wallet_address" text NOT NULL,
+    "total_token_balance" numeric DEFAULT '0'::numeric NOT NULL,
     "total_earned_trading_fees" numeric DEFAULT '0'::numeric NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL,
     "updated_at" timestamp with time zone
 );
 
 ALTER TABLE "public"."user_wallets" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."users_public" (
-    "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "wallet_address" "text",
-    "metadata" "jsonb",
-    "avatar" "text",
-    "display_name" "text",
+    "user_id" uuid DEFAULT auth.uid() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL,
+    "wallet_address" text,
+    "metadata" jsonb,
+    "avatar" text,
+    "display_name" text,
     "total_earned_trading_fees" numeric DEFAULT '0'::numeric NOT NULL,
-    "avatar_thumb" "text",
+    "avatar_thumb" text,
     "avatar_stored" boolean DEFAULT false NOT NULL,
-    "stored_avatar" "text",
-    "stored_avatar_thumb" "text",
-    "x_username" "text",
+    "stored_avatar" text,
+    "stored_avatar_thumb" text,
+    "x_username" text,
     "follower_count" integer DEFAULT 0 NOT NULL,
     "following_count" integer DEFAULT 0 NOT NULL,
     "blocked" boolean DEFAULT false NOT NULL,
@@ -1987,10 +1971,10 @@ CREATE TABLE IF NOT EXISTS "public"."users_public" (
 ALTER TABLE "public"."users_public" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."wallet_linking_nonces" (
-    "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "wallet_address" "text" NOT NULL,
-    "nonce" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "user_id" uuid DEFAULT auth.uid() NOT NULL,
+    "wallet_address" text NOT NULL,
+    "nonce" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 
 ALTER TABLE "public"."wallet_linking_nonces" OWNER TO "postgres";
@@ -2052,60 +2036,68 @@ ALTER TABLE ONLY "public"."wallet_linking_nonces"
 ALTER TABLE ONLY "public"."user_wallets"
     ADD CONSTRAINT "wallets_pkey" PRIMARY KEY ("wallet_address");
 
-CREATE OR REPLACE TRIGGER "decrease_post_comment_count" AFTER DELETE ON "public"."posts" FOR EACH ROW EXECUTE FUNCTION "public"."decrease_post_comment_count"();
+CREATE TRIGGER decrease_post_comment_count AFTER DELETE ON public.posts FOR EACH ROW EXECUTE FUNCTION public.decrease_post_comment_count();
 
-CREATE OR REPLACE TRIGGER "decrease_post_like_count" AFTER DELETE ON "public"."post_likes" FOR EACH ROW EXECUTE FUNCTION "public"."decrease_post_like_count"();
+CREATE TRIGGER decrease_post_like_count AFTER DELETE ON public.post_likes FOR EACH ROW EXECUTE FUNCTION public.decrease_post_like_count();
 
-CREATE OR REPLACE TRIGGER "decrease_repost_count" AFTER DELETE ON "public"."reposts" FOR EACH ROW EXECUTE FUNCTION "public"."decrease_repost_count"();
+CREATE TRIGGER decrease_repost_count AFTER DELETE ON public.reposts FOR EACH ROW EXECUTE FUNCTION public.decrease_repost_count();
 
-CREATE OR REPLACE TRIGGER "increase_post_comment_count" AFTER INSERT ON "public"."posts" FOR EACH ROW EXECUTE FUNCTION "public"."increase_post_comment_count"();
+CREATE TRIGGER increase_post_comment_count AFTER INSERT ON public.posts FOR EACH ROW EXECUTE FUNCTION public.increase_post_comment_count();
 
-CREATE OR REPLACE TRIGGER "increase_post_like_count" AFTER INSERT ON "public"."post_likes" FOR EACH ROW EXECUTE FUNCTION "public"."increase_post_like_count"();
+CREATE TRIGGER increase_post_like_count AFTER INSERT ON public.post_likes FOR EACH ROW EXECUTE FUNCTION public.increase_post_like_count();
 
-CREATE OR REPLACE TRIGGER "increase_repost_count" AFTER INSERT ON "public"."reposts" FOR EACH ROW EXECUTE FUNCTION "public"."increase_repost_count"();
+CREATE TRIGGER increase_repost_count AFTER INSERT ON public.reposts FOR EACH ROW EXECUTE FUNCTION public.increase_repost_count();
 
-CREATE OR REPLACE TRIGGER "parse_contract_event" AFTER INSERT ON "public"."contract_events" FOR EACH ROW EXECUTE FUNCTION "public"."parse_contract_event"();
+CREATE TRIGGER parse_contract_event AFTER INSERT ON public.contract_events FOR EACH ROW EXECUTE FUNCTION public.parse_contract_event();
 
-CREATE OR REPLACE TRIGGER "set_posts_updated_at" BEFORE UPDATE ON "public"."posts" FOR EACH ROW EXECUTE FUNCTION "public"."set_updated_at"();
+CREATE TRIGGER set_posts_updated_at BEFORE UPDATE ON public.posts FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
-CREATE OR REPLACE TRIGGER "set_token_last_message" AFTER INSERT ON "public"."token_chat_messages" FOR EACH ROW EXECUTE FUNCTION "public"."set_token_last_message"();
+CREATE TRIGGER set_token_holders_updated_at BEFORE UPDATE ON public.token_holders FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
-CREATE OR REPLACE TRIGGER "set_users_public_updated_at" BEFORE UPDATE ON "public"."users_public" FOR EACH ROW EXECUTE FUNCTION "public"."set_updated_at"();
+CREATE TRIGGER set_token_last_message AFTER INSERT ON public.token_chat_messages FOR EACH ROW EXECUTE FUNCTION public.set_token_last_message();
 
-CREATE OR REPLACE TRIGGER "update_price_trend" BEFORE UPDATE ON "public"."old_pal_tokens" FOR EACH ROW EXECUTE FUNCTION "public"."update_price_trend"();
+CREATE TRIGGER set_tokens_updated_at BEFORE UPDATE ON public.tokens FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+CREATE TRIGGER set_tracked_event_blocks_updated_at BEFORE UPDATE ON public.tracked_event_blocks FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+CREATE TRIGGER set_user_wallets_updated_at BEFORE UPDATE ON public.user_wallets FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+CREATE TRIGGER set_users_public_updated_at BEFORE UPDATE ON public.users_public FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+CREATE TRIGGER update_price_trend BEFORE UPDATE ON public.old_pal_tokens FOR EACH ROW EXECUTE FUNCTION public.update_price_trend();
 
 ALTER TABLE ONLY "public"."follows"
-    ADD CONSTRAINT "follows_followee_id_fkey" FOREIGN KEY ("followee_id") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "follows_followee_id_fkey" FOREIGN KEY (followee_id) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."follows"
-    ADD CONSTRAINT "follows_follower_id_fkey" FOREIGN KEY ("follower_id") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "follows_follower_id_fkey" FOREIGN KEY (follower_id) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."general_chat_messages"
-    ADD CONSTRAINT "general_chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "general_chat_messages_author_fkey" FOREIGN KEY (author) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."notifications"
-    ADD CONSTRAINT "notifications_triggerer_fkey" FOREIGN KEY ("triggerer") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "notifications_triggerer_fkey" FOREIGN KEY (triggerer) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."notifications"
-    ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY (user_id) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."post_likes"
-    ADD CONSTRAINT "post_likes_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "post_likes_user_id_fkey" FOREIGN KEY (user_id) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."posts"
-    ADD CONSTRAINT "posts_author_fkey" FOREIGN KEY ("author") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "posts_author_fkey" FOREIGN KEY (author) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."reposts"
-    ADD CONSTRAINT "reposts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "reposts_user_id_fkey" FOREIGN KEY (user_id) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."token_chat_messages"
-    ADD CONSTRAINT "token_chat_messages_author_fkey" FOREIGN KEY ("author") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "token_chat_messages_author_fkey" FOREIGN KEY (author) REFERENCES public.users_public(user_id);
 
 ALTER TABLE ONLY "public"."users_public"
-    ADD CONSTRAINT "users_public_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
+    ADD CONSTRAINT "users_public_user_id_fkey" FOREIGN KEY (user_id) REFERENCES auth.users(id);
 
 ALTER TABLE ONLY "public"."wallet_linking_nonces"
-    ADD CONSTRAINT "wallet_linking_nonces_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users_public"("user_id");
+    ADD CONSTRAINT "wallet_linking_nonces_user_id_fkey" FOREIGN KEY (user_id) REFERENCES public.users_public(user_id);
 
 ALTER TABLE "public"."activities" ENABLE ROW LEVEL SECURITY;
 
@@ -2115,33 +2107,33 @@ CREATE POLICY "allow anon select" ON "public"."old_pal_tokens" FOR SELECT USING 
 
 CREATE POLICY "allow anon select" ON "public"."users_public" FOR SELECT USING (true);
 
-CREATE POLICY "can delete only authed" ON "public"."posts" FOR DELETE TO "authenticated" USING (("author" = "auth"."uid"()));
+CREATE POLICY "can delete only authed" ON "public"."posts" FOR DELETE TO authenticated USING ((author = auth.uid()));
 
-CREATE POLICY "can follow only follower" ON "public"."follows" FOR INSERT TO "authenticated" WITH CHECK ((("follower_id" = "auth"."uid"()) AND ("follower_id" <> "followee_id")));
+CREATE POLICY "can follow only follower" ON "public"."follows" FOR INSERT TO authenticated WITH CHECK (((follower_id = auth.uid()) AND (follower_id <> followee_id)));
 
-CREATE POLICY "can like only authed" ON "public"."post_likes" FOR INSERT TO "authenticated" WITH CHECK (("user_id" = "auth"."uid"()));
+CREATE POLICY "can like only authed" ON "public"."post_likes" FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 
-CREATE POLICY "can repost only authed" ON "public"."reposts" FOR INSERT TO "authenticated" WITH CHECK (("user_id" = "auth"."uid"()));
+CREATE POLICY "can repost only authed" ON "public"."reposts" FOR INSERT TO authenticated WITH CHECK ((user_id = auth.uid()));
 
-CREATE POLICY "can unfollow only follower" ON "public"."follows" FOR DELETE TO "authenticated" USING (("follower_id" = "auth"."uid"()));
+CREATE POLICY "can unfollow only follower" ON "public"."follows" FOR DELETE TO authenticated USING ((follower_id = auth.uid()));
 
-CREATE POLICY "can unlike only authed" ON "public"."post_likes" FOR DELETE TO "authenticated" USING (("user_id" = "auth"."uid"()));
+CREATE POLICY "can unlike only authed" ON "public"."post_likes" FOR DELETE TO authenticated USING ((user_id = auth.uid()));
 
-CREATE POLICY "can unrepost only authed" ON "public"."reposts" FOR DELETE TO "authenticated" USING (("user_id" = "auth"."uid"()));
+CREATE POLICY "can unrepost only authed" ON "public"."reposts" FOR DELETE TO authenticated USING ((user_id = auth.uid()));
 
-CREATE POLICY "can write only authed" ON "public"."general_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((((("message" IS NOT NULL) AND ("message" <> ''::"text") AND ("length"("message") <= 1000)) OR (("message" IS NULL) AND ("rich" IS NOT NULL))) AND ("author" = "auth"."uid"())));
+CREATE POLICY "can write only authed" ON "public"."general_chat_messages" FOR INSERT TO authenticated WITH CHECK (((((message IS NOT NULL) AND (message <> ''::text) AND (length(message) <= 1000)) OR ((message IS NULL) AND (rich IS NOT NULL))) AND (author = auth.uid())));
 
-CREATE POLICY "can write only authed" ON "public"."posts" FOR INSERT TO "authenticated" WITH CHECK ((("message" <> ''::"text") AND ("length"("message") <= 2000) AND ("author" = "auth"."uid"()) AND (("chain" IS NULL) OR ("token_address" IS NULL) OR (( SELECT "tokens"."owner"
-   FROM "public"."tokens"
-  WHERE (("tokens"."chain" = "posts"."chain") AND ("tokens"."token_address" = "posts"."token_address"))) = ( SELECT "users_public"."wallet_address"
-   FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."write_token_required"
-   FROM "public"."tokens"
-  WHERE (("tokens"."chain" = "posts"."chain") AND ("tokens"."token_address" = "posts"."token_address"))) <= ( SELECT "token_holders"."last_fetched_balance"
-   FROM "public"."token_holders"
-  WHERE (("token_holders"."chain" = "posts"."chain") AND ("token_holders"."token_address" = "posts"."token_address") AND ("token_holders"."wallet_address" = ( SELECT "users_public"."wallet_address"
-           FROM "public"."users_public"
-          WHERE ("users_public"."user_id" = "auth"."uid"())))))))));
+CREATE POLICY "can write only authed" ON "public"."posts" FOR INSERT TO authenticated WITH CHECK (((message <> ''::text) AND (length(message) <= 2000) AND (author = auth.uid()) AND ((chain IS NULL) OR (token_address IS NULL) OR (( SELECT tokens.owner
+   FROM public.tokens
+  WHERE ((tokens.chain = posts.chain) AND (tokens.token_address = posts.token_address))) = ( SELECT users_public.wallet_address
+   FROM public.users_public
+  WHERE (users_public.user_id = auth.uid()))) OR (( SELECT tokens.write_token_required
+   FROM public.tokens
+  WHERE ((tokens.chain = posts.chain) AND (tokens.token_address = posts.token_address))) <= ( SELECT token_holders.last_fetched_balance
+   FROM public.token_holders
+  WHERE ((token_holders.chain = posts.chain) AND (token_holders.token_address = posts.token_address) AND (token_holders.wallet_address = ( SELECT users_public.wallet_address
+           FROM public.users_public
+          WHERE (users_public.user_id = auth.uid())))))))));
 
 ALTER TABLE "public"."contract_events" ENABLE ROW LEVEL SECURITY;
 
@@ -2169,11 +2161,11 @@ ALTER TABLE "public"."tokens" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."tracked_event_blocks" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "update pal token's metadata" ON "public"."old_pal_tokens" FOR UPDATE TO "authenticated" USING (("owner" = ( SELECT "users_public"."wallet_address"
-   FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"())))) WITH CHECK (("owner" = ( SELECT "users_public"."wallet_address"
-   FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))));
+CREATE POLICY "update pal token's metadata" ON "public"."old_pal_tokens" FOR UPDATE TO authenticated USING ((owner = ( SELECT users_public.wallet_address
+   FROM public.users_public
+  WHERE (users_public.user_id = auth.uid())))) WITH CHECK ((owner = ( SELECT users_public.wallet_address
+   FROM public.users_public
+  WHERE (users_public.user_id = auth.uid()))));
 
 ALTER TABLE "public"."user_wallets" ENABLE ROW LEVEL SECURITY;
 
@@ -2197,43 +2189,43 @@ CREATE POLICY "view everyone" ON "public"."user_wallets" FOR SELECT USING (true)
 
 CREATE POLICY "view everyone" ON "public"."users_public" FOR SELECT USING (true);
 
-CREATE POLICY "view everyone or only token holders" ON "public"."posts" FOR SELECT USING ((("target" = 0) OR ("author" = "auth"."uid"()) OR ("chain" IS NULL) OR ("token_address" IS NULL) OR ((( SELECT "tokens"."owner"
-   FROM "public"."tokens"
-  WHERE (("tokens"."chain" = "posts"."chain") AND ("tokens"."token_address" = "posts"."token_address"))) = ( SELECT "users_public"."wallet_address"
-   FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."view_token_required"
-   FROM "public"."tokens"
-  WHERE (("tokens"."chain" = "posts"."chain") AND ("tokens"."token_address" = "posts"."token_address"))) <= ( SELECT "token_holders"."last_fetched_balance"
-   FROM "public"."token_holders"
-  WHERE (("token_holders"."chain" = "posts"."chain") AND ("token_holders"."token_address" = "posts"."token_address") AND ("token_holders"."wallet_address" = ( SELECT "users_public"."wallet_address"
-           FROM "public"."users_public"
-          WHERE ("users_public"."user_id" = "auth"."uid"())))))))));
+CREATE POLICY "view everyone or only token holders" ON "public"."posts" FOR SELECT USING (((target = 0) OR (author = auth.uid()) OR (chain IS NULL) OR (token_address IS NULL) OR ((( SELECT tokens.owner
+   FROM public.tokens
+  WHERE ((tokens.chain = posts.chain) AND (tokens.token_address = posts.token_address))) = ( SELECT users_public.wallet_address
+   FROM public.users_public
+  WHERE (users_public.user_id = auth.uid()))) OR (( SELECT tokens.view_token_required
+   FROM public.tokens
+  WHERE ((tokens.chain = posts.chain) AND (tokens.token_address = posts.token_address))) <= ( SELECT token_holders.last_fetched_balance
+   FROM public.token_holders
+  WHERE ((token_holders.chain = posts.chain) AND (token_holders.token_address = posts.token_address) AND (token_holders.wallet_address = ( SELECT users_public.wallet_address
+           FROM public.users_public
+          WHERE (users_public.user_id = auth.uid())))))))));
 
-CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR SELECT TO "authenticated" USING (((( SELECT "tokens"."owner"
-   FROM "public"."tokens"
-  WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) = ( SELECT "users_public"."wallet_address"
-   FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."view_token_required"
-   FROM "public"."tokens"
-  WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) <= ( SELECT "token_holders"."last_fetched_balance"
-   FROM "public"."token_holders"
-  WHERE (("token_holders"."chain" = "token_chat_messages"."chain") AND ("token_holders"."token_address" = "token_chat_messages"."token_address") AND ("token_holders"."wallet_address" = ( SELECT "users_public"."wallet_address"
-           FROM "public"."users_public"
-          WHERE ("users_public"."user_id" = "auth"."uid"()))))))));
+CREATE POLICY "view only holder or owner" ON "public"."token_chat_messages" FOR SELECT TO authenticated USING (((( SELECT tokens.owner
+   FROM public.tokens
+  WHERE ((tokens.chain = token_chat_messages.chain) AND (tokens.token_address = token_chat_messages.token_address))) = ( SELECT users_public.wallet_address
+   FROM public.users_public
+  WHERE (users_public.user_id = auth.uid()))) OR (( SELECT tokens.view_token_required
+   FROM public.tokens
+  WHERE ((tokens.chain = token_chat_messages.chain) AND (tokens.token_address = token_chat_messages.token_address))) <= ( SELECT token_holders.last_fetched_balance
+   FROM public.token_holders
+  WHERE ((token_holders.chain = token_chat_messages.chain) AND (token_holders.token_address = token_chat_messages.token_address) AND (token_holders.wallet_address = ( SELECT users_public.wallet_address
+           FROM public.users_public
+          WHERE (users_public.user_id = auth.uid()))))))));
 
 ALTER TABLE "public"."wallet_linking_nonces" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((((("message" <> ''::"text") AND ("length"("message") < 1000)) OR ("rich" IS NOT NULL)) AND ("author" = "auth"."uid"()) AND ((( SELECT "tokens"."owner"
-   FROM "public"."tokens"
-  WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) = ( SELECT "users_public"."wallet_address"
-   FROM "public"."users_public"
-  WHERE ("users_public"."user_id" = "auth"."uid"()))) OR (( SELECT "tokens"."write_token_required"
-   FROM "public"."tokens"
-  WHERE (("tokens"."chain" = "token_chat_messages"."chain") AND ("tokens"."token_address" = "token_chat_messages"."token_address"))) <= ( SELECT "token_holders"."last_fetched_balance"
-   FROM "public"."token_holders"
-  WHERE (("token_holders"."chain" = "token_chat_messages"."chain") AND ("token_holders"."token_address" = "token_chat_messages"."token_address") AND ("token_holders"."wallet_address" = ( SELECT "users_public"."wallet_address"
-           FROM "public"."users_public"
-          WHERE ("users_public"."user_id" = "auth"."uid"())))))))));
+CREATE POLICY "write only holder or owner" ON "public"."token_chat_messages" FOR INSERT TO authenticated WITH CHECK (((((message <> ''::text) AND (length(message) < 1000)) OR (rich IS NOT NULL)) AND (author = auth.uid()) AND ((( SELECT tokens.owner
+   FROM public.tokens
+  WHERE ((tokens.chain = token_chat_messages.chain) AND (tokens.token_address = token_chat_messages.token_address))) = ( SELECT users_public.wallet_address
+   FROM public.users_public
+  WHERE (users_public.user_id = auth.uid()))) OR (( SELECT tokens.write_token_required
+   FROM public.tokens
+  WHERE ((tokens.chain = token_chat_messages.chain) AND (tokens.token_address = token_chat_messages.token_address))) <= ( SELECT token_holders.last_fetched_balance
+   FROM public.token_holders
+  WHERE ((token_holders.chain = token_chat_messages.chain) AND (token_holders.token_address = token_chat_messages.token_address) AND (token_holders.wallet_address = ( SELECT users_public.wallet_address
+           FROM public.users_public
+          WHERE (users_public.user_id = auth.uid())))))))));
 
 REVOKE USAGE ON SCHEMA "public" FROM PUBLIC;
 GRANT USAGE ON SCHEMA "public" TO "postgres";
@@ -2241,13 +2233,13 @@ GRANT USAGE ON SCHEMA "public" TO "anon";
 GRANT USAGE ON SCHEMA "public" TO "authenticated";
 GRANT USAGE ON SCHEMA "public" TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."check_view_granted"("parameter_token_address" "text") TO "service_role";
+GRANT ALL ON FUNCTION "public"."check_view_granted"(parameter_token_address text) TO "anon";
+GRANT ALL ON FUNCTION "public"."check_view_granted"(parameter_token_address text) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."check_view_granted"(parameter_token_address text) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."check_write_granted"("parameter_token_address" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."check_write_granted"("parameter_token_address" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."check_write_granted"("parameter_token_address" "text") TO "service_role";
+GRANT ALL ON FUNCTION "public"."check_write_granted"(parameter_token_address text) TO "anon";
+GRANT ALL ON FUNCTION "public"."check_write_granted"(parameter_token_address text) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."check_write_granted"(parameter_token_address text) TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."decrease_post_comment_count"() TO "anon";
 GRANT ALL ON FUNCTION "public"."decrease_post_comment_count"() TO "authenticated";
@@ -2265,97 +2257,97 @@ GRANT ALL ON FUNCTION "public"."decrement_token_favorite_count"() TO "anon";
 GRANT ALL ON FUNCTION "public"."decrement_token_favorite_count"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."decrement_token_favorite_count"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."find_posts"("p_user_id" "uuid", "search_string" "text", "last_post_id" bigint, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."find_posts"("p_user_id" "uuid", "search_string" "text", "last_post_id" bigint, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."find_posts"("p_user_id" "uuid", "search_string" "text", "last_post_id" bigint, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."find_posts"(p_user_id uuid, search_string text, last_post_id bigint, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."find_posts"(p_user_id uuid, search_string text, last_post_id bigint, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."find_posts"(p_user_id uuid, search_string text, last_post_id bigint, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_following_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_following_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_following_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_following_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_following_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_following_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_global_activities"("last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_global_activities"("last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_global_activities"("last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_global_activities"(last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_global_activities"(last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_global_activities"(last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"("last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"(last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"(last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_global_activities_with_users"(last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_global_posts"("last_post_id" bigint, "max_count" integer, "signed_user_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_global_posts"("last_post_id" bigint, "max_count" integer, "signed_user_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_global_posts"("last_post_id" bigint, "max_count" integer, "signed_user_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_global_posts"(last_post_id bigint, max_count integer, signed_user_id uuid) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_global_posts"(last_post_id bigint, max_count integer, signed_user_id uuid) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_global_posts"(last_post_id bigint, max_count integer, signed_user_id uuid) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_held_or_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_held_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_held_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_held_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_held_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_liked_posts"("p_user_id" "uuid", "last_liked_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_liked_posts"(p_user_id uuid, last_liked_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_liked_posts"(p_user_id uuid, last_liked_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_liked_posts"(p_user_id uuid, last_liked_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_new_tokens"("last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_new_tokens"("last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_new_tokens"("last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_new_tokens"(last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_new_tokens"(last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_new_tokens"(last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_owned_tokens"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_owned_tokens"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_portfolio_value"("p_wallet_address" "text") TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_portfolio_value"(p_wallet_address text) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_portfolio_value"(p_wallet_address text) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_portfolio_value"(p_wallet_address text) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint, "max_comment_count" integer, "signed_user_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint, "max_comment_count" integer, "signed_user_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_post_and_comments"("p_post_id" bigint, "last_comment_id" bigint, "max_comment_count" integer, "signed_user_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_post_and_comments"(p_post_id bigint, last_comment_id bigint, max_comment_count integer, signed_user_id uuid) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_post_and_comments"(p_post_id bigint, last_comment_id bigint, max_comment_count integer, signed_user_id uuid) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_post_and_comments"(p_post_id bigint, last_comment_id bigint, max_comment_count integer, signed_user_id uuid) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_reposts"("p_user_id" "uuid", "last_reposted_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_reposts"("p_user_id" "uuid", "last_reposted_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_reposts"("p_user_id" "uuid", "last_reposted_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_reposts"(p_user_id uuid, last_reposted_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_reposts"(p_user_id uuid, last_reposted_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_reposts"(p_user_id uuid, last_reposted_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_token"("p_chain" "text", "p_token_address" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_token"("p_chain" "text", "p_token_address" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_token"("p_chain" "text", "p_token_address" "text") TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_token"(p_chain text, p_token_address text) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token"(p_chain text, p_token_address text) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token"(p_chain text, p_token_address text) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_token_activities"("p_chain" "text", "p_token_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_token_activities"("p_chain" "text", "p_token_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_token_activities"("p_chain" "text", "p_token_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_token_activities"(p_chain text, p_token_address text, last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token_activities"(p_chain text, p_token_address text, last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token_activities"(p_chain text, p_token_address text, last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_token_held_activities"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_token_held_activities"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_token_held_activities"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"("p_wallet_address" "text", "last_created_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token_held_activities_with_users"(p_wallet_address text, last_created_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_token_held_posts"("p_user_id" "uuid", "p_wallet_address" "text", "last_post_id" bigint, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_token_held_posts"("p_user_id" "uuid", "p_wallet_address" "text", "last_post_id" bigint, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_token_held_posts"("p_user_id" "uuid", "p_wallet_address" "text", "last_post_id" bigint, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_token_held_posts"(p_user_id uuid, p_wallet_address text, last_post_id bigint, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token_held_posts"(p_user_id uuid, p_wallet_address text, last_post_id bigint, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token_held_posts"(p_user_id uuid, p_wallet_address text, last_post_id bigint, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_token_holders"("p_chain" "text", "p_token_address" "text", "last_balance" numeric, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_token_holders"("p_chain" "text", "p_token_address" "text", "last_balance" numeric, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_token_holders"("p_chain" "text", "p_token_address" "text", "last_balance" numeric, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_token_holders"(p_chain text, p_token_address text, last_balance numeric, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_token_holders"(p_chain text, p_token_address text, last_balance numeric, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_token_holders"(p_chain text, p_token_address text, last_balance numeric, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_top_tokens"("last_rank" integer, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_top_tokens"("last_rank" integer, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_top_tokens"("last_rank" integer, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_top_tokens"(last_rank integer, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_top_tokens"(last_rank integer, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_top_tokens"(last_rank integer, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_trending_tokens"("p_last_purchased_at" timestamp with time zone, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_trending_tokens"(p_last_purchased_at timestamp with time zone, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_trending_tokens"(p_last_purchased_at timestamp with time zone, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_trending_tokens"(p_last_purchased_at timestamp with time zone, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_user_comment_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_user_comment_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_user_comment_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_user_comment_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_user_comment_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_user_comment_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_user_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "anon";
-GRANT ALL ON FUNCTION "public"."get_user_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_user_posts"("p_user_id" "uuid", "last_post_id" bigint, "max_count" integer) TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_user_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_user_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_user_posts"(p_user_id uuid, last_post_id bigint, max_count integer) TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."increase_post_comment_count"() TO "anon";
 GRANT ALL ON FUNCTION "public"."increase_post_comment_count"() TO "authenticated";
