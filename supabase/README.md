@@ -7,6 +7,7 @@ supabase functions deploy store-user-avatar
 supabase functions deploy new-wallet-linking-nonce
 supabase functions deploy link-wallet-to-user
 supabase functions deploy track-contract-events
+supabase functions deploy bridge-chat-message
 supabase db dump -f supabase/seed.sql
 ```
 
