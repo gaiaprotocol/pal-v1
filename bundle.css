@@ -1957,24 +1957,24 @@ button.component:hover {
 .token-chat-room-list-item > main > h3 > .price.down {
   color: var(--falling-color);
 }
-.posts-view {
+.feed-view {
   position: relative;
   height: 100%;
 }
-.posts-view > main {
+.feed-view > main {
   height: 100%;
   overflow-y: auto;
   padding-bottom: 120px;
 }
-.posts-view > main > .new-post-form {
+.feed-view > main > .new-post-form {
   padding: 20px 20px 0 20px;
 }
 @container (width < 1280px) {
-  .posts-view > main > .new-post-form {
+  .feed-view > main > .new-post-form {
     display: none;
   }
 }
-.posts-view > button.post {
+.feed-view > button.post {
   position: absolute;
   bottom: 16px;
   right: 16px;
@@ -1986,17 +1986,17 @@ button.component:hover {
   opacity: 0.6;
 }
 @container (width < 1280px) {
-  .posts-view > button.post {
+  .feed-view > button.post {
     opacity: 1;
   }
 }
-.posts-view > button.post > .icon {
+.feed-view > button.post > .icon {
   font-size: 30px;
 }
-.posts-view > button.post:hover {
+.feed-view > button.post:hover {
   opacity: 1;
 }
-.posts-view > button.post:active {
+.feed-view > button.post:active {
   opacity: 1;
 }
 .post-view {
