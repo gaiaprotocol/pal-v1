@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS "public"."general_chat_messages" (
     "id" bigint NOT NULL,
     "source" "text" NOT NULL,
-    "author" "uuid" DEFAULT "auth"."uid"() NOT NULL,
+    "author" "uuid" DEFAULT "auth"."uid"(),
     "external_author_id" "text",
     "external_author_name" "text",
     "external_author_avatar" "text",

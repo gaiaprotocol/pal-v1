@@ -14,7 +14,7 @@ class PalChatMessageInteractions
         ".source",
         "from ",
         el("a", "Discord", {
-          href: "https://discord.gg/p2VhZAjyzP",
+          href: "https://discord.gg/gaia-protocol-931958830873575474",
           target: "_blank",
         }),
       );
@@ -23,7 +23,7 @@ class PalChatMessageInteractions
         ".source",
         "from ",
         el("a", "Telegram", {
-          href: "https://t.me/krew_social",
+          href: "https://t.me/gaiaprotocol/17082",
           target: "_blank",
         }),
       );
