@@ -10,9 +10,10 @@
     "pretty": "prettier --write contracts/**/*.sol",
     "solhint": "hardhat check",
     "generateProfile": "sol-profiler ./contracts/",
-    "webpack-dev": "webpack --mode development --watch --config webpack.config.dev.cjs",
-    "webpack-prod": "webpack --mode production --config webpack.config.prod.cjs",
-    "predeploy": "yarn webpack-prod",
+    "webpack-dev": "webpack --mode development --watch --config webpack.config.development.cjs",
+    "webpack-testnet": "webpack --mode development --watch --config webpack.config.testnet.cjs",
+    "webpack-mainnet": "webpack --mode production --config webpack.config.mainnet.cjs",
+    "predeploy": "yarn webpack-mainnet",
     "deploy": "gh-pages -d public"
   },
   "type": "module",

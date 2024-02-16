@@ -5,7 +5,7 @@ const CircularDependencyPlugin = require("circular-dependency-plugin");
 
 module.exports = {
   entry: {
-    "bundle": "./app/dev.ts",
+    "bundle": "./app/testnet.ts",
     __less: "./public/style/main.less",
     //"firebase-messaging-sw": "./service-worker/firebase-messaging-sw.ts",
   },
