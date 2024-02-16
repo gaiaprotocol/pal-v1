@@ -29,7 +29,7 @@ export default class FeedView extends View {
 
     Layout.append(
       this.container = el(
-        ".posts-view",
+        ".feed-view",
         el(
           "main",
           PalSignedUserManager.signed ? new NewPostForm() : undefined,
@@ -40,16 +40,16 @@ export default class FeedView extends View {
                 "posts-view-tabs",
                 PalSignedUserManager.walletLinked
                   ? [
-                    { id: "global", label: msg("posts-view-global-tab") },
-                    { id: "following", label: msg("posts-view-following-tab") },
+                    { id: "global", label: msg("feed-view-global-tab") },
+                    { id: "following", label: msg("feed-view-following-tab") },
                     {
                       id: "token-held",
-                      label: msg("posts-view-token-held-tab"),
+                      label: msg("feed-view-token-held-tab"),
                     },
                   ]
                   : [
-                    { id: "global", label: msg("posts-view-global-tab") },
-                    { id: "following", label: msg("posts-view-following-tab") },
+                    { id: "global", label: msg("feed-view-global-tab") },
+                    { id: "following", label: msg("feed-view-following-tab") },
                   ],
               )
               : undefined,

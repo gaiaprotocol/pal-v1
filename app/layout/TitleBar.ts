@@ -56,7 +56,7 @@ export default class TitleBar extends DomNode {
   public set uri(uri: string) {
     if (
       [
-        "posts",
+        "feed",
         "chats",
         "explore",
         "activity",

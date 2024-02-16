@@ -1,6 +1,3 @@
-/*!***********************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!../app-module/style/reset.css ***!
-  \***********************************************************************************************************/
 /***
     The new CSS reset - version 1.8.4 (last updated 14.2.2023)
     GitHub page: https://github.com/elad2412/the-new-css-reset
@@ -101,9 +98,6 @@ meter {
 :where(dialog:modal) {
     all: revert;
 }
-/*!*********************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/less-loader/dist/cjs.js!./public/style/main.less ***!
-  \*********************************************************************************************************************************************/
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
@@ -1963,24 +1957,24 @@ button.component:hover {
 .token-chat-room-list-item > main > h3 > .price.down {
   color: var(--falling-color);
 }
-.posts-view {
+.feed-view {
   position: relative;
   height: 100%;
 }
-.posts-view > main {
+.feed-view > main {
   height: 100%;
   overflow-y: auto;
   padding-bottom: 120px;
 }
-.posts-view > main > .new-post-form {
+.feed-view > main > .new-post-form {
   padding: 20px 20px 0 20px;
 }
 @container (width < 1280px) {
-  .posts-view > main > .new-post-form {
+  .feed-view > main > .new-post-form {
     display: none;
   }
 }
-.posts-view > button.post {
+.feed-view > button.post {
   position: absolute;
   bottom: 16px;
   right: 16px;
@@ -1992,17 +1986,17 @@ button.component:hover {
   opacity: 0.6;
 }
 @container (width < 1280px) {
-  .posts-view > button.post {
+  .feed-view > button.post {
     opacity: 1;
   }
 }
-.posts-view > button.post > .icon {
+.feed-view > button.post > .icon {
   font-size: 30px;
 }
-.posts-view > button.post:hover {
+.feed-view > button.post:hover {
   opacity: 1;
 }
-.posts-view > button.post:active {
+.feed-view > button.post:active {
   opacity: 1;
 }
 .post-view {

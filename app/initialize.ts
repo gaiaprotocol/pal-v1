@@ -71,7 +71,7 @@ export default async function initialize(config: Config) {
   Router.route("bridges", BridgesView);
   Router.route("settings", SettingsView);
 
-  Router.route(["", "posts"], FeedView);
+  Router.route(["", "feed"], FeedView);
   Router.route("post/{postId}", PostView);
 
   Router.route(["chats", "general", "{chain}/{tokenAddress}"], ChatsView, [
@@ -96,7 +96,7 @@ export default async function initialize(config: Config) {
     "profile",
     "bridges",
     "settings",
-    "posts",
+    "feed",
     "chats",
     "general",
   ]);
