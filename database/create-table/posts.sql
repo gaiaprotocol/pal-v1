@@ -45,7 +45,7 @@ CREATE POLICY "view everyone or only token holders" ON "public"."posts" FOR SELE
            FROM "public"."users_public"
           WHERE ("users_public"."user_id" = "auth"."uid"())))))))));
 
-CREATE POLICY "can write only authed" ON "public"."posts" FOR INSERT TO "authenticated" WITH CHECK ((("message" <> ''::"text") AND ("length"("message") <= 2000) AND ("author" = "auth"."uid"()) AND ((( SELECT "tokens"."owner"
+CREATE POLICY "can write only authed" ON "public"."posts" FOR INSERT TO "authenticated" WITH CHECK ((("message" <> ''::"text") AND ("length"("message") <= 2000) AND ("author" = "auth"."uid"()) and ((SELECT blocked from users_public where user_id = auth.uid()) <> true) AND ((( SELECT "tokens"."owner"
    FROM "public"."tokens"
   WHERE (("tokens"."chain" = "posts"."chain") AND ("tokens"."token_address" = "posts"."token_address"))) = ( SELECT "users_public"."wallet_address"
    FROM "public"."users_public"

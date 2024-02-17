@@ -32,7 +32,7 @@ ALTER TABLE ONLY "public"."general_chat_messages"
 ALTER TABLE "public"."general_chat_messages" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "view everyone" ON "public"."general_chat_messages" FOR SELECT USING (true);
-CREATE POLICY "can write only authed" ON "public"."general_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((((("message" IS NOT NULL) AND ("message" <> ''::"text") AND ("length"("message") <= 1000)) OR (("message" IS NULL) AND ("rich" IS NOT NULL))) AND ("author" = "auth"."uid"())));
+CREATE POLICY "can write only authed" ON "public"."general_chat_messages" FOR INSERT TO "authenticated" WITH CHECK ((((("message" IS NOT NULL) AND ("message" <> ''::"text") AND ("length"("message") <= 1000)) OR (("message" IS NULL) AND ("rich" IS NOT NULL))) AND ("author" = "auth"."uid"()) and ((SELECT blocked from users_public where user_id = auth.uid()) <> true)));
 
 GRANT ALL ON TABLE "public"."general_chat_messages" TO "anon";
 GRANT ALL ON TABLE "public"."general_chat_messages" TO "authenticated";
