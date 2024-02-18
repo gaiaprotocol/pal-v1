@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-ethers");
 
 async function main() {
-  const deployedProxyAddress = process.env.PAL_ADDRESS_BASE;
+  const deployedProxyAddress = process.env.PAL_ADDRESS_BASE_SEPOLIA;
 
   const PalUpgrade = await ethers.getContractFactory(
     "PalOnBase",

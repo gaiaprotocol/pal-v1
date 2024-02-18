@@ -63,10 +63,10 @@ module.exports = {
       chainId: 8453,
       gasPrice: 1000000000,
     },
-    "base-goerli": {
-      url: "https://goerli.base.org",
+    "base-sepolia": {
+      url: "https://sepolia.base.org",
       accounts,
-      chainId: 84531,
+      chainId: 84532,
       gasPrice: 1000000000,
     },
   },
@@ -74,7 +74,7 @@ module.exports = {
     apiKey: {
       mainnet: process.env.ETHERSCAN_API_KEY,
       base: process.env.BASESCAN_API_KEY,
-      "base-goerli": "PLACEHOLDER_STRING",
+      "base-sepolia": "PLACEHOLDER_STRING",
     },
     customChains: [
       {

@@ -1,15 +1,12 @@
 CREATE TABLE IF NOT EXISTS "public"."token_chat_messages" (
     "id" bigint NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "chain" "text" NOT NULL,
     "token_address" "text" NOT NULL,
     "author" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "message_type" smallint NOT NULL,
     "message" "text",
     "rich" "jsonb",
-    "translated" "jsonb",
-    "author_name" "text",
-    "author_avatar_url" "text",
-    "chain" "text" DEFAULT 'base'::"text" NOT NULL
+    "translated" "jsonb"
 );
 
 ALTER TABLE "public"."token_chat_messages" OWNER TO "postgres";

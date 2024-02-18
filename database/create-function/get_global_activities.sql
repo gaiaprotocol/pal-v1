@@ -57,7 +57,7 @@ BEGIN
     LEFT JOIN 
         "public"."users_public" u ON a.wallet_address = u.wallet_address
     LEFT JOIN
-        "public"."tokens" t ON a.token_address = t.token_address
+        "public"."tokens" t ON a.chain = t.chain AND a.token_address = t.token_address
     WHERE 
         (last_created_at IS NULL OR a.created_at < last_created_at)
     ORDER BY 
