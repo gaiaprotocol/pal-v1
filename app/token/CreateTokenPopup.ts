@@ -9,6 +9,7 @@ import {
   MaterialIcon,
   msg,
   Popup,
+  Router,
   Select,
 } from "@common-module/app";
 import Blockchains from "../blockchain/Blockchains.js";
@@ -84,6 +85,8 @@ export default class CreateTokenPopup extends Popup {
                   console.log(tokenAddress);
 
                   await TrackEventManager.trackEvent(chain);
+
+                  Router.go(`/${chain}/${tokenAddress}`);
                   this.delete();
                 } catch (e: any) {
                   new ErrorAlert({
