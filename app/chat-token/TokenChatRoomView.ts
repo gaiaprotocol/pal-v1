@@ -1,16 +1,18 @@
 import { ViewParams } from "@common-module/app";
+import { ChatRoomView } from "@common-module/social";
 import BlockchainType from "../blockchain/BlockchainType.js";
-import ChatMessageSource from "../chat/ChatMessageSource.js";
-import ChatRoomView from "../chat/ChatRoomView.js";
 import Token from "../database-interface/Token.js";
+import Layout from "../layout/Layout.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TokenChatMessageForm from "./TokenChatMessageForm.js";
 import TokenChatMessageList from "./TokenChatMessageList.js";
 import TokenChatRoomHeader from "./TokenChatRoomHeader.js";
 
-export default class TokenChatRoomView extends ChatRoomView {
+export default class TokenChatRoomView extends ChatRoomView<void> {
+  protected messageList!: TokenChatMessageList;
+
   constructor(params: ViewParams, uri: string, data?: any) {
-    super(".token-chat-room-view");
+    super(Layout, ".token-chat-room-view");
     this.render(params.chain as BlockchainType, params.tokenAddress!, data);
   }
 
@@ -24,16 +26,16 @@ export default class TokenChatRoomView extends ChatRoomView {
     previewToken?: Token,
   ) {
     const header = new TokenChatRoomHeader(chain, token, previewToken);
-    const list = new TokenChatMessageList(chain, token);
+    this.messageList = new TokenChatMessageList(chain, token);
     const form = new TokenChatMessageForm(chain, token);
 
     form.on(
       "messageSending",
       (tempId, message, files) => {
         if (PalSignedUserManager.user) {
-          list.messageSending(
+          this.messageList.messageSending(
             tempId,
-            ChatMessageSource.Pal,
+            undefined,
             PalSignedUserManager.user,
             message,
             files,
@@ -41,8 +43,11 @@ export default class TokenChatRoomView extends ChatRoomView {
         }
       },
     );
-    form.on("messageSent", (tempId, id) => list.messageSent(tempId, id));
+    form.on(
+      "messageSent",
+      (tempId, id) => this.messageList.messageSent(tempId, id),
+    );
 
-    this.container.empty().append(header, list, form);
+    this.container.empty().append(header, this.messageList, form);
   }
 }

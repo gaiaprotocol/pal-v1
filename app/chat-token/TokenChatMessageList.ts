@@ -2,15 +2,13 @@ import { msg, Supabase } from "@common-module/app";
 import { ChatMessageList } from "@common-module/social";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import BlockchainType from "../blockchain/BlockchainType.js";
-import ChatMessageSource from "../chat/ChatMessageSource.js";
 import MessageLoadingAnimation from "../chat/MessageLoadingAnimation.js";
 import PalChatMessageInteractions from "../chat/PalChatMessageInteractions.js";
 import TokenChatMessage from "../database-interface/TokenChatMessage.js";
 import PalSignedUserManager from "../user/PalSignedUserManager.js";
 import TokenChatMessageService from "./TokenChatMessageService.js";
 
-export default class TokenChatMessageList
-  extends ChatMessageList<ChatMessageSource> {
+export default class TokenChatMessageList extends ChatMessageList<void> {
   private channel: RealtimeChannel;
 
   constructor(private chain: BlockchainType, private tokenAddress: string) {

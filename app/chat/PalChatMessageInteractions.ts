@@ -3,12 +3,12 @@ import { Author, ChatMessageInteractions } from "@common-module/social";
 import ChatMessageSource from "./ChatMessageSource.js";
 
 class PalChatMessageInteractions
-  implements ChatMessageInteractions<ChatMessageSource> {
+  implements ChatMessageInteractions<ChatMessageSource | void> {
   public openAuthorProfile(author: Author) {
     Router.go(`/${author.x_username}`, undefined, author);
   }
 
-  public getSourceLabel(source: ChatMessageSource) {
+  public getSourceLabel(source: ChatMessageSource | void) {
     if (source === ChatMessageSource.Discord) {
       return el(
         ".source",
