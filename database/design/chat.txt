@@ -9,6 +9,7 @@ general_chat_messages
 	external_message_id - text - nullable
 	translated - jsonb - nullbale
 	rich - jsonb - nullable
+	bridged - jsonb - nullable
 	created_at - timestampz - now()
 
 token_chat_messages

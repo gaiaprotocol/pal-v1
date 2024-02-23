@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS "public"."general_chat_messages" (
     "external_message_id" "text",
     "translated" "jsonb",
     "rich" "jsonb",
+    "bridged" "jsonb",
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
 );
 
