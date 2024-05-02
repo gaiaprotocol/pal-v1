@@ -8,7 +8,7 @@ async function main() {
   );
   const contract = await PalUpgrade.attach(deployedProxyAddress);
 
-  const tx = await contract.transferOwnership("0x8033cEB86c71EbBF575fF7015FcB8F1689d90aC1");
+  const tx = await contract.transferOwnership("0x48674148a4043EAadB92E5D8D7C493121D6489b1");
   await tx.wait();
 
   console.log("Done", await contract.owner());

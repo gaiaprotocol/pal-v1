@@ -1,0 +1,35 @@
+.activity-view {
+    background-color: #1e1e1e;
+    height          : 100%;
+    display         : flex;
+
+    @media @phone {
+        display       : block;
+        overflow-y    : auto;
+        padding-bottom: 60px;
+    }
+
+    >.activity-list-container {
+        flex          : 1 1 0px;
+        border-right  : 1px solid #2d2d2d;
+        overflow-y    : auto;
+        padding-bottom: 60px;
+
+        @media @phone {
+            overflow-y    : visible;
+            padding-bottom: 12px;
+            border-right  : none;
+            border-bottom : 1px solid #2d2d2d;
+        }
+
+        >h2 {
+            font-size: 28px;
+            color    : #666;
+            padding  : 16px;
+
+            @media @phone {
+                font-size: 20px;
+            }
+        }
+    }
+}

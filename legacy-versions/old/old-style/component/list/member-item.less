@@ -1,0 +1,34 @@
+.member-item {
+    display    : flex;
+    padding    : 8px 16px;
+    gap        : 16px;
+    align-items: center;
+
+    >.user {
+        display    : flex;
+        gap        : 16px;
+        align-items: center;
+        cursor     : pointer;
+
+        >.profile-image {
+            width        : 48px;
+            height       : 48px;
+            border-radius: 50%;
+            border       : 1px solid #2d2d2d;
+            flex         : 0 0 48px;
+
+            &.loading {
+                background: linear-gradient(0.25turn,
+                        #1e1e1e,
+                        #2e2e2e 45% 55%,
+                        #1e1e1e);
+                animation: profile-image-loading 2s infinite linear;
+            }
+        }
+
+        >.name {
+            flex-grow: 1;
+            font-size: 16px;
+        }
+    }
+}

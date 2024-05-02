@@ -1,0 +1,57 @@
+.token-purchase-form {
+    display         : none;
+    position        : absolute;
+    left            : 0;
+    top             : 60px;
+    width           : 100%;
+    height          : calc(100% - 60px);
+    background-color: #222222;
+
+    &.show {
+        display        : flex;
+        flex-direction : column;
+        align-items    : center;
+        justify-content: center;
+    }
+
+    >.profile-image-display {
+        width        : 120px;
+        height       : 120px;
+        margin-bottom: 20px;
+
+        >img {
+            width : 120px;
+            height: 120px;
+        }
+    }
+
+    >.icon {
+        font-size    : 30px;
+        color        : #666;
+        margin-bottom: 12px;
+    }
+
+    >.message {
+        max-width    : 300px;
+        margin-bottom: 20px;
+        text-align   : center;
+        color        : #999;
+
+        >b {
+            color      : rgba(var(--primary-color));
+            font-weight: bold;
+        }
+    }
+
+    >.buy-token-button {
+        width      : 260px;
+        height     : 40px;
+        font-weight: bold;
+    }
+
+    >.last-message-sent-at {
+        margin-top: 20px;
+        color     : #666;
+        font-size : 12px;
+    }
+}

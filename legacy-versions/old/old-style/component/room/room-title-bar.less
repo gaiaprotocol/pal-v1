@@ -1,0 +1,69 @@
+.room-title-bar {
+    position        : absolute;
+    left            : 0;
+    top             : 0;
+    background-color: #1f1f1f;
+    width           : 100%;
+    height          : 60px;
+    display         : flex;
+    align-items     : center;
+    padding         : 0 24px;
+    gap             : 24px;
+
+    @media @phone {
+        padding         : 0 12px;
+        gap             : 12px;
+        background-color: #530087;
+    }
+
+    >h1 {
+        font-size: 20px;
+        cursor   : pointer;
+
+        @media @phone {
+            display: none;
+        }
+    }
+
+    >.pc-favorite-button {
+        @media @phone {
+            display: none;
+        }
+    }
+
+    >.mobile-favorite-button {
+        display: none;
+        color  : #999;
+
+        @media @phone {
+            display     : block;
+            margin-right: auto;
+        }
+    }
+
+    >.token-summary-container {
+        margin-left: auto;
+
+        @media @phone {
+            margin-left: 0;
+        }
+    }
+
+    >.close-button {
+        display: none;
+        cursor : pointer;
+        color  : #999;
+
+        @media @phone {
+            display: block;
+        }
+
+        >.icon {
+            display: block;
+        }
+
+        &:hover {
+            color: #fff;
+        }
+    }
+}
